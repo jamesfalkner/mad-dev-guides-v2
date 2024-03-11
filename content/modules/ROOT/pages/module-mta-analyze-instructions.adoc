@@ -1,6 +1,12 @@
 = Assessment and Analysis - Instructions
 :imagesdir: ../assets/images/
 
+== 1. Goals of this lab
+
+As part of Globex's digital transformation and cloud adoption initiative, the development and devops teams embarked upon a journey to modernize their existing siloed services running on virtual machines on Red Hat Virtualization and containerized applications on Red Hat OpenShift separately.
+
+The goal of this lab is to assess and anlyze the current application portfolio and identify potential issues and risks to implementing advanced cloud-native architectures with application modernization.
+
 == 1.1. Assessment 
 
 To start the assessment of the existing applications we will use the https://access.redhat.com/documentation/en-us/migration_toolkit_for_applications/6.0/html-single/introduction_to_the_migration_toolkit_for_applications/index[Migration Toolkit for Applications (MTA)^]. We will use _MTA_ to assess the `Customers` service based on the _Tomcat_ server on Red Hat Virtualization.
@@ -144,13 +150,11 @@ Go to `Report` on the left menu. There you will be able to access the report det
 
 image::mta-analyze/report-review.png[report-review]
 
-== Congratulations!
-
-You have now successfully begun the modernization process by assessing the current application portfolio and you identified issues and risks that will need to be considered in the next step: application analysis and code modification as part of modernization.
+*Congratulations!* You have now successfully begun the modernization process by assessing the current application portfolio and you identified issues and risks that will need to be considered in the next step: application analysis and code modification as part of modernization.
 
 Read more about use cases and migration paths at https://developers.redhat.com/products/mta/use-cases[Migration Toolkit for Applications^].
 
-== 2.1. Analyze
+== 2. Analyze
 
 As you have realized in the previous *assessment* exercise, you need to analyze the legacy applications in terms of identifying the actual lines of code for the modernization issues as well as estimating time and effort for the modernization project.
 
@@ -170,7 +174,7 @@ And has several capabilities such as:
 
 Read more about it in the https://access.redhat.com/documentation/en-us/migration_toolkit_for_applications/6.0/html-single/introduction_to_the_migration_toolkit_for_applications/index#new-mta-features_getting-started-guide[MTA Features]
 
-== 2.1.1. Analyze Customers Application using MTA
+== 2.1. Analyze Customers Application using MTA
 
 First, you need to configure *Git repositories* to refer to your link:https://gitea.%SUBDOMAIN%/%USERID%/modern-app-dev[Gitea repository^] when you analyze your inventory and applications using MTA.
 
@@ -203,7 +207,7 @@ Select the `Analysis` tab. When you click on the `Customers` application, `Analy
 
 image::mta-analyze/application-analysis.png[application-analysis]
 
-=== 2.1.2. Analysis mode
+=== 2.2. Analysis mode
 
 Select `Source dode` in Analysis mode popup.
 
@@ -211,7 +215,7 @@ image::mta-analyze/add-applications.png[Add applications]
 
 Click on `Next`.
 
-=== 2.1.3. Set targets
+=== 2.3. Set targets
 
 You will now be presented with options for transformation targets. Here we will select several targets based on the technologies we are moving to:
 
@@ -229,7 +233,7 @@ image::mta-analyze/packages.png[Select packages]
 
 Click on `Next`.
 
-=== 2.1.4. Advanced
+=== 2.4. Advanced
 
 You will now be presented with options for custom rules.
 
@@ -279,7 +283,7 @@ The analysis may take a few minutes as it must pull container images for Windup 
 
 image::mta-analyze/active-analysis.png[Active analysis]
 
-== 2.2. Understanding the report
+== 2.5. Understanding the report
 
 The Dashboard gives an overview of the entire application migration effort. It summarizes:
 

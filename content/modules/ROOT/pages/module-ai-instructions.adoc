@@ -1,7 +1,7 @@
 = Create an Intelligent Application - Instructions
 :imagesdir: ../assets/images
 
-== 1.1 Launching a notebook environment
+== 1. Launching a notebook environment
 
 If this is a new thing for you, a notebook is an environment where you can easily run code in an interactive manner. Simply saying that gives you a hint of why it has been heavily adopted by scientists in general, especially data scientists. Experiments are usually done in this interactive trial and error manner, and you will shortly see why this is the perfect environment to do that.
 
@@ -110,7 +110,7 @@ As you will see, you then get the result of the code that was run in that cell (
 
 Notebooks are so named because they are just like a physical Notebook. It is exactly like if you were taking notes about your experiments (which you will do), along with the code itself, including any parameters you set. You see the output of the experiment inline (this is the result from a cell once it is run), along with all the notes you want to take (to do that, you can switch the cell type from the menu from `Code` to `Markup`).
 
-=== 1.2.1. Time to experiment!
+=== 1.2.2. Time to experiment!
 
 Now that we have covered the basics, just give it a try!
 

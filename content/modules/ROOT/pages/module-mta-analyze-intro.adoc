@@ -1,8 +1,4 @@
 = Assessment and Analysis - Intro
-:imagesdir: ../assets/images/mta-analyze
+:imagesdir: ../assets/images/
 
-== Goals of this lab
 
-As part of Globex's digital transformation and cloud adoption initiative, the development and devops teams embarked upon a journey to modernize their existing siloed services running on virtual machines on Red Hat Virtualization and containerized applications on Red Hat OpenShift separately.
-
-The goal of this lab is to assess and anlyze the current application portfolio and identify potential issues and risks to implementing advanced cloud-native architectures with application modernization.

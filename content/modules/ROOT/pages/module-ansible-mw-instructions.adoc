@@ -1,0 +1,4 @@
+= Day 2 operations with Ansible MiddleWare - Instructions
+:imagesdir: ../assets/images/
+
+Story: Globex has been in business for several years with a core retail EAP application running on-prem in VMs. They struggle to respond on time when issues come up and spend a lot of time keeping their servers up to date with newer versions or patches. They are looking to automate many of the manual administrative tasks they do each day. 

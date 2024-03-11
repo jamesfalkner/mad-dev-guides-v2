@@ -3,3 +3,5 @@
 * xref:module-eap-instructions.adoc[Migration to JBoss EAP - Instructions]
 * xref:module-mta-analyze-intro.adoc[Assessment and Analysis - Intro]
 * xref:module-mta-analyze-instructions.adoc[Assessment and Analysis - Instructions]
+* xref:module-mta-ai-intro.adoc[Create an Intelligent Application - Intro]
+* xref:module-mta-ai-instructions.adoc[Create an Intelligent Application - Instructions]

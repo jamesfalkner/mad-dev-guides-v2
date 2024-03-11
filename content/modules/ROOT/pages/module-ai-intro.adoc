@@ -48,6 +48,4 @@ image::ai/dsp.png[]
 
 image::ai/resources.png[]
 
-'''
-
 Now that we know our way around the OpenShift AI environment, let's do some data science!
