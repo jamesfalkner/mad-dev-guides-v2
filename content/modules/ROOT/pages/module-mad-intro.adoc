@@ -1,13 +1,13 @@
 = Introduction to the Modern App Dev Roadshow Dev Track
-:imagesdir: ../assets/images/intro
+:imagesdir: ../assets/images/
 
 A common way of speaking about migrating or modernizing workloads to the cloud has been coined as the *6 Rs framework*. This framework can be broken down as follows.
 
-image::mod-strategies.png[Modernization Strategies]
+image::intro/mod-strategies.png[Modernization Strategies]
 
 Red Hat helps our customers' application modernization journey with this approach:
 
-image::app-mod-approach.png[Modernization Approach]
+image::intro/app-mod-approach.png[Modernization Approach]
 
 This module will walk you through 2 of the phases (_Assess_, _Rationalize_) as following steps:
 
@@ -22,7 +22,7 @@ Migration Toolkit for Applications (MTA) accelerates large-scale application mod
 
 Globex is a fictional company we will use for this workshop. The Globex system in your workshop environment consists of microservices applications that are deployed across multiple platforms such as virtual machines and a container platform as depicted below.
 
-image::architecture_initial.png[architecture_initial]
+image::intro/architecture_initial.png[architecture_initial]
 
 Your initial state for this workshop is an environment that is spread over Legacy Virtualization and Red Hat OpenShift Container Platform.
 
@@ -46,7 +46,7 @@ The problem right now is in the *customers* service:
 
 Once you have finished the all of the modules in this workshop, your deployment architecture will look like this:
 
-image::architecture_completed.png[architecture_completed]
+image::intro/architecture_completed.png[architecture_completed]
 
 == 1.2. Workshop Environment
 
@@ -54,11 +54,11 @@ image::architecture_completed.png[architecture_completed]
 
 Look in the box at the top of your screen. Is your username set already? If so it will look like this:
 
-image::alreadyset.png[alreadyset]
+image::intro/alreadyset.png[alreadyset]
 
 If your `username` is properly set, then you can move on. *If not, in the above box, enter the user ID you were assigned* like this:
 
-image::setuser.png[setuser]
+image::intro/setuser.png[setuser]
 
 This will customize the links and copy/paste code for this workshop. If you accidentally type the wrong username, just update your username in the URL parameters (e.g., `1-introduction.html?USERID=%USERID%` )
 
@@ -86,11 +86,11 @@ To get started, access the link:https://codeserver-codeserver-%USERID%.%SUBDOMAI
 
 * Password: `{openshift-password}`
 
-image::vscode-server-login.png[vscode-server-login]
+image::intro/vscode-server-login.png[vscode-server-login]
 
 The graphical user interface (GUI) should look like:
 
-image::vscode.png[VSCode]
+image::intro/vscode.png[VSCode]
 
 == 1.3. Explore the Globex Retail Services (GUI)
 
@@ -104,7 +104,7 @@ Click on `New Terminal` in Terminal menu in the VS Code. Once a new terminal is 
 oc login -u %USERID% -p openshift https://openshift.default.svc:443
 ----
 
-image::vscode-terminal.png[vscode-terminal]
+image::intro/vscode-terminal.png[vscode-terminal]
 
 [NOTE]
 ====
@@ -130,7 +130,7 @@ ordersfrontend   ordersfrontend-retail-%USERID%.%SUBDOMAIN%          ordersfront
 
 Navigate to the orders frontend route by entering the hostname listed above under `HOST/PORT` into your browser's address bar.
 
-image::frontend.png[Frontend]
+image::intro/frontend.png[Frontend]
 
 Click through the three panels on the left.
 

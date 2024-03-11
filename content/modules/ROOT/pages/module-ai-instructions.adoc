@@ -1,0 +1,469 @@
+= Create an Intelligent Application - Instructions
+:imagesdir: ../assets/images
+
+== 1.1 Launching a notebook environment
+
+If this is a new thing for you, a notebook is an environment where you can easily run code in an interactive manner. Simply saying that gives you a hint of why it has been heavily adopted by scientists in general, especially data scientists. Experiments are usually done in this interactive trial and error manner, and you will shortly see why this is the perfect environment to do that.
+
+Jupyter is a leading open source notebook solution developed at UC Berkeley, that we have implemented in OpenShift AI.
+
+Launching a Jupyter notebook environment in OpenShift AI is pretty easy:
+
+* From the **Applications->Enabled** menu, select **Launch application** from the **Jupyter** tile:
+
+image::ai/launch_jupyter.png[]
+
+This will lead you to a page with different options that you have to select to start the environment.
+
+* The type of **Notebook image** you will use. They each come with a specific set of tools, libraries or packages depending on the "flavour" you are choosing. For this introduction, select "Standard Data Science", which brings you a set of data science packages commonly used:
+
+image::ai/standard_data_science.png[]
+
+* The second choice you have to make is the **Deployment size** of your environment. Basically this is the resources (CPU, RAM) that will be allocated to the pod where your code will be running. It's a set of "T-Shirt" sizes to choose from. We will use a "Small" environment for this introduction:
+
+image::ai/deployment_size.png[]
+
+* Optionally, if there are GPUs available in your environment, you would be able to choose how many would be allocated to you (*0* in our case, we won't need any):
+
+image::ai/gpu.png[]
+
+* Finally, you could set environment variables that would be injected in your environment at spawn time. They will be created as ConfigMap, or Secrets if you check the box, which will make it easier to modify programmatically or manually later on:
+
+image::ai/variables.png[]
+
+* You can then select **Start Server**:
+
+image::ai/start_server.png[]
+
+* While the environment is starting you will get some information:
+
+image::ai/start.png[]
+
+* And when it's ready you can select **Open in new tab** to get access to your environment:
+
+image::ai/open_new_tab.png[]
+
+* You will have to login again, and the first time you access the environment authorize the access to different information.
+
+ * *Username*: `%USERID%`
+ * *Password*: `{openshift-password}`
+
+image::ai/authorize.png[]
+
+* Congratulations, you just launched your Jupyter Lab environment!
+
+image::ai/jupyterlab.png[]
+
+== 1.1. Working with JupyterLab
+
+*JupyterLab* is an IDE that will let you primarily work with **notebooks**. As you can see, it's a web-based environment, but everything you will do here is in fact happening on the Red Hat OpenShift AI, in the Pod for which you selected the image and the size.
+
+This means that without having to install and maintain anything on your own computer, and without disposing of lots of local resources like CPU and RAM, you can conduct your Data Science work in this powerful and stable managed environment.
+
+On the left side, in the *file-browser-like* panel, you will find the files and folders that are saved inside your own personal space inside Red Hat OpenShift AI. It is pretty empty right now though. So the first thing we will do is to bring the content of the workshop inside this environment.
+
+* On the left toolbar, select the Git icon:
+
+image::ai/git.png[]
+
+* Then select `Clone a Repository`:
+
+image::ai/git_clone.png[]
+
+* Enter this URL, https://github.com/rh-aiservices-bu/mad_m6_workshop.git, then select `CLONE`:
+
+image::ai/clone_repo.png[]
+
+* It takes a few seconds, after which you can double-click and navigate to the newly-created folder, **mad_m6_workshop**:
+
+image::ai/open_mad_workshop.png[]
+
+We are now ready to use notebooks!
+
+== 1.2. Working with notebooks
+
+This section provides a small introduction on how to use Jupyter Notebooks. If you are already at ease with Jupyter, you can directly head to the link:3-model-training.html[next section].
+
+=== 1.2.1. What's a notebook?
+
+* A notebook is an environment where you have cells that can display formatted text, or code.
+
+This is an empty cell:
+
+image::ai/empty_cell.png[]
+
+And a cell where we have entered some code:
+
+image::ai/cell_with_code.png[]
+
+* Code cells contain Python code that can be run interactively. It means that you can modify the code, then run it, but only for this cell, not for the whole content of the notebook! The code will not run on your computer or in the browser, but directly in the environment you are connected to, Red Hat OpenShift AI.
+
+* To run a code cell, you simply select it (select the cell, or on the left side of it), and select the Run/Play button from the toolbar (you can also press CTRL+Enter to run a cell, or Shift+Enter to run the cell and automatically select the following one).
+
+The Run button on the toolbar:
+
+image::ai/run_cell.png[]
+
+As you will see, you then get the result of the code that was run in that cell (if the code produces some output), as well as information on when this particular cell has been run.
+
+* When you save a notebook, the code as well as all the results are saved! So you can always reopen it to look at the results without having to run all the program again, while still having access to the code that produced this content.
+
+Notebooks are so named because they are just like a physical Notebook. It is exactly like if you were taking notes about your experiments (which you will do), along with the code itself, including any parameters you set. You see the output of the experiment inline (this is the result from a cell once it is run), along with all the notes you want to take (to do that, you can switch the cell type from the menu from `Code` to `Markup`).
+
+=== 1.2.1. Time to experiment!
+
+Now that we have covered the basics, just give it a try!
+
+In your Jupyter environment, in file explorer on the left side, there is file called `01_sanbdbox.ipynb`. Double-click it to launch the notebook (it will open another tab in the content section of the environment, on the right). Please feel free to experiment, run the different cells, add some more code... You can do what you want - it is your environment, and there is no risk of breaking anything or impacting other users. This environment isolation is also a great advantage brought by Red Hat OpenShift AI.
+
+You can also create a new notebook by selecting `File->New->Notebook` from the menu on the top left, then select a Python 3 kernel. This instructs Jupyter that we want to create a new notebook where the code cells will be run using a Python 3 kernel. We could have different kernels, with different languages or versions that we can run into notebooks, but that is a story for another time.
+
+You can also create a notebook by simply selecting the icon in the launcher:
+
+image::ai/launch_notebook_icon.png[]
+
+If you want to learn more about notebooks, head to https://jupyter.org/[this page^].
+
+== 2. Training a model
+
+In this section, we will explore how data scientists are training models. It will be a very simple example, but it will give you the basics on the workflow.
+
+* If you still have your sandbox notebook opened, please first close it:
+
+image::ai/close_sandbox.png[]
+
+We also need to shut down the Jupyter notebook environment and pod, as for the rest of the workshop we will use a Data Science Project.
+
+* If you still have you OpenShift AI dashboard tab opened in your browser, head to it. You can then simply close the JupyterLab tab, and select **Stop notebook server** on the dashboard:
+
+image::ai/stop_notebook_server.png[]
+
+* If you had closed the OpenShift AI dashboard, you can access it https://rhods-dashboard-redhat-ods-applications.%SUBDOMAIN%[here^] or you can reopen it from Jupyter by clicking on **File->Hub Control Panel**:
+
+image::ai/hub_panel.png[]
+
+It will reopen a tab with the dashboard, from which you can stop the notebook environment as described before. We are now ready to work in a Data Science Project.
+
+== 2.1. Data Science Project
+
+First, we will need a data science project to organize all our work: model training, model serving, application deployment. As we said earlier, a data science project is in fact an OpenShift project, but you don't need to leave the OpenShift AI environment to create it!
+
+=== 2.1.1. Creating the DSP
+
+* Head to **Data Science Projects** and select **Create data science project**:
+
+image::ai/create_dsp.png[]
+
+* Type the following values in the popup window. It will be the Display name for OpenShift, and the Resource name is automatically sanitized and created for you.
+
+* *Name*: `%USERID% data science project`
+* *Resource name*: `%USERID%-data-science-project`
+* *Description*: `This is my first try at data science!`
+
+image::ai/create_dsp_modal.png[]
+
+Now, if you are curious and have a look at the *OpenShift console*:
+
+* Access from your web browser your https://console-openshift-console.%SUBDOMAIN%/k8s/cluster/projects/%USERID%-data-science-project[Data Science Project^]
+
+* Use the following credentials if you haven't logged in to the OpenShift cluster before. OpenShift is already integrated with https://access.redhat.com/products/red-hat-single-sign-on/[Red Hat Single Sign On^].
+
+image::ai/sso_login.png[openshift_login]
+
+*  Login using your credentials:
+
+** Username: `%USERID%`
+** Password: `{openshift-password}`
+
+* You will see that the project has indeed been created.
+
+image::ai/my_dsp_console.png[]
+
+=== 2.1.2. Working with the DSP
+
+In a Data Science Project you have different sections:
+
+* Workbenches are development environments. They can be based on JupyterLab, but also on other types of IDEs, like VS Code or RStudio. You can create as many workbenches as you want, and they can run concurrently.
+* Cluster storage are Persistent Volumes Claims (PVCs), the persistent storage spaces you can use to store your notebooks and data. You can create them directly from here, and mount them in your workbenches as you like. Note that a default cluster storage (PVC) is always automatically created with a new workbench to save your work.
+* Data connections are configurations for remote data location. At the moment, only S3-compatible Object Storage is supported. We will use this feature later on to configure the storage for our models.
+* Finally, Model Servers are used to serve models! But let's save that for later.
+
+For now, let's create a new workbench to work with Tensorflow to train models!
+
+* select **Create workbench**
+
+image::ai/create_workbench.png[]
+
+* Give it a name, select the **Tensorflow** image with the version **2022.1**, a Deployment size of **Small**, and a Cluster storage space of **1GB**, it will be enough:
+
+image::ai/create_workbench_1.png[]
+image::ai/create_workbench_2.png[]
+
+* And of course, select **Create workbench**:
+
+image::ai/create_workbench_click.png[]
+
+* The workbench is created, first in the **Starting state**:
+
+image::ai/workbench_starting.png[]
+
+You can use this toggle to easily start/stop this environment later on.
+
+* When it is ready, the state will change to **Running** and you can select **Open** to go to your environment:
+
+image::ai/workbench_running.png[]
+
+* After authentication and allowing permissions, you are again in your now familiar JupyterLab environment:
+
+image::ai/workbench_jl.png[]
+
+== 2.2. Model training
+
+We are now ready to do some serious work!
+
+* Again, go to the Git menu on the left:
+
+image::ai/git.png[]
+
+* Then select `Clone a Repository`:
+
+image::ai/git_clone.png[]
+
+* Enter the URL https://github.com/rh-aiservices-bu/mad_m6_workshop.git, then select `CLONE`:
+
+image::ai/clone_repo.png[]
+
+* It takes a few seconds, after which you can double-click and navigate to the newly-created folder, **mad_m6_workshop**:
+
+image::ai/open_mad_workshop.png[]
+
+* In the `mad_m6_workshop` folder, open the file `02_model_training_basics`.
+
+* Follow the steps in the notebook, and run each cell as you go. There may be an Error message when running the cell where `pip install` are done, but you can safely ignore it.
+
+image::ai/run_cell.png[]
+
+== 3. Deploying a model
+
+After this overview of how a model is trained and how to use it, we're going to see how you can use OpenShift AI to serve it, which will make it easier to use later on in our intelligent application.
+
+OpenShift AI integrates the https://docs.openvino.ai/latest/ovms_what_is_openvino_model_server.html[Intel's OpenVino Model Server^] runtime, a high-performance system for serving models, optimized for deployment on Intel architectures.
+
+The model we are going to use is an **object detection model** that is able to isolate and recognize **T-shirts**, **bottles**, and **hats** in pictures. Although the process is globally the same one as what we have seen in the previous section, this model has already been trained as it takes a few hours with the help of a GPU to do it. If you want to know more about this training process, you can have a look https://github.com/rh-aiservices-bu/yolov5-transfer-learning[here^].
+
+The resulting model has been saved in the https://onnx.ai/[ONNX^] format, an open standard for machine learning interoperability, which is one we can use with OpenVino and OpenShift AI model serving. The model has been stored and is available for download in an AWS S3 bucket.
+
+Let's serve this model!
+
+== 3.1. Check the model
+
+There are many ways and different tools available to interact with Object Storage. Here we are going to use the Python library named `boto3`.
+
+* In the notebook we are going to use, you will need to enter a key to decrypt the credentials to access the model location. This key is:
+
+[source,text]
+----
+Is_34AxyLht603Lh4z6UYztla79lQ3oz_os7U99JsKQ=
+----
+
+Please copy it, you will need it in a few seconds to replace the `replace_me` placeholder in the first cell of the notebook.
+
+IMPORTANT: When you copy the key, don't forget to select the "=" sign at the end of the line.
+
+(Don't worry, the bucket we are going to access is readonly, and those access/secret can only be used to read the public model file. So even the decrypted credentials are not sensitive at all.)
+
+* In your project in JupyterLab, open the notebook `03_check_model` and follow the instructions to check the availability and the exact location of the model. Again, don't forget to run the cells!
+
+image::ai/check_model.png[]
+
+* Once you are finished, you can come back to these instructions.
+
+image::ai/check_model-complete.png[]
+
+== 3.2. Deploy the model in OpenShift AI
+
+With your model available on S3 storage, it is pretty easy to serve it.
+
+* Switch back to the OpenShift AI dashboard. If you have closed it, you can access it https://rhods-dashboard-redhat-ods-applications.%SUBDOMAIN%[here^] or you can reopen it from Jupyter by clicking on **File->Hub Control Panel**:
+
+image::ai/hub_panel.png[]
+
+* In the OpenShift AI dashboard, still in your Data Science Project, create a Data connection. It will serve as a reference and configuration for access to the object bucket. In the **Data connections** section, select **Add data connection**:
+
+image::ai/add_data_connection.png[]
+
+* Fill in the information, the select **Add data connection**:
+    ** Name it `Coolstore`
+    ** `Access Key` is the `Access key` you got in the previous step in the notebook.
+    ** `Secret key` is the `Secret key` you got in the previous step in the notebook.
+    ** `Endpoint` is `https://s3.amazonaws.com/` (default).
+    ** `Region` is `us-east-1` (default).
+    ** `Bucket` is `rh-mad-workshop-m6`.
+
+No need to specify any connected workbench, this data connection will only be used by the model server.
+
+image::ai/data_connection_configuration.png[]
+
+* You now have a data connection ready to use:
+
+image::ai/data_connection_ok.png[]
+
+* Now, on the **Models and model servers** section select **Configure server**:
+
+image::ai/add_model_server.png[]
+
+* Type *coolstore-modelserver* in the model server name. Select *OpenVINO Model Server* in Serving runtime. 
+* Leave replicas to 1, size to Small. At this point, `don't` check **Make model available via an external route**. Then select **Add**:
+
+image::ai/model_server_configure.png[]
+
+* We now have a model server available (but no model deployed yet). Select **Deploy model**:
+
+image::ai/model_server_available.png[]
+
+* Give a name to your model, `coolstore`, select **onnx - 1** for the framework, select the Data location you created before for the Model location, and enter **coolstore-model** as the folder path for the model (without leading `/`), then select **Deploy**:
+
+image::ai/deploy_model_configuration.png[]
+
+* The model is now deploying. You should click on the `1` on the `Deployed models` tab to see details:
+
+image::ai/deployed_models.png[]
+
+* After some time, under the **Status** column, you should see a green tick to the right of you model, indicating it's ready for use!
+
+image::ai/model_ready.png[]
+
+* Once it's ready, select the **Internal Service** link under the Inference endpoint column, and make note of the grpcURL value, we will need it later. It should be `grpc://modelmesh-serving.%USERID%-data-science-project:8033`
+
+image::ai/grpcurl.png[]
+
+== 3.3. Test the model
+
+Now that the model server is ready to receive requests, we can test it.
+
+* In your project in JupyterLab, open the notebook `04_remote_inference` and follow the instructions to see how the model can be queried.
+
+image::ai/remote_inference.png[]
+
+* Once you complete the notebook's instruction, you will end up with this result.
+
+image::ai/remote_inference_complete.png[]
+
+== 4. Building and deploying an intelligent application
+
+The application we are going to deploy is a simple example of how you can add an *intelligent* feature powered by AI/ML to an application. It is a webapp that you can use on your phone to discover coupons on various items you can see in a store, in an augmented reality way.
+
+== 4.1. Architecture
+
+++++
+<style>
+.mermaid {
+  width: 100%;
+}
+</style>
+++++
+[mermaid]
+....
+sequenceDiagram
+autonumber
+
+participant f as Frontend
+participant b as Backend
+participant p as Pre-Post Processing Service
+participant m as Model Server
+
+f ->> b : Send the image<br/>to analyze
+b ->> p : Pass the image to<br/>the pre-post processing service
+p ->> m : Pre-process the image<br/>and call the model server
+m ->> p : Send back the inference result
+p ->> b : Post-process the inference<br/>and send back the result
+b ->> f : Pass the result to<br/>the frontend for display
+....
+
+The different components are:
+
+* The Frontend: a https://react.dev/[React^] application, typically running on the browser of your phone,
+* The Backend: a NodeJS server, serving the application and relaying API calls,
+* The Pre-Post Processing Service: a Python https://fastapi.tiangolo.com/[FastAPI^] service, doing the image pre-processing, calling the model server API, and doing the post-processing before sending the results back.
+* The Model Server: the OpenShift AI component serving the model as an API to do the inference.
+
+NOTE: This architecture could be simplified by "merging" the Backend part and the Pre-Post Processing service. In this workshop we kept the two separated so that you can verify by yourself that the code running in the Pre-Post Processing service is the same as the one we used in the notebook in the previous section.
+
+== 4.2. Deploy the application
+
+The deployment of the application is really easy, as we already created for you the necessary YAML files. They are included in the Git project we used for this workshop. You can find them **in the `deployment` folder inside you Jupyter environment**, or directly https://github.com/rh-aiservices-bu/mad_m6_workshop/tree/main/deployment[here^]. 
+
+Of course, you can take a few minutes to look at the code of the Frontend, Backend or the Pre-Post Processing service.
+
+To deploy the Pre-Post Processing Service service and the Application:
+
+* From your https://console-openshift-console.%SUBDOMAIN%/k8s/cluster/projects/%USERID%-data-science-project[OpenShift Console^]
+
+* Use the following credentials if you haven't logged in to the OpenShift cluster before. OpenShift is already integrated with https://access.redhat.com/products/red-hat-single-sign-on/[Red Hat Single Sign On^].
+
+image::ai/sso_login.png[openshift_login]
+
+*  Login using your credentials:
+
+** Username: `%USERID%`
+** Password: `{openshift-password}`
+
+* On your project **%USERID%-data-science-project** select the "Import YAML" button, the "plus" sign on the top right:
+
+image::ai/import_yaml.png[]
+
+- Copy/Paste the content of the file `pre_post_processor_deployment.yaml` inside the Window. If you have named your model `coolstore` as instructed, you're good to go. If not, modify the value on line 35 with the name you set. You can then select `Create`:
+
+image::ai/create_inference_service.png[]
+
+- Copy/Paste the content of the file `intelligent_application_deployment.yaml` inside the Window. Nothing to change here, you can then select `Create`:
+
+image::ai/create_application_deployment.png[]
+
+- Go back to https://console-openshift-console.%SUBDOMAIN%/k8s/cluster/projects/%USERID%-data-science-project?view=graph[OpenShift web console^] if both deployments are successful.
+
+image::ai/deployment-complete.png[]
+
+== 4.3. Use the application
+
+The application is relatively straightforward to use. Click on the URL for the Route `ia-frontend` that was created. This URL should be: https://ia-frontend-%USERID%-data-science-project.%SUBDOMAIN%/[https://ia-frontend-%USERID%-data-science-project.%SUBDOMAIN%/^]
+
+You have first to allow it to use your camera, this is the interface you get:
+
+image::ai/app_ui.png[]
+
+You have:
+
+- The current view of your camera.
+- A button to take a picture:
+
+image::ai/take_picture_button.png[]
+
+- A button to switch from front to rear camera if you are using a phone:
+
+image::ai/switch_camera_button.png[]
+
+- A QR code that you can use to quickly open the application **on a phone** (much easier than typing the URL!):
+
+image::ai/qr_code_example.png[]
+
+When you take a picture, it will be sent to the inference service, and you will see which items have been detected, and if there is a promotion available!
+
+== 4.4. Tweak the application
+
+There are two parameters you can change on this application:
+
+- On the `ia-frontend` Deployment, you can modify the `DISPLAY_BOX` environment variable from `true` to `false`. It will hide the bounding box and the inference score, so that you get only the coupon *flying* over the item.
+- On the `ia-inference` Deployment, the one used for pre-post processing, you can modify the `COUPON_VALUE` environment variable. The format is simply an Array with the value of the coupon for the 3 classes: bottle, hat, shirt. As you see, these values could be adjusted in real time, and this could even be based on another ML model! But this would be a subject for another workshop.
+
+== 5. Conclusion
+
+We hope you have enjoyed this workshop!
+
+Here is a quick summary of what we have learned:
+
+- How to use **Red Hat OpenShift AI**. You can learn more about it https://www.redhat.com/en/technologies/cloud-computing/openshift/openshift-ai[here].
+- How to train a model and deploy it easily on OpenShift AI. You will find many other examples and tutorials in our https://developers.redhat.com/products/red-hat-openshift-data-science/getting-started[Learning Paths^].
+- How to create an intelligent application that will be able to use a Machine Learning model to enrich it.
+
+And all of this in a single platform, **Red Hat OpenShift**!

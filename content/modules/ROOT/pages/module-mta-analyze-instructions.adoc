@@ -1,5 +1,5 @@
 = Assessment and Analysis - Instructions
-:imagesdir: ../assets/images/mta-analyze
+:imagesdir: ../assets/images/
 
 == 1.1. Assessment 
 
@@ -9,7 +9,7 @@ Open a new browser to access the https://mta-mta-%USERID%.%SUBDOMAIN%[MTA Web Co
 
 You will see existing application inventories such as *Customers*, *Orders*, *Inventory*, and more.
 
-image::application-inventory.png[application inventory]
+image::mta-analyze/application-inventory.png[application inventory]
 
 **MTA Application Inventory** is the vehicle which selects applications for assessment by https://github.com/konveyor/tackle-pathfinder[Tackle Pathfinder^] and analysis by https://github.com/windup/[Windup^]. It provides users four main functions:
 
@@ -38,11 +38,11 @@ These controls provide useful metadata about the relationships between applicati
 
 Go to `Controls` on the left menu and you will see existing _stakeholders_ such as *Hank Scorpio* and *Homer Simpson*.
 
-image::mta-control-stakeholder.png[stakeholders]
+image::mta-analyze/mta-control-stakeholder.png[stakeholders]
 
 You can also find the existing _stakeholder groups_ such as *IT Management* and *Retail Management* for the application assessment.
 
-image::mta-stakeholder-groups.png[stakeholder-groups]
+image::mta-analyze/mta-stakeholder-groups.png[stakeholder-groups]
 
 === 1.1.3. Business services
 
@@ -50,7 +50,7 @@ Applications can be classified and grouped in multiple ways such as **business s
 
 Go to `Controls` on the left menu and click on _Business services_ tab. You will see existing _business services_ such as *Finance and HR* and *Retail*.
 
-image::mta-control-business-service.png[business service]
+image::mta-analyze/mta-control-business-service.png[business service]
 
 == 1.2. Application inventory
 
@@ -60,7 +60,7 @@ Let's focus on the legacy application. We have added tags that represent its tec
 
 Go to `Application inventory` on the left menu in the *Migration* perspective and click on `pencil` (edit) icon for the customers application.
 
-image::app-inventory-landing.png[app-inventory-landing]
+image::mta-analyze/app-inventory-landing.png[app-inventory-landing]
 
 It shows 5 tags.
 
@@ -82,15 +82,15 @@ Today, you'll run the *second* assessment to choose the proper answer in the `cr
 
 Click on `Assess`.
 
-image::app-inventory-access.png[app-inventory-access]
+image::mta-analyze/app-inventory-access.png[app-inventory-access]
 
 When you see *This application has already been assessed. Do you want to continue?* message, click on `Continue` to continue the assessment.
 
-image::edit-assessment.png[edit-assessment]
+image::mta-analyze/edit-assessment.png[edit-assessment]
 
 The first step will be to select the stakeholders (_Homer Simpson_) and Stakeholder groups (_Retail Management_) involved with the assessment. Leave the default values.
 
-image::select-stakeholder.png[select-stakeholder]
+image::mta-analyze/select-stakeholder.png[select-stakeholder]
 
 Click on `Next`.
 
@@ -99,7 +99,7 @@ Click on `Next`.
 Review the former answers in the initial assessment for each application assessment section such as `Details`, `Dependencies`, and `Observability`. You don't need to change any answers but keep clicking on `Next` button until you get into the `Application cross-cutting concerns` section.
 ====
 
-image::app-details.png[app-details]
+image::mta-analyze/app-details.png[app-details]
 
 === 1.2.3. Application cross-cutting concerns
 
@@ -108,7 +108,7 @@ Choose the following answer for the *How is the application configured?* questio
 * *Question* - How is the application configured?
 * *Answer* - `Multiple configuration files in multiple file system locations`
 
-image::app-cross-cutting-concerns.png[app-cross-cutting-concerns]
+image::mta-analyze/app-cross-cutting-concerns.png[app-cross-cutting-concerns]
 
 Click on `Save and review`.
 
@@ -116,11 +116,11 @@ Click on `Save and review`.
 
 You will be presented with the review screen. It allows you to find out which risks were identified during the assessment and decide which migration strategy to follow based those risks.
 
-image::review.png[review]
+image::mta-analyze/review.png[review]
 
 Scroll down the screen to view the risks. This legacy application uses a static (fixed) discovery mechanism that is not cloud-friendly, which makes sense since it comes from a classic platform and accesses a database through a *static IP*.
 
-image::review-high-risk.png[review-high-risk]
+image::mta-analyze/review-high-risk.png[review-high-risk]
 
 Now that we know we will need changes in the source code to adapt the application, we can decide that the strategy will be `Refactor`.
 
@@ -134,15 +134,15 @@ Since this is a key application in the architecture, we're going to set the crit
 
 Click on `Submit Review`.
 
-image::submit-review.png[submit-review]
+image::mta-analyze/submit-review.png[submit-review]
 
 At this point you have completed the 2nd assessment to update the `Application cross-cutting concerns` section. You have also identified a new `high` risk along with the external configuration references and dependencies.
 
-image::complete-review.png[complete-review]
+image::mta-analyze/complete-review.png[complete-review]
 
 Go to `Report` on the left menu. There you will be able to access the report details such as _Current landscape_, _Adoption candidate distribution_, _Suggested adoption plan_, and _Identified risks_.
 
-image::report-review.png[report-review]
+image::mta-analyze/report-review.png[report-review]
 
 == Congratulations!
 
@@ -176,7 +176,7 @@ First, you need to configure *Git repositories* to refer to your link:https://gi
 
 In *Administration* view, select *Repositories > Git*. `Toggle` the *Consume insecure Git repositories* switch to the right.
 
-image::mta-admin-git.png[admin git]
+image::mta-analyze/mta-admin-git.png[admin git]
 
 [NOTE]
 ====
@@ -195,19 +195,19 @@ Update application with the following source code information.
 * Branch - `patch-postgres`
 * Root path - `package-legacy`
 
-image::application-update-git.png[application-update-git]
+image::mta-analyze/application-update-git.png[application-update-git]
 
 Select `Save`.
 
 Select the `Analysis` tab. When you click on the `Customers` application, `Analyze` button will be enabled. Then, click on *Analyze*.
 
-image::application-analysis.png[application-analysis]
+image::mta-analyze/application-analysis.png[application-analysis]
 
 === 2.1.2. Analysis mode
 
 Select `Source dode` in Analysis mode popup.
 
-image::add-applications.png[Add applications]
+image::mta-analyze/add-applications.png[Add applications]
 
 Click on `Next`.
 
@@ -219,13 +219,13 @@ Since this is going to be a linux container, it makes sense to do a sanity check
 
 Click on `Containers`, `Linux`, and `OpenJDK` as the targets.
 
-image::configure-analysis-checked.png[Configure Analysis]
+image::mta-analyze/configure-analysis-checked.png[Configure Analysis]
 
 Click on `Next`.
 
 Select `Application and internal dependencies only` for the scope of dependencies.
 
-image::packages.png[Select packages]
+image::mta-analyze/packages.png[Select packages]
 
 Click on `Next`.
 
@@ -233,7 +233,7 @@ Click on `Next`.
 
 You will now be presented with options for custom rules.
 
-image::custom-rules.png[Custom rules]
+image::mta-analyze/custom-rules.png[Custom rules]
 
 MTA Analysis uses a custom rule engine for the analysis. It comes with many rules out of the box to support the different migration paths, but it can be extended. Custom rules can be developed with a very simple XML syntax and used as part of the analysis. We've provided some custom rules which will detect the usage of a specific library that we know has been used at Globex in the past and make suggestions for changes to be performed to remove it.
 
@@ -252,19 +252,19 @@ Key in the following information in the repository page.
 In case you don't see `None` in the `Associated credentials`, please leave it since the field is not mandatory.
 ====
 
-image::add-repository-customrules.png[add-repository-customrules]
+image::mta-analyze/add-repository-customrules.png[add-repository-customrules]
 
 Click on `Next`.
 
 Next, you will be presented with options to fine tune the analysis. For now we will stick with the default options.
 
-image::fine-tune.png[Fine tuning]
+image::mta-analyze/fine-tune.png[Fine tuning]
 
 Click on `Next`.
 
 Lastly, we are presented with a summary of the configuration for our analysis.
 
-image::finish-project.png[Finish project]
+image::mta-analyze/finish-project.png[Finish project]
 
 Click on `Run`.
 
@@ -277,7 +277,7 @@ Once it finishes, select *Customers* application. Then click on `Report` in the 
 The analysis may take a few minutes as it must pull container images for Windup before executing the analysis.
 ====
 
-image::active-analysis.png[Active analysis]
+image::mta-analyze/active-analysis.png[Active analysis]
 
 == 2.2. Understanding the report
 
@@ -292,11 +292,11 @@ Story points are an abstract metric commonly used in Agile software development 
 
 Once the report is finished, click on the link to access the report. Click on `customers-tomcat.war` application.
 
-image::report-view.png[View report]
+image::mta-analyze/report-view.png[View report]
 
 The reports provide all kinds of information about the application, like the technologies it uses, dependencies, but most importantly issues that need to get fixed.
 
-image::report-dashboard.png[report dashboard]
+image::mta-analyze/report-dashboard.png[report dashboard]
 
 Click on the `Issues` tab.
 
@@ -306,23 +306,23 @@ Click on `Hard coded IP address`.
 
 By choosing the issue we can see where it was detected and view a hint on how to solve it.  It looks like the config files are pointing to some static IPs. That's not good in a cloud / container environment!
 
-image::report-hint.png[report hint]
+image::mta-analyze/report-hint.png[report hint]
 
 Click on `File system issue`.
 
 It looks like a problem has been detected on some class coming from the config library. We are analyzing the binary, so the dependencies have been analyzed as well.
 
-image::report-hint-fs.png[report hint file system]
+image::mta-analyze/report-hint-fs.png[report hint file system]
 
 Click on `Legacy configuration issue`.
 
 It looks like the custom rule got triggered and found some issues with the source code.  This rule detects the use of a custom configuration library and gives some hints about what needs to be done to fix it.
 
-image::report-hint-custom.png[report hint custom rule]
+image::mta-analyze/report-hint-custom.png[report hint custom rule]
 
 Click on the `io.konveyor.demo.ordermanagement.config.PersistenceConfig` file.
 
-image::report-code.png[report code]
+image::mta-analyze/report-code.png[report code]
 
 You can now see exactly where the issue is located in the source code.
 

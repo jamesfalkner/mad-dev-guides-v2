@@ -1,5 +1,5 @@
 = Migration to JBoss EAP - Instructions
-:imagesdir: ../assets/images/eap
+:imagesdir: ../assets/images/
 
 In this module you’ll work with an existing Java EE application designed for a retail webshop.  The current
 version of the webshop is a Java EE application built for Oracle Weblogic Application Server. As part of a modernization
@@ -7,7 +7,7 @@ strategy you've decided to move this application to JBoss EAP, containerize it, 
 
 === What is Migration Toolkit for Applications?
 
-image::mta_icon.png[MTA Logo, 300]
+image::eap/mta_icon.png[MTA Logo, 300]
 
 Migration Toolkit for Applications (MTA) is an extensible and customizable rule-based tool that helps simplify migration of Java applications.
 
@@ -38,48 +38,48 @@ You will be using Visual Studio Code (VS Code) based on https://developers.redha
 
 To get started, {{ DS_URL }}[access the Red Hat OpenShift Dev Spaces instance^] and select *Log in with OpenShift* button:
 
-image::login_with_openshift.png[login,800]
+image::eap/login_with_openshift.png[login,800]
 
 Type in the following credentail:
 
 * *Username*: `%USERID%`
 * *Password*: `{openshift-password}`
 
-image::che-login.png[login,800]
+image::eap/che-login.png[login,800]
 
 [NOTE]
 ====
 In case you see the *Authorize Access* page as below, select *Allow selected permissions* button.
 
-image::auth-access.png[auth-access, 800]
+image::eap/auth-access.png[auth-access, 800]
 ====
 
 Once you log in, you’ll be placed on the *Create Workspace* dashboard. Copy the following `Git Repo URL` and select `Create & Open`.
 
 * *Git Repo URL*: `https://github.com/RedHat-Middleware-Workshops/cloud-native-workshop-v2m1-labs/tree/ocp-4.13`
 
-image::ds-landing.png[ds, 800]
+image::eap/ds-landing.png[ds, 800]
 
 A new window or tab in your web browser will open automatically to showcase the progess about *Starting workspace quarkus-workshop*. It takes about *60* seconds to finish the process.
 
-image::starting-workspace.png[ds, 800]
+image::eap/starting-workspace.png[ds, 800]
 
 [NOTE]
 ====
 In case you see this information page, select `Start your workspace` to continue  using your workspace.
 
-image::starting-workspace-info.png[ds, 800]
+image::eap/starting-workspace-info.png[ds, 800]
 ====
 
 After a few seconds, you’ll be placed in the workspace.
 
-image::ds-workspace.png[ds, 800]
+image::eap/ds-workspace.png[ds, 800]
 
 [NOTE]
 ====
 In case you see this infomation page, check on `Trust the authors of all files in the parent folder 'projects'`. Then, select `Yes, I trust the authors.
 
-image::ds-trust-popup.png[ds, 800]
+image::eap/ds-trust-popup.png[ds, 800]
 ====
 
 You'll use all of these during the course of this workshop, so keep this browser tab open throughout. **If things get weird, you can simply reload the browser tab to refresh the view.**
@@ -88,55 +88,55 @@ You'll use all of these during the course of this workshop, so keep this browser
 
 Click on `MTA Explorer` icon on the left. Then, a new MTA configuration will be shown up:
 
-image::mta_newconf.png[MTA Landing Page, 700]
+image::eap/mta_newconf.png[MTA Landing Page, 700]
 
 [NOTE]
 ====
 In case you see this popup, select `Download` button to download the windup command line tool into your VS Code server.
 
-image::ds-windup-cli.png[ds, 800]
+image::eap/ds-windup-cli.png[ds, 800]
 ====
 
 To input source files and directories, click on `Add` then select `Open File Explorer`:
 
 Note that you might need to remove an existing input directory.
 
-image::mta-add-input.png[MTA Add App, 700]
+image::eap/mta-add-input.png[MTA Add App, 700]
 
 Open `projects > cloud-native-workshop-v2m1-labs` then select `monolith` directory. Click on `Choose...`:
 
-image::mta-add-opendir.png[MTA Add App, 700]
+image::eap/mta-add-opendir.png[MTA Add App, 700]
 
 Then you will see that */projects/cloud-native-workshop-v2m1-labs/monoilth* directory is added in _--input_ configuration.
 
 Be sure that `eap7` is already selected in _--target_ server to migrate:
 
-image::mta-target.png[MTA Add App, 700]
+image::eap/mta-target.png[MTA Add App, 700]
 
 Click on `--source` to migrate from then select `weblogic`. Leave the other configurations:
 
-image::mta-source.png[MTA Add App, 700]
+image::eap/mta-source.png[MTA Add App, 700]
 
 == 1.4. Run an analysis report
 
 Click on `Run` icon to analyze the WebLogic application. Note that if you don't see the _Run_ icon, you need to click on the _mtaConfiguration_:
 
-image::mta-run-report.png[MTA Add App, 700]
+image::eap/mta-run-report.png[MTA Add App, 700]
 
 Migration Toolkit for Applications (MTA) CLI will be executed automatically in a new terminal then it will take a few mins to complete the analysis. Click on `Open Report`:
 
-image::mta-analysis-complete.png[MTA Add App, 900]
+image::eap/mta-analysis-complete.png[MTA Add App, 900]
 
 == 1.5. Review the report
 
-image::mta_result_landing_page.png[MTA Langing Page, 900]
+image::eap/mta_result_landing_page.png[MTA Langing Page, 900]
 
 The main landing page of the report lists the applications that were processed. Each row contains a high-level overview of the
 story points, number of incidents, and technologies encountered in that application.
 
 **Click on the `monolith` link** to access details for the project:
 
-image::mta_project_overview.png[MTA Project Overview, 900]
+image::eap/mta_project_overview.png[MTA Project Overview, 900]
 
 == 1.6. Understanding the report
 
@@ -166,17 +166,17 @@ Let's jump to code containing identified migration issues. Expand the *monolith*
 
 TIP: You can use kbd:[CTRL+p] (or kbd:[CMD+p] on Mac OSX) to quickly open a file.  Simply start typing the name of the file in the text box that appears and select your file from the list that is produced.
 
-image::mta_project_issues.png[mta, 500]
+image::eap/mta_project_issues.png[mta, 500]
 
 In the Explorer, MTA issues use an icon to indicate their severity level and status. The following table describes the meaning of the various icons:
 
-image::mta-issues-table.png[mta, 700]
+image::eap/mta-issues-table.png[mta, 700]
 
 == 2.2. View Details about the Migration Issues
 
 Let's take a look at the details about the migration issue. Right-click on `WebLogic ApplicationLifecycleListenerEvent[rule-id:xxx]` in _Hints_ of _StartupListener.java_ file. Click on `View Details`:
 
-image::mta-issue-detail.png[rhamt_project_issues, 900]
+image::eap/mta-issue-detail.png[rhamt_project_issues, 900]
 
 The WebLogic `ApplicationLifecycleListener` abstract class is used to perform functions or schedule jobs in Oracle WebLogic, like server start and stop. In this case we have code in the `postStart` and `preStop` methods which are executed after Weblogic starts up and before it shuts down, respectively.
 
@@ -195,12 +195,12 @@ Using this method makes the code much more portable.
 ====
 In this section we're going to deal with the following two issues from the report:
 
-image::report_applifecycle_issues.png[Lifecycle Issues]
+image::eap/report_applifecycle_issues.png[Lifecycle Issues]
 ====
 
 To begin we are fixing the issues under the Monolith application. Click on `WebLogic ApplicationLifecycleListenerEvent[rule-id:xxx]` in _Hints_ of _StartupListener.java_ file:
 
-image::mta-issue-open-code.png[mta_project_issues, 900]
+image::eap/mta-issue-open-code.png[mta_project_issues, 900]
 
 You can also navigate to the `cloud-native-workshop-v2m1-labs` folder in the project tree, then open the file `monolith/src/main/java/com/redhat/coolstore/utils/StartupListener.java` by clicking on it.
 
@@ -249,7 +249,7 @@ In case you see the red lines in the source code, you can't ignore it because th
 
 Open a Terminal window. 
 
-image::new-terminal.png[new-terminal, 700]
+image::eap/new-terminal.png[new-terminal, 700]
 
 In the terminal, issue the following command to test the build:
 
@@ -283,7 +283,7 @@ If it builds successfully (you will see `BUILD SUCCESS`), let’s move on to the
 
 You can review the changes you've made. On the left, click on the _Version Control_ icon, which shows a list of the changed files. Double-click on `StartupListener.java` to view the differences you've made:
 
-image::ds-diffs.png[diffs, 800]
+image::eap/ds-diffs.png[diffs, 800]
 
 VS Code keeps track (using Git) of the changes you make, and you can use version control to check in, update, and compare files as you change them.
 
@@ -295,7 +295,7 @@ For now, go back to the _Explorer_ tree and lets fix the remaining issues.
 ====
 In this section we'll be looking to remediate this part of the migration report:
 
-image::report_logging_issues.png[Logging Issues]
+image::eap/report_logging_issues.png[Logging Issues]
 ====
 
 Some of our application makes use of Weblogic-specific logging methods like the `NonCatalogLogger`, which offer features related to logging of
@@ -385,7 +385,7 @@ If builds successfully (you will see `BUILD SUCCESS`), then let’s move on to t
 ====
 In this and the following few sections we'll be addressing this part of the report
 
-image::report_mdb_issues.png[MDB Issues, 1100]
+image::eap/report_mdb_issues.png[MDB Issues, 1100]
 
 To highlight in a little more detail:
 
@@ -440,13 +440,13 @@ If you have the tab for the `weblogic-ejb-jar.xml` file open (or handy) you can 
 image:reveal_in_explorer.png[reveal-in-explorer, 600]
 ====
 
-image::ds-delete-jar.png[ds-convert, 500]
+image::eap/ds-delete-jar.png[ds-convert, 500]
 
 While we’re at it, let’s remove the stub weblogic implementation classes added as part of the scenario.
 
 Whilst still in the Project Explorer, right-click on the `src/main/java/weblogic` folder and select *Delete* to delete the folder:
 
-image::ds-delete-weblogic.png[ds-convert, 500]
+image::eap/ds-delete-weblogic.png[ds-convert, 500]
 
 == 2.9. Fix the code
 
@@ -516,7 +516,7 @@ Your MDB should now be properly migrated to JBoss EAP.
 
 Lastly, remove Maven dependency on *org.jboss.spec.javax.rmi:jboss-rmi-api_1.0_spec*. In JBoss EAP 7.3(or later), artifact with groupId _org.jboss.spec.javax.rmi_ and artifactId _jboss-rmi-api_1.0_spec_ are unsupported dependencies. Remove the following dependency in `monolith/pom.xml`:
 
-image::mta-remove-dependency.png[rhamt_rerun_analysis_report, 700]
+image::eap/mta-remove-dependency.png[rhamt_rerun_analysis_report, 700]
 
 == 2.10. Test the build
 
@@ -537,11 +537,11 @@ In this step we will re-run the MTA report to verify our migration was successfu
 
 Click on `Run` icon to analyze the WebLogic application:
 
-image::mta-rerun-report.png[rhamt_rerun_analysis_report, 700]
+image::eap/mta-rerun-report.png[rhamt_rerun_analysis_report, 700]
 
 Migration Toolkit for Applications (MTA) CLI will be executed automatically in a new terminal then it will take a few mins to complete the analysis. Click on `Open Report`:
 
-image::mta-analysis-rerun-complete.png[MTA Add App, 700]
+image::eap/mta-analysis-rerun-complete.png[MTA Add App, 700]
 
 [NOTE]
 ====
@@ -555,7 +555,7 @@ Click on the latest result to go to the report web page and verify that it now r
 
 You have successfully migrated this app to JBoss EAP, congratulations!
 
-image::mta_project_issues_story.png[mta_project_issues_story, 700]
+image::eap/mta_project_issues_story.png[mta_project_issues_story, 700]
 
 [NOTE]
 ====
@@ -574,7 +574,7 @@ In this development environment (GitPod), a JBoss EAP server is already running 
 <img src="../img/eap-running.png" width=700 align=center>
 </p>
 
-image::eap-running.png[eap-running, 700]
+image::eap/eap-running.png[eap-running, 700]
 
 Copy the packaged application (.war file) to the running EAP server. Run the following command in the `Pre-warm Maven` terminal in GitPod:
 
@@ -590,7 +590,7 @@ Go back to the `Start Wildfly server` terminal in GitPod where EAP was started f
 <img src="../img/eap-deployed.png" width=700 align=center>
 </p>
 
-image::eap-deployed.png[eap-deployed, 700]
+image::eap/eap-deployed.png[eap-deployed, 700]
 
 > **Hint:** If you accidentally closed the terminal that was running Wildfly, you can restart Wildfly with `$JBOSS_HOME/bin/standalone.sh -b 0.0.0.0`
 
@@ -624,7 +624,7 @@ The output should look like:
 
 Now you are using the same application that we built locally on OpenShift. That wasn’t too hard right?
 
-image::coolstore_web.png[coolstore_web, 700]
+image::eap/coolstore_web.png[coolstore_web, 700]
 
 === Summary
 
