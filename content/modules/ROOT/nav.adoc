@@ -15,7 +15,6 @@
 * xref:module-devhub-instructions.adoc[Accelerating Software development with RH Developer Hub - Instructions]
 * xref:module-outerloop-intro.adoc[Outerloop with OpenShift Pipelines and GitOps - Intro]
 * xref:module-outerloop-instructions.adoc[Outerloop with OpenShift Pipelines and GitOps - Instructions]
-
 * xref:module-servicemesh-intro.adoc[Service Mesh - Intro]
 * xref:module-servicemesh-instructions.adoc[Service Mesh - Instructions]
 * xref:module-serverless-intro.adoc[Serverless - Intro]

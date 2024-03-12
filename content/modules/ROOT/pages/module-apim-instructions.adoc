@@ -291,7 +291,7 @@ In this lab you will declare the 3scale assets like Product and Backend as Kuber
 Note: <<appendix.adoc#3scale-definitions, Click to learn more about Backends, Products, ActiveDocs and CRDs>>
 
 [#create-backend]
-=== 4.4. Create 3scale Backend
+== 4.4. Create 3scale Backend
 
 To create the Backend for Product Catalog API Gateway, you will need the Service URL of Product Catalog deployment which is already running on OpenShift. +
 
@@ -349,7 +349,7 @@ image:apim-backend-overview.png[]
 ---
 
 [#3scale-product]
-=== 4.5. Create 3scale Product and ActiveDocs
+== 4.5. Create 3scale Product and ActiveDocs
 The next step is to create a 3scale Product, Application Plans for the Product, and also ActiveDocs for the Product Catalog API
 
 . Navigate to the link:https://console-openshift-console.%SUBDOMAIN%/topology/ns/globex-%USERID%?view=graph[OpenShift Console^,role=external,window=console]. 

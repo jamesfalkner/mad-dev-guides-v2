@@ -56,7 +56,7 @@ image::apim/sso_login.png[openshift_login]
 . Open the *Developer* perspective in the *globex-apim-%USERID%* namespace.
 . The *globex-apim-%USERID%* namespace contains deployments needed to design, govern and manage your APIs.
 +
-image:apim-namespace.png[]
+image::apim/apim-namespace.png[]
 . The *globex-%USERID%* namespace contains the Backend services deployed by Globex. From the *Developer* perspective, switch to the *globex-%USERID%* namespace by using the drop down. 
 +
-image:globex-namespace.png[]
+image::apim/globex-namespace.png[]
