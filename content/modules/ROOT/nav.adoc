@@ -30,5 +30,5 @@
 
 * xref:module-keycloak-intro.adoc[Securing Apps with OpenShift and Keycloak - Intro]
 * xref:module-keycloak-instructions.adoc[Securing Apps with OpenShift and Keycloak - Instructions]
-* xref:module-ai-intro.adoc[Create an Intelligent Application - Intro]
-* xref:module-ai-instructions.adoc[Create an Intelligent Application - Instructions]
+* xref:module-skupper-intro.adoc[Service Interconnect - Intro]
+* xref:module-skupper-instructions.adoc[Service Interconnect - Instructions]
