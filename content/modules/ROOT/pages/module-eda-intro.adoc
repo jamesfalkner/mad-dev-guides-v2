@@ -1,0 +1,52 @@
+= Event-driven Applications - Intro
+:imagesdir: ../assets/images/
+
+== Globex Digital Transformation Journey
+
+Globex is a fictitious retail company. The company recently started a digital transformation and cloud adoption journey. As part of this initiative, the development and devops teams have completed the modernization of the existing multi-tier monolithic retail e-commerce web application. The monolithic application was split in a couple of loosely-coupled microservices and the application was re-hosted on OpenShift.
+
+A schematic overview of the current state of the application after the first phase of the application modernization effort:
+
+image::eda/globex-phase1.png[width=60%]
+
+To further enhance the Globex Retail application, the business comes up with new requirements
+
+* The ability to track user activity on the website and the mobile application.
+* Highlight products which generate most customer interest as featured products.
+* Provide a personalized experience for users on the website and mobile application.
+
+The team decides to use the Kafka ecosystem to track the user activity since it can easily scale. Red Hat AMQ Streams (based on the upstream Strimzi) provides a Kubernetes/OpenShift-centric view of Apache Kafka, providing operator-based installation and upgrades, and cloud-native management of brokers, topics and security.
+
+
+== Goals of this lab
+In this module you will follow this journey:
+
+* Add event streaming to the Globex retail application to track user activity 
+* Use Kafka streams to then highlight featured products
+
+
+== Runtime Architecture
+
+image::eda/globex-runtime-architecture-2.png[]
+
+Visitors engage with the Globex retail website in a number of ways:
+
+* View list of products
+* Search for products
+* Like a product / add a product to favourites
+* View product details 
+* Add products to the shopping cart
+* Place an order
+
+Each of these activities generate a stream of events which are captured by  the *User Activity Tracking* service. This service then pushes the events into the Kafka streaming platform. 
+The events can then be consumed by other services such as the *Product Recommendation* service which powers the list of featured products.
+A new *Featured Products* section is created in the front-end web application to showcase the top featured products. 
+
+
+== Deployment Architecture
+
+Here is a view of the deployment architecture
+
+image::eda/globex-deployment-architecture-2.png[]
+
+All services and the website are deployed on Red Hat OpenShift running on the cloud.

@@ -1,0 +1,62 @@
+= Manage and Secure APIs - Intro
+:imagesdir: ../assets/images/
+
+In this module you will discover how an API First Approach provides the right framework to build microservices and APIs based systems. The stages of an API life cycle cover both the implementation life cycle and the management life cycle.
+
+* The *Implementation* phase allows you to collaboratively design an API before determining and developing the various channels and applications that will use the API. The design-first approach advocates for designing the API's contract before writing any code.
+* The *Management* phase allows you to manage access to the implement APIs, measure consumption and also track utilization of the APIs to perhaps even monetize the APIs
+
+== Globex's Digital Transformation Journey
+
+Globex, a fictitious retail company, has completed the modernization of their existing retail e-commerce web application as part of their modernization journey. A schematic overview of the current state of the application as show below:
+
+image::apim/globex-phase1.png[width=60%]
+
+As a next step Globex would like to expand business with a *multi-channel retailing strategy* through a mobile app and partner channels. This means that the new channels will need access to their core backend API services. 
+
+To secure the access to Globex's core APIs that will be used by the new channels, an API Management platform is needed. To build a holistic API Management solution, the team decides to adopt an *API First approach* spanning design, governance, mock and management of APIs - which will enable rapid development across teams. 
+
+
+== Goals of this lab
+In this module you will follow this journey:
+
+* *Design* an API resulting in an OpenAPI schema
+* *Govern* the schema with a registry for use by various teams
+* *Mock* the APIs to enable faster inner loop development
+* *Manage and Secure* APIs to allow access for external teams
+
+
+== Deployment architecture Overview
+Here is a view of the deployment architecture. +
+
+image::apim/globex-deployment-apim.png[]
+
+
+* The services (primarily Inventory and Catalog), and the databases are deployed on Red Hat OpenShift. 
+* API Designer and Red Hat build of Apicurio Registry, based on https://www.apicur.io/[Apicurio^, window=info], are used to *Design* and *Govern* the APIs
+* https://microcks.io/[Microcks^, window=info], a popular opensource project, is used to *mock* the APIs
+* https://www.redhat.com/en/technologies/jboss-middleware/3scale[Red Hat 3scale Management^,window=info] is an API Management platform used to *manage and secure* the APIs. 3scale allows you to offer the same set of APIs for different audiences through packaging and unique consumption plans. 
+
+== Explore the environment
+
+This module uses two namespaces that have been deployed within your OpenShift environment. 
+
+* Navigate to the console of the lab OpenShift cluster at link:https://console-openshift-console.%SUBDOMAIN%/topology/ns/globex-apim-%USERID%?view=graph[console^,role=external,window=openshiftconsole].
+
+Use the following credentials if you haven't logged in to the OpenShift cluster before. OpenShift is already integrated with https://access.redhat.com/products/red-hat-single-sign-on/[Red Hat Single Sign On^].
+
+image::apim/sso_login.png[openshift_login]
+
+.  Login using your credentials:
+
+** Username: `%USERID%`
+** Password: `{openshift-password}`
+
+
+. Open the *Developer* perspective in the *globex-apim-%USERID%* namespace.
+. The *globex-apim-%USERID%* namespace contains deployments needed to design, govern and manage your APIs.
++
+image:apim-namespace.png[]
+. The *globex-%USERID%* namespace contains the Backend services deployed by Globex. From the *Developer* perspective, switch to the *globex-%USERID%* namespace by using the drop down. 
++
+image:globex-namespace.png[]
