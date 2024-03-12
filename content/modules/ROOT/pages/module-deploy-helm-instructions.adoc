@@ -1,0 +1,4 @@
+= Deploy App to OpenShift with Helm - Instructions
+:imagesdir: ../assets/images/
+
+Story: As part of a multi-year modernization initiative, Globex has begun adopting OpenShift for their core business applications, but is not skilled enough to understand and select the right deployment mechanism for onboarding these applications and their dependencies.
