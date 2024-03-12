@@ -1,0 +1,4 @@
+= Securing Apps with OpenShift and Keycloak - Instructions
+:imagesdir: ../assets/images/
+
+Story: Globex has recently launched several new APIs, and quickly discovered that the world is not a safe place, with hackers exploiting their lack of security to obtain free products and steal sensitive data, including administrative passwords for their backend systems. 

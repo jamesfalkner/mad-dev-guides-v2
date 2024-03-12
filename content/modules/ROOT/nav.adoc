@@ -25,6 +25,10 @@
 * xref:module-apim-instructions.adoc[Manage and Secure APIs - Instructions]
 * xref:module-observability-intro.adoc[App Observability and Tracing - Intro]
 * xref:module-observability-instructions.adoc[App Observability and Tracing - Instructions]
+* xref:module-ai-intro.adoc[Create an Intelligent Application - Intro]
+* xref:module-ai-instructions.adoc[Create an Intelligent Application - Instructions]
 
+* xref:module-keycloak-intro.adoc[Securing Apps with OpenShift and Keycloak - Intro]
+* xref:module-keycloak-instructions.adoc[Securing Apps with OpenShift and Keycloak - Instructions]
 * xref:module-ai-intro.adoc[Create an Intelligent Application - Intro]
 * xref:module-ai-instructions.adoc[Create an Intelligent Application - Instructions]
