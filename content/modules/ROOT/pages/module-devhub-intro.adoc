@@ -36,7 +36,7 @@ The Red Hat® Developer Hub is a developer portal that promotes efficiency and c
 
 Development teams can help make sure workflows run smoothly by providing the right tools, validated environments, and on-demand services. Confidence is gained that software will adhere to organizational best practices and standards without introducing unnecessary bureaucracy. Maintenance becomes more manageable, and future teams can easily assume control within a known, trusted environment, while also enhancing governance. https://www.redhat.com/en/technologies/cloud-computing/developer-hub[More information^]
 
-=== 1.3 Red Hat Developer Hub Architecture
+== 1.3 Red Hat Developer Hub Architecture
 
 image::devhub/red_hat_developer_hub_assets.png[]
 
@@ -46,7 +46,7 @@ image::devhub/red_hat_developer_hub_assets.png[]
 4- *Software Templates*: will be used to create components to bring the applications into the platform according to runtimes and specific configurations.
 5- *Search*: access all the components created quickly by using the Search functionality. 
 
-=== 1.4 Explore Red Hat Developer Hub
+== 1.4 Explore Red Hat Developer Hub
 
 === 1.4.1 Access Red Hat Developer Hub
 
@@ -157,13 +157,10 @@ image::devhub/gitlab_st_details.png[width=30%]
 * *helm/app* folder contains all the manifests to deploy the application using *Helm Charts*. 
 * *helm/pipeline* folder contains all the manifests to build the application using https://docs.openshift.com/pipelines/latest/about/understanding-openshift-pipelines.html[*OpenShift Pipelines*^]. 
 
-
 === 1.4.4 Red Hat Developer Hub Configurations
 
 Red Hat Developer Hub is flexible and supports multiple plugins. The following diagram describes how the components described interact with each other.
 
 image::devhub/rhdh_architecture.png[width=50%]  
 
-*Congratulations!*
-
-You have completed the introduction module and learned about Red Hat Developer Hub. In the following modules, you will experience firsthand the value added to the business by simplifying the developer experience.
+*Congratulations!* You have completed the introduction module and learned about Red Hat Developer Hub. In the following modules, you will experience firsthand the value added to the business by simplifying the developer experience.

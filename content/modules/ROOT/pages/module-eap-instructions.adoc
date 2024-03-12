@@ -620,12 +620,10 @@ The output should look like:
 (9 rows)
 ----
 
-== Congratulations!
-
-Now you are using the same application that we built locally on OpenShift. That wasn’t too hard right?
+*Congratulations!* Now you are using the same application that we built locally on OpenShift. That wasn’t too hard right?
 
 image::eap/coolstore_web.png[coolstore_web, 700]
 
-=== Summary
+== Summary
 
 Now that you have migrated an existing Java EE app to the cloud with JBoss and OpenShift, you are ready to start modernizing the application by breaking the monolith into smaller microservices in incremental steps, and employing modern techniques to ensure the application runs well in a distributed and containerized environment. 

@@ -25,7 +25,7 @@ image::mta-refactor/applicationConfiguration-class.png[applicationConfiguration-
 
 The legacy ApplicationConfiguration class is being used in this application. This is discouraged by the migration guidelines, and should be replaced by a more appropriate approach using Spring's `@PropertySource` annotation and `Environment` class.
 
-=== 1.3. Add Spring PropertySource annotation
+== 1.3. Add Spring PropertySource annotation
 
 Add the following annotation on top of `PersistenceConfig` public class.
 
@@ -35,7 +35,7 @@ Add the following annotation on top of `PersistenceConfig` public class.
 @PropertySource("classpath:persistence.properties")
 ----
 
-=== 1.4. Update DataSource method
+== 1.4. Update DataSource method
 
 Then, inject an instance of the `Environment` class using the Spring `@Autowired` annotation to refer to the local application configuration. Add the following class variable to the _PersistenceConfig_ class.
 
@@ -67,7 +67,7 @@ The `PersistenceConfig` class should look like this.
 
 image::mta-refactor/datasource-modification.png[datasource-modification]
 
-=== 1.5. Update additionalProperties method
+== 1.5. Update additionalProperties method
 
 You also need to remove the *ApplicationConfiguration* reference in the `additionalProperties()` method. Replace the existing _additionalProperties_ method with the following code.
 
@@ -84,7 +84,7 @@ You also need to remove the *ApplicationConfiguration* reference in the `additio
     }
 ----
 
-=== 1.6. Update Packages
+== 1.6. Update Packages
 
 Remove unnecessary package imports (e.g. _ApplicationConfiguration_) and add new package images for DI injection and PropertySource.
 
@@ -123,7 +123,7 @@ Please make sure you don't remove the package name from the class and the end re
 package io.konveyor.demo.ordermanagement.config;
 ----
 
-=== 1.7. Remove Corporate libraries
+== 1.7. Remove Corporate libraries
 
 With these changes, you don't need to refer to the external corporate libraries anymore. You can easily remove or comment out the dependency in your Maven project.
 
@@ -142,7 +142,7 @@ Open the `pom.xml` and comment (or remove) the following `config-utils` dependen
 
 image::mta-refactor/comment-dep.png[comment-dep]
 
-=== 1.8. Update application.properties
+== 1.8. Update application.properties
 
 In the meantime, the Globex retails system's *SRE team* has already migrated the `PostgreSQL database` running from the virtual machine on `Red Hat Virtualization` to `OpenShift Virtualization` based on KubeVirt.
 
@@ -170,7 +170,7 @@ jdbc.url=jdbc:postgresql://postgresql-database.retail-%USERID%.svc.cluster.local
 
 image::mta-refactor/update-app-props.png[update-app-props]
 
-=== 1.9. Test the build
+== 1.9. Test the build
 
 Go to the `Terminal` window in VS Code server. Then, build and package the customer application again:
 
@@ -199,7 +199,7 @@ The output should end up with `BUILD SUCCESS`.
 [INFO] ------------------------------------------------------------------------
 ----
 
-=== 1.10. Commit and Push Changes
+== 1.10. Commit and Push Changes
 
 Before you analyzing the MTA report, you need to commit and push changes to Gitea repository. Go back to VS Code and select `Source Control` menu on the left.
 
@@ -230,7 +230,7 @@ If you go back to your link:https://gitea.%SUBDOMAIN%/%USERID%/modern-app-dev/sr
 
 image::mta-refactor/gitea-commit.png[gitea-commit]
 
-=== 1.11. Re-run MTA Analysis
+== 1.11. Re-run MTA Analysis
 
 Go back to the link:https://mta-mta-%USERID%.%SUBDOMAIN%/applications/analysis-tab[MTA Analysis web console^] and create a new inventory element to analyze the modernized application (*customers*).
 

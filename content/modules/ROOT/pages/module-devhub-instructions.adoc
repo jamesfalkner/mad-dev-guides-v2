@@ -287,8 +287,7 @@ image::devhub/catalog_deployment.png[width=65%]
 
 *Note*: We will continue exploring this view in the next module.
 
-## Congratulations!
-You have successfully built and deployed using CI/CD, the backend services needed for the Cool Store application. You used two software templates to build Spring Boot and Quarkus applications. Depending on your company guidelines and architectures, you could use more templates to satisfy the application's needs. 
+*Congratulations!* You have successfully built and deployed using CI/CD, the backend services needed for the Cool Store application. You used two software templates to build Spring Boot and Quarkus applications. Depending on your company guidelines and architectures, you could use more templates to satisfy the application's needs. 
 
 == 2. Application Development
 
@@ -696,7 +695,7 @@ image::devhub/final_web.png[width=100%]
 
 *Congratulations!*  You have finished your git request.
 
-## Bonus Point: Explore applications dependencies and APIs
+=== Bonus Point: Explore applications dependencies and APIs
 
 * Go back to your frontend component on the Red Hat Developer Hub: https://developer-hub-rhdhub.%SUBDOMAIN%/catalog/default/component/frontend-app-%USERID%[Red Hat Developer Hub UI^].
 
@@ -712,6 +711,6 @@ image::devhub/workshop_detail.png[width=100%]
 * The *Relations* section shows all the services you have installed on your namespace. 
 * The *APIs* section shows the Gateway API the frontend application is consuming to access the backend services information from product catalog to inventory. 
 
-## Congratulations!
+== Summary
 
 You have successfully built the Cool Store application and learn the benefits of Red Hat Developer Hub with Software Templates reduce developer cognitive load by providing pre-architected and supported approaches to building and deploying a service or software component without having to learn all the details of the technology used to create it.

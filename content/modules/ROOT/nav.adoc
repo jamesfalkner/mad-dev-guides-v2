@@ -14,5 +14,5 @@
 * xref:module-devhub-intro.adoc[Accelerating Software development with RH Developer Hub - Intro]
 * xref:module-devhub-instructions.adoc[Accelerating Software development with RH Developer Hub - Instructions]
 
-* xref:module-mta-ai-intro.adoc[Create an Intelligent Application - Intro]
-* xref:module-mta-ai-instructions.adoc[Create an Intelligent Application - Instructions]
+* xref:module-ai-intro.adoc[Create an Intelligent Application - Intro]
+* xref:module-ai-instructions.adoc[Create an Intelligent Application - Instructions]
