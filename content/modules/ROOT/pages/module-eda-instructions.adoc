@@ -1,4 +1,4 @@
-= Event-driven Applications - Instructions
+= Build Event-driven Applications - Instructions
 :imagesdir: ../assets/images/
 
 == 1. Adding Event Streaming capabilities to an application

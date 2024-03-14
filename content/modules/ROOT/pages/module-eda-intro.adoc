@@ -1,4 +1,4 @@
-= Event-driven Applications - Intro
+= Build Event-driven Applications - Intro
 :imagesdir: ../assets/images/
 
 == Globex Digital Transformation Journey

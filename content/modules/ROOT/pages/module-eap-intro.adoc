@@ -1,6 +1,18 @@
 = Migration to JBoss EAP - Intro
 :imagesdir: ../assets/images/
 
+++++
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-M2B2QW31FT"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-M2B2QW31FT');
+</script>
+++++
+
 Globex has been in business for a number of years with a core retail application written for a proprietary, expensive app server. They are now all-in on modernization to save costs and update to newer, open source products
 
 == 1.1. First Step: Confirm Your Username!
