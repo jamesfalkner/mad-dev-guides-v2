@@ -1,6 +1,18 @@
 = Assessment and Analysis - Instructions
 :imagesdir: ../assets/images/
 
+++++
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0SSSH2TQ1L"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-0SSSH2TQ1L');
+</script>
+++++
+
 == 1. Goals of this lab
 
 As part of Globex's digital transformation and cloud adoption initiative, the development and devops teams embarked upon a journey to modernize their existing siloed services running on virtual machines on Red Hat Virtualization and containerized applications on Red Hat OpenShift separately.

@@ -1,4 +1,16 @@
 = Deploy App to OpenShift with Helm - Instructions
 :imagesdir: ../assets/images/
 
+++++
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XS54W2D18Q"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-XS54W2D18Q');
+</script>
+++++
+
 Story: As part of a multi-year modernization initiative, Globex has begun adopting OpenShift for their core business applications, but is not skilled enough to understand and select the right deployment mechanism for onboarding these applications and their dependencies.

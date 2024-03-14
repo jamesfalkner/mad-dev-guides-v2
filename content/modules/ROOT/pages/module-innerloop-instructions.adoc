@@ -1,6 +1,18 @@
 = Cloud Native App Innerloop Development - Instructions
 :imagesdir: ../assets/images/
 
+++++
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7ME05FLNBC"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-7ME05FLNBC');
+</script>
+++++
+
 In this lab you will learn about providing your Developer Workspace with a Kubernetes-native development platform 
 and getting familiar with the OpenShift CLI and OpenShift Web Console.
 

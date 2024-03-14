@@ -1,6 +1,18 @@
 = Accelerating Software development with RH Developer Hub - Instructions
 :imagesdir: ../assets/images/
 
+++++
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-9HZBMQ1K32"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-9HZBMQ1K32');
+</script>
+++++
+
 == 1. Application Modernization
 
 This lab aims to learn how developers can modernize their applications quickly by moving them into the OpenShift Application Platform with Red Hat Developer Hub. *Red Hat Developer Hub* is already configured with *Red Hat Single Sign-On*, *OpenShift Pipelines*, *OpenShift GitOps*, and *GitLab*. In this section you will migrate all the backend microservices that are part of the *Cool Store Application* with just a few clicks using Red Hat Developer Hub.

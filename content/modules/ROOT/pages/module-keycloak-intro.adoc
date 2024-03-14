@@ -1,4 +1,16 @@
 = Securing Apps with OpenShift and Keycloak - Intro
 :imagesdir: ../assets/images/
 
+++++
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-JDW1SZKHTQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-JDW1SZKHTQ');
+</script>
+++++
+
 Story: Globex has recently launched several new APIs, and quickly discovered that the world is not a safe place, with hackers exploiting their lack of security to obtain free products and steal sensitive data, including administrative passwords for their backend systems. 

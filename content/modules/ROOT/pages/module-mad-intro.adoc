@@ -1,6 +1,18 @@
 = Introduction to the Modern App Dev Roadshow Dev Track
 :imagesdir: ../assets/images/
 
+++++
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-8JGT33527T"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-8JGT33527T');
+</script>
+++++
+
 A common way of speaking about migrating or modernizing workloads to the cloud has been coined as the *6 Rs framework*. This framework can be broken down as follows.
 
 image::intro/mod-strategies.png[Modernization Strategies]

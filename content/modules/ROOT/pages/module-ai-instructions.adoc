@@ -1,6 +1,18 @@
 = Create an Intelligent Application - Instructions
 :imagesdir: ../assets/images
 
+++++
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3HTRSDJ3M4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-3HTRSDJ3M4');
+</script>
+++++
+
 == 1. Launching a notebook environment
 
 If this is a new thing for you, a notebook is an environment where you can easily run code in an interactive manner. Simply saying that gives you a hint of why it has been heavily adopted by scientists in general, especially data scientists. Experiments are usually done in this interactive trial and error manner, and you will shortly see why this is the perfect environment to do that.

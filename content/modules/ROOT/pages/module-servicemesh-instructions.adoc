@@ -1,4 +1,16 @@
 = Service Mesh - Instructions
 :imagesdir: ../assets/images/
 
+++++
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZYGJZV3DCR"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-ZYGJZV3DCR');
+</script>
+++++
+
 Story: Globex’s application footprint has been growing on OpenShift. They have several microservices that communicate across their network to perform business-related tasks. It has been challenging to understand the different interdependencies between services, and their security team recently discovered that the service responsible for managing credit card data was hacked from outside the network. The team in charge of the app has been instructed to improve visibility across the services, understand how services interact, and be able to dynamically alter the topology without requiring developers to make code changes.

@@ -1,4 +1,16 @@
 = Serverless - Intro
 :imagesdir: ../assets/images/
 
+++++
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7VKEN8D4RJ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-7VKEN8D4RJ');
+</script>
+++++
+
 Story: Globex’s retail application has recently been re-architected to be event-driven, but has several components that are expensive to keep up and running, but mostly sit idle, waiting for events. They’d like to improve the scalability of the system and avoid idle costs.

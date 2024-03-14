@@ -1,6 +1,18 @@
 = Manage and Secure APIs - Intro
 :imagesdir: ../assets/images/
 
+++++
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-X840ND4PZV"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-X840ND4PZV');
+</script>
+++++
+
 In this module you will discover how an API First Approach provides the right framework to build microservices and APIs based systems. The stages of an API life cycle cover both the implementation life cycle and the management life cycle.
 
 * The *Implementation* phase allows you to collaboratively design an API before determining and developing the various channels and applications that will use the API. The design-first approach advocates for designing the API's contract before writing any code.

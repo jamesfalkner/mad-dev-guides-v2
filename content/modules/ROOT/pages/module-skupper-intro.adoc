@@ -1,4 +1,16 @@
 = Service Interconnect - Intro
 :imagesdir: ../assets/images/
 
+++++
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-WJJ9SY6RSW"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-WJJ9SY6RSW');
+</script>
+++++
+
 Story: As part of Globex’s multi-year modernization initiative, they have adopted OpenShift and have migrated many of their applications to it, however, several backend systems remain in place due to data sovereignty laws and technical limitations of their cloud provider. They want to be able to securely connect their cloud applications with the backend, without a lot of work for their developers, who aren’t as security-aware as the product security team.

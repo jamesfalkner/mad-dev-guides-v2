@@ -1,6 +1,18 @@
 = Build Event-driven Applications - Instructions
 :imagesdir: ../assets/images/
 
+++++
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-BQ3J5KXCKY"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-BQ3J5KXCKY');
+</script>
+++++
+
 == 1. Adding Event Streaming capabilities to an application
 
 To support the business requirement of capturing and processing user activity on the Globex Coolstuff application, two new services have been developed:

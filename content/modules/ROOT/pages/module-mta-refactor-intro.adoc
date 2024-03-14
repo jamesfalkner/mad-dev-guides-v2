@@ -1,6 +1,18 @@
 = Refactor - Intro
 :imagesdir: ../assets/images/
 
+++++
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-870VCFYW3Q"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-870VCFYW3Q');
+</script>
+++++
+
 [NOTE]
 ====
 If you've already completed the introduction exercise in the previous module, feel free to skip to the 'Refactor' lab. This exercise is meant to introduce you to the environment and confirm your services are running correctly.

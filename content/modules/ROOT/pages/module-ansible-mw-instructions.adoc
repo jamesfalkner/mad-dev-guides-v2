@@ -1,4 +1,16 @@
 = Day 2 operations with Ansible MiddleWare - Instructions
 :imagesdir: ../assets/images/
 
+++++
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L6CY091CT6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L6CY091CT6');
+</script>
+++++
+
 Story: Globex has been in business for several years with a core retail EAP application running on-prem in VMs. They struggle to respond on time when issues come up and spend a lot of time keeping their servers up to date with newer versions or patches. They are looking to automate many of the manual administrative tasks they do each day. 
