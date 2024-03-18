@@ -11,6 +11,14 @@
 
   gtag('config', 'G-M2B2QW31FT');
 </script>
+<style>
+  .nav-container, .pagination, .toolbar {
+    display: none !important;
+  }
+  .doc {    
+    max-width: 70rem !important;
+  }
+</style>
 ++++
 
 Globex has been in business for a number of years with a core retail application written for a proprietary, expensive app server. They are now all-in on modernization to save costs and update to newer, open source products

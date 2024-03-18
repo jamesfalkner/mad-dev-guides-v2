@@ -11,6 +11,14 @@
 
   gtag('config', 'G-T68FV4Q4B8');
 </script>
+<style>
+  .nav-container, .pagination, .toolbar {
+    display: none !important;
+  }
+  .doc {    
+    max-width: 70rem !important;
+  }
+</style>
 ++++
 
 Story: Globex recently experienced long wait times in their mobile app. After analyzing the issue, it was determined that one application service was causing the bulk of the problem, but it took several days of looking at logs and attempting to correlate service calls and expected results. The team is interested in reducing the time it takes to discover and remediate these failures if they occur again, and provide a reporting dashboard showing application performance, to be able to quickly spot issues.

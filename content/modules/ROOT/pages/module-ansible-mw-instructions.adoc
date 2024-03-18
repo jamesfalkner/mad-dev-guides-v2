@@ -11,6 +11,14 @@
 
   gtag('config', 'G-L6CY091CT6');
 </script>
+<style>
+  .nav-container, .pagination, .toolbar {
+    display: none !important;
+  }
+  .doc {    
+    max-width: 70rem !important;
+  }
+</style>
 ++++
 
 Story: Globex has been in business for several years with a core retail EAP application running on-prem in VMs. They struggle to respond on time when issues come up and spend a lot of time keeping their servers up to date with newer versions or patches. They are looking to automate many of the manual administrative tasks they do each day. 

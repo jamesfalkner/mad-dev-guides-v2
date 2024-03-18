@@ -11,6 +11,14 @@
 
   gtag('config', 'G-X840ND4PZV');
 </script>
+<style>
+  .nav-container, .pagination, .toolbar {
+    display: none !important;
+  }
+  .doc {    
+    max-width: 70rem !important;
+  }
+</style>
 ++++
 
 == 1. Design APIs

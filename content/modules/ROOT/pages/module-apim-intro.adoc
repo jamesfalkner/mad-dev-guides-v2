@@ -11,6 +11,14 @@
 
   gtag('config', 'G-X840ND4PZV');
 </script>
+<style>
+  .nav-container, .pagination, .toolbar {
+    display: none !important;
+  }
+  .doc {    
+    max-width: 70rem !important;
+  }
+</style>
 ++++
 
 In this module you will discover how an API First Approach provides the right framework to build microservices and APIs based systems. The stages of an API life cycle cover both the implementation life cycle and the management life cycle.

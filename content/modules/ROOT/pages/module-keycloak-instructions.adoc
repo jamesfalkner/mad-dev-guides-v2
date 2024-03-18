@@ -11,6 +11,14 @@
 
   gtag('config', 'G-JDW1SZKHTQ');
 </script>
+<style>
+  .nav-container, .pagination, .toolbar {
+    display: none !important;
+  }
+  .doc {    
+    max-width: 70rem !important;
+  }
+</style>
 ++++
 
 Story: Globex has recently launched several new APIs, and quickly discovered that the world is not a safe place, with hackers exploiting their lack of security to obtain free products and steal sensitive data, including administrative passwords for their backend systems. 

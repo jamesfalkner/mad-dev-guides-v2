@@ -11,6 +11,14 @@
 
   gtag('config', 'G-7VKEN8D4RJ');
 </script>
+<style>
+  .nav-container, .pagination, .toolbar {
+    display: none !important;
+  }
+  .doc {    
+    max-width: 70rem !important;
+  }
+</style>
 ++++
 
 Story: Globex’s retail application has recently been re-architected to be event-driven, but has several components that are expensive to keep up and running, but mostly sit idle, waiting for events. They’d like to improve the scalability of the system and avoid idle costs.

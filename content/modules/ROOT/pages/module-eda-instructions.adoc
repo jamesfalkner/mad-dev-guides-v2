@@ -11,6 +11,14 @@
 
   gtag('config', 'G-BQ3J5KXCKY');
 </script>
+<style>
+  .nav-container, .pagination, .toolbar {
+    display: none !important;
+  }
+  .doc {    
+    max-width: 70rem !important;
+  }
+</style>
 ++++
 
 == 1. Adding Event Streaming capabilities to an application

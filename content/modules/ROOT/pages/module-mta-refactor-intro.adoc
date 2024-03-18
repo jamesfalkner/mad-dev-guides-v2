@@ -11,6 +11,14 @@
 
   gtag('config', 'G-870VCFYW3Q');
 </script>
+<style>
+  .nav-container, .pagination, .toolbar {
+    display: none !important;
+  }
+  .doc {    
+    max-width: 70rem !important;
+  }
+</style>
 ++++
 
 [NOTE]

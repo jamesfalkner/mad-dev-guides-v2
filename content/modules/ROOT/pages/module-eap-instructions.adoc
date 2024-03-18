@@ -11,6 +11,14 @@
 
   gtag('config', 'G-M2B2QW31FT');
 </script>
+<style>
+  .nav-container, .pagination, .toolbar {
+    display: none !important;
+  }
+  .doc {    
+    max-width: 70rem !important;
+  }
+</style>
 ++++
 
 In this module you’ll work with an existing Java EE application designed for a retail webshop.  The current

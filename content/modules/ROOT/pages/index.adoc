@@ -4,6 +4,14 @@
 <br>
 <h4><i>Discover the art of the possible.</i></h4>
 <br>
+<style>
+  .nav-container, .pagination, .toolbar {
+    display: none !important;
+  }
+  .doc {
+    max-width: 70rem !important;
+  }
+</style>
 ++++
 
 The `Modern Application Development` (MAD) Roadshow is the premier hands-on experience for developers, operations, and business leaders to learn how Red Hat's technologies help them build, run, and manage their applications in the Hybrid Cloud. 

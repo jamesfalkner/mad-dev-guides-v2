@@ -11,6 +11,14 @@
 
   gtag('config', 'G-8JGT33527T');
 </script>
+<style>
+  .nav-container, .pagination, .toolbar {
+    display: none !important;
+  }
+  .doc {    
+    max-width: 70rem !important;
+  }
+</style>
 ++++
 
 A common way of speaking about migrating or modernizing workloads to the cloud has been coined as the *6 Rs framework*. This framework can be broken down as follows.
