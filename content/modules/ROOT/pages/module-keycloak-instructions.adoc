@@ -15,10 +15,330 @@
   .nav-container, .pagination, .toolbar {
     display: none !important;
   }
-  .doc {    
+  .doc {
     max-width: 70rem !important;
   }
 </style>
 ++++
 
-Story: Globex has recently launched several new APIs, and quickly discovered that the world is not a safe place, with hackers exploiting their lack of security to obtain free products and steal sensitive data, including administrative passwords for their backend systems. 
+== 1. Deploy Globex Coolstore app using Helm
+
+Let's first deploy the fully function (but unsecured) application. We'll use a Helm chart to deploy it to your namespace (`{MODULE_NAMESPACE}`). Open the https://console-openshift-console.apps.{ROUTE_SUBDOMAIN}/topology/ns/{MODULE_NAMESPACE}?view=graph[OpenShift console^]. You will see the Keycloak operator already installed:
+
+image::keycloak/start.png[]
+
+Click on the Add icon, and enter `cool` into the search box, locate and click on the `Coolstore Microservice` chart, and click `Create`:
+
+image::keycloak/helm.png[]
+
+This helm chart will deploy a fully functional version of our application we wish to secure later on. Leave default value and click `Create`:
+
+image::keycloak/helmcreate.png[]
+
+You should see a number of microservices begin deploying:
+
+image::keycloak/helmcreated.png[]
+
+It will only take a few seconds for all of the services to deploy and turn dark blue.
+
+=== 1.1 Test the app
+
+Once they are all deployed, click on the _frontend_ open link to ensure that the app is running:
+
+image::keycloak/frontend-open.png[]
+
+You should see the application's frontend open in a separate browser tab:
+
+image::keycloak/app-open.png[]
+
+Feel free to click on the various menu items on the left and ensure you see valid customer and product details. Globex recently had an outage, where a hacker was able to infiltrate the inventory data and wreak havoc. So Globex has decided that the product inventory should only be accessible by authorized users, and has asked you to product that particular endpoint with authentication and authorization. Let's use Keycloak to do this.
+
+== 2. Deploy Keycloak instance
+
+You can install Keycloak in many ways, including just downloading and extracting a zip file, downloading the source and building it, or manually constructing a container and deploying it. Kubernetes Operators make both the installation and management of Keycloak (and many other software packages) much easier, and we have installed the Keycloak operator for you to use.
+
+=== 2.1 Deploy Keycloak Database
+
+Keycloak needs a database to store its data. We'll use Postgres. Back on the https://console-openshift-console.apps.{ROUTE_SUBDOMAIN}/topology/ns/{MODULE_NAMESPACE}?view=graph[OpenShift console^], click the Add icon once again, type `postgres ephemeral` into the search box, locate the `Postgres (Ephemeral)` template, click on it, and click *Instantiate Template*:
+
+image::keycloak/postgres-create.png[]
+
+On the next screen, override the following values (leaving the rest as their defaults):
+
+* *Database Service Name*: `keycloak-postgresql`
+* *PostgreSQL Database Name*: `keycloak`
+
+Leave the rest as-is, including the username and password, which will be auto-generated for you and you'll refer to them later. Finally, click *Create*:
+
+image::keycloak/postgres-create2.png[]
+
+You should see a postgres database begin spinning up:
+
+image::keycloak/postgres-create3.png[]
+
+=== 2.2 Create self-signed certificate
+
+TBD
+Run:
+`openssl req -subj '/CN={ROUTE_SUBDOMAIN}/O=Test Keycloak./C=US' -newkey rsa:2048 -nodes -keyout key.pem -x509 -days 365 -out certificate.pem`
+`oc create secret tls keycloak-cert-secret --cert certificate.pem --key key.pem`
+
+=== 2.3 Create Keycloak instance
+
+By creating an instance of a `Keycloak` object, the Keycloak operator will process it and instantiate a new Keycloak server. Once again, click the `Add` icon, type `keycloak` into the search box, click on the "Keycloak" item, and click Create:
+
+image::keycloak/keycloak-create1.png[]
+
+On the next screen, make sure you're in the _YAML view_, and replace the YAML with the following definition:
+
+[.console-input]
+[source,yaml,subs="+attributes,macros+"]
+----
+apiVersion: k8s.keycloak.org/v2alpha1
+kind: Keycloak
+metadata:
+  name: keycloak
+spec:
+  instances: 1
+  http:
+    tlsSecret: keycloak-cert-secret
+  hostname:
+    hostname: keycloak-{MODULE_NAMESPACE}.{ROUTE_SUBDOMAIN}
+  db:
+    vendor: postgres
+    host: keycloak-postgresql
+    usernameSecret:
+      name: keycloak-postgresql
+      key: database-user
+    passwordSecret:
+      name: keycloak-postgresql
+      key: database-password
+----
+
+This references the certificate+key pair created earlier, as well as our Postgres database credentials, which are stored in a secret. Click *Create*, and you will see your new keycloak server starting up:
+
+image::keycloak/keycloak-create2.png[]
+
+Wait for it to complete (and get a dark blue circle). This should only take a few seconds if everything is working! If it does not after a minute or so, double-check that you entered the right values, and the database secret and certificate secret both exist under the names given.
+
+=== 2.4 Log into Keycloak
+
+When you use the keycloak operator, it will generate an initial administrator username/password in a Secret. Access the secret by clicking on *Secrets*, and find the `keycloak-initial-admin` secret, and click on it:
+
+image::keycloak/keycloak-secrets1.png[]
+
+Finally, click on *Reveal Values* to see the username (which should be `admin`), and the password:
+
+image::keycloak/keycloak-adminsecret.png[]
+
+`admin` is pretty easy to remember, but you'll probably want to copy the password to your clipboard (using the copy-to-clipboard icon at the far right, or CTRL-C (CMD-C on a Mac)) to use in a moment.
+
+Back on the https://console-openshift-console.apps.{ROUTE_SUBDOMAIN}/topology/ns/{MODULE_NAMESPACE}?view=graph[OpenShift console^] topology page, click the small "open" icon at the upper right of the Keycloak deployment:
+
+image::keycloak/keycloak-openicon.png[]
+
+You should land on the Keycloak intro screen:
+
+image::keycloak/admin-intro.png[]
+
+Click *Administration Console* to log in with the following:
+
+* *Username or email*: `admin`
+* *Password*: The password you retrieved from the https://console-openshift-console.{ROUTE_SUBDOMAIN}/k8s/ns/{MODULE_NAMESPACE}/secrets/keycloak-initial-admin[secret^] earlier.
+
+image::keycloak/admin-pw.png[]
+
+Once logged in, you should be at the Admin home screen:
+
+image::keycloak/admin-home.png[]
+
+== 3. Define Realm, users, and groups in Keycloak
+
+For authentication purposes, we'll create 2 users that we can test our authenticated endpoint code with, as well as define a "confidential resource" based on access path, which will enable Keycloak to enforce authorization to this resource without code change.
+
+=== 3.1 Create a new Realm
+
+A _realm_ is a space where you manage objects, including users, applications, roles, and groups. A user belongs to and logs into a realm. One Keycloak deployment can define, store, and manage as many realms as there is space for in the database.
+
+Keycloak comes with a `master` realm but that's designed to be used for managing Keycloak itself. For application usage, let's create a new realm.
+
+On the realm dropdown at the upper right, select *Create Realm*:
+
+image::keycloak/keycloak-realm1.png[]
+
+Name the realm `globex`, leave other settings unchanged, and click *Create*:
+
+image::keycloak/keycloak-realm2.png[]
+
+You should see a success message.
+
+With `globex` selected as the current realm, let's create our two users in the realm.
+
+Click *Users* -> *Add User*
+
+image::keycloak/keycloak-user1.png[]
+
+Set the following fields, leaving the others as-is:
+
+* *Username*: `alice`
+* *Email verified*: _Yes_
+* *First name*: `Alice`
+* *Last name*: `Admin`
+
+Alice is our administrator (get it? A for Alice, A for Administrator).
+
+And click *Create*:
+
+image::keycloak/keycloak-user2.png[]
+
+You will now be on the _User Details* screen for Alice. Click the _Credentials_ Tab, and then _Set password_:
+
+image::keycloak/keycloak-user3.png[]
+
+Set the password to `alice` (this is not a very secure password), and uncheck the _Temporary_ toggle to indicate the password does not need updating on first login, and then click *Save*, and *Confirm* the confirmation message.
+
+image::keycloak/keycloak-user4.png[]
+
+Repeat the same process to create another new user. Click the *Users* link on the left (you will see Alice), and *Add user* to repeat the process:
+
+* *Username*: `bob`
+* *Email verified*: _Yes_
+* *First name*: `Bob`
+* *Last name*: `User`
+
+Bob will be our "ordinary" (non-superuser) user. Remember to click the *Credentials* tab once Bob is created, set their password to `bob`, and uncheck _Temporary_.
+
+=== 3.2 Create groups
+
+With our new users, let's create two corresponding groups to group together admin users and non-admin users. Click *Groups* -> *Create group*:
+
+image::keycloak/keycloak-group1.png[]
+
+Name the group `admins`, and click *Create*.
+
+Do the same process, and create another group named `users`. Once complete, you should have two groups defined:
+
+image::keycloak/keycloak-group2.png[]
+
+We now need to assign Alice to both groups, and Bob to just the `users` group (Bob is not an admin and is not to be trusted).
+
+Click *Groups* and then click on the newly-created `admins` group:
+
+image::keycloak/keycloak-group3.png[]
+
+Click on the _Members_ tab, and click *Add member*:
+
+image::keycloak/keycloak-group4.png[]
+
+Assign Alice by checking the box next to their name and click *Add*:
+
+image::keycloak/keycloak-group5.png[]
+
+Repeat the same process for the `users` group: Click _Groups_, select the `users` group, click on the _Members_ tab, but this time choose both Alice and Bob as members (since they are both users) and click *Add*:
+
+image::keycloak/keycloak-group6.png[]
+
+=== 3.4 Create Realm Roles
+
+We now need to map our groups and users to roles associated with the realm. We will then refer to this role in our application to specify which roles can access a given API. Click *Realm Roles* on the left, and then *Create role*. Create a role named `admin` and click *Save*.
+
+image::keycloak/keycloak-realmrole1.png[]
+
+Repeat this process to create a role named `user`.
+
+To assign our groups to these roles, click on _Groups_ on the left, and select the `admins` group. Click the _Role mapping_ tab, and click *Assign Role*:
+
+image::keycloak/keycloak-realmrole2.png[]
+
+Since admins are also users, select both admin and user to assign all of our admins as both admins and users.
+
+image::keycloak/keycloak-realmrole3.png[]
+
+Repeat this process for the user group, assigning it to only the user role: Click on _Groups_ on the left, and select the `users` group. Click the _Role mapping_ tab, and click *Assign Role*. Assign only the user role to the user group:
+
+image::keycloak/keycloak-realmrole4.png[]
+
+
+
+=== 3.5 Create Realm Client
+
+For each application wishing to authenticate within the `globex` realm, we will need to create a _Client_ within the realm. Clients are entities that can request authentication of a user for a given realm.
+
+Click *Clients* to see the list of default clients for a new realm:
+
+image::keycloak/keycloak-client1.png[]
+
+Click *Create client*. Our new client will be used by our application to which we will add authentication and authorization.
+
+Use the following values on the General Settings form:
+
+* *Client Type*: `OpenID Connect`
+* *Client ID*: `globex-inventory-service`
+* *Name*: `Globex Inventory Service`
+* *Description*: `The Inventory service listing product details for Globex retail`
+* *Always display in UI*: _On_
+
+Click *Next*, and then use these values on the _Capabilities config_ screen:
+
+* *Client authentication*: _On_
+* *Authorization*: _On_
+* *Authentication flow*: Leave this as-is (_Standard flow_ and _Direct access grants_)
+
+Click *Next*, and then use these values on the _Login Settings_ screen:
+
+* *Root URL*: `http://inventory-route-{MODULE_NAMESPACE}.{ROUTE_SUBDOMAIN}/``
+* *Home URL*: Leave blank
+* *Valid redirect URIs*: Leave blank
+* *Valid post logout redirect URIs*: Leave blank
+* *Web origins*: Set this to `*` (to accept all web origins for our exercise)
+
+Note that when using the full OpenID Connect authentication flow, these values would need to be set to appropriate values. For our exercise, we will not be using these.
+
+Click *Save*.
+
+You will land on the Client details screen.
+
+image::keycloak/keycloak-clientsecret.png[]
+
+Click on the _Credentials_ tab and make note of the `Client secret` - this value will be needed when configuring the application. We'll come back to that later.
+
+=== 3.3 Create Secured Resources
+
+There are multiple ways to product a given API. One way, in Java, is to add `@RolesAllowed` annotations to RESTful resource paths that should only all certain roles to access. In this way, applications can request a list of which roles a given user is in, and only allow access to an API if the user is in the right role. This decision is made on the application side.
+
+Keycloak's _Authorization Services_ provides fine-grained authorization policies that decouples the authorization policy from your code, allowing Keycloak to protect access, so when your policies change, your code doesn't have to.
+
+We will use both ways (`@RolesAllowed` as well as Keycloak Authorization as described above). To enable Keycloak Authorization, we need to define the resources that are to be protected, along with a policy to enforce that protection.
+
+On the _Client Details_ screen, click on the _Authorization_ tab, and then the _Resources_ sub-tab:
+
+image::keycloak/keycloak-authz1.png[]
+
+Click *Create resource* to begin defining the resource. Use the following values (leave the others as-is):
+
+* *Name*: `product-futures-resource`
+* *Display name*: `Future product direction`
+* *URIs*: `/product/futures`
+
+Click *Save*. Return to the Client Details screen, and click on the
+
+TBD
+
+== 4. Add secured endpoints using DevSpaces
+
+[NOTE]
+====
+In this exercise we are **short-circuiting typical web authentication flows** to illustrate the ease of protecting APIs. In a typical web authentication, users are redirected (via their browser) to a login page, after which a negotiation is performed to retrieve _access tokens_ used on behalf of the user to access protected resources. Here we will be doing this manually with `curl`.
+====
+
+TBD
+
+== 5. Test different user access scenarios
+
+TBD
+
+Congratulations!
+
+This exercise demonstrated how your applications can use Keycloak to protect APIs in your applications. Here we used bearer tokens to authenticate users, `@RolesAllowed` to specify in the app how to restrict access, and Keycloak's fine-grained permissions to product APIs from Keycloak itself.
+
+More information about Red Hat build of Keycloak is available in its https://access.redhat.com/documentation/en-us/red_hat_build_of_keycloak[Red Hat build of Keycloak documentation^]

@@ -15,10 +15,25 @@
   .nav-container, .pagination, .toolbar {
     display: none !important;
   }
-  .doc {    
+  .doc {
     max-width: 70rem !important;
   }
 </style>
 ++++
 
-Story: Globex has recently launched several new APIs, and quickly discovered that the world is not a safe place, with hackers exploiting their lack of security to obtain free products and steal sensitive data, including administrative passwords for their backend systems. 
+The story so far: Globex has recently launched several new APIs, and quickly discovered that the world is not a safe place, with hackers exploiting their lack of security to obtain free products and steal sensitive data, including administrative passwords for their backend systems.
+
+In this exercise you will use https://access.redhat.com/documentation/en-us/red_hat_build_of_keycloak[Red Hat build of Keycloak^] (based on the popular upstream https://keycloak.org[Keycloak project^]) to add secure endpoints to one of the Globex services based on Quarkus, and ensure that only authorized users are permitted to access them.
+
+*Red Hat build of Keycloak* is well suited for securing web-based and other modern applications, mobile apps, APIs and services, by leveraging popular standards and security protocols such as OpenID Connect, OAuth and SAML with the following features:
+
+* Seamless User Experience, Login, Logout, Self-registration, User Account Management
+* Strong Authentication, MFA, Passwordless authentication
+* Single-Sign-On, Login once to multiple applications
+* Identity Federation, connect to existing LDAP, Active Directory servers, or users in other stores
+* Identity Brokering, authenticating with external OpenID Connect or SAML Identity Providers
+* Social Login, enable login with Google, GitHub, Facebook, Twitter/X, and other social networks
+* Role-based access control, fine-grained Authorization services
+* FIPS Compliance (FIPS 140-2)
+
+Find more information https://developers.redhat.com/articles/2023/11/15/whats-new-red-hat-build-keycloak-version-22[here^].
