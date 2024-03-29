@@ -30,3 +30,5 @@ In addition, you will learn how to enable **Service Mesh** capability on OpenShi
 and how to use it for advanced deployment techniques.
 
 Let's start the workshop with the discovery of OpenShift and OpenShift Dev Spaces.
+
+Proceed to the xref:./module-outerloop-instructions.adoc[instructions] for this module.

@@ -70,3 +70,5 @@ Here is a view of the deployment architecture
 image::eda/globex-deployment-architecture-2.png[]
 
 All services and the website are deployed on Red Hat OpenShift running on the cloud.
+
+Proceed to the xref:./module-eda-instructions.adoc[instructions] for this module.

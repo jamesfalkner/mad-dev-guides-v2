@@ -184,3 +184,5 @@ Red Hat Developer Hub is flexible and supports multiple plugins. The following d
 image::devhub/rhdh_architecture.png[width=50%]  
 
 *Congratulations!* You have completed the introduction module and learned about Red Hat Developer Hub. In the following modules, you will experience firsthand the value added to the business by simplifying the developer experience.
+
+Proceed to the xref:./module-devhub-instructions.adoc[instructions] for this module.

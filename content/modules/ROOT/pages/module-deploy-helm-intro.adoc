@@ -21,4 +21,6 @@
 </style>
 ++++
 
-Story: As part of a multi-year modernization initiative, Globex has begun adopting OpenShift for their core business applications, but is not skilled enough to understand and select the right deployment mechanism for onboarding these applications and their dependencies.
+The story so far: As part of a multi-year modernization initiative, Globex has begun adopting OpenShift for their core business applications, but is not skilled enough to understand and select the right deployment mechanism for onboarding these applications and their dependencies.
+
+Proceed to the xref:./module-deploy-helm-instructions.adoc[instructions] for this module.

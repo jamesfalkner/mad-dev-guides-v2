@@ -80,3 +80,5 @@ image::apim/apim-namespace.png[]
 . The *globex-%USERID%* namespace contains the Backend services deployed by Globex. From the *Developer* perspective, switch to the *globex-%USERID%* namespace by using the drop down. 
 +
 image::apim/globex-namespace.png[]
+
+Proceed to the xref:./module-apim-instructions.adoc[instructions] for this module.

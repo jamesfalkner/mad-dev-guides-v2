@@ -37,3 +37,5 @@ In this exercise you will use https://access.redhat.com/documentation/en-us/red_
 * FIPS Compliance (FIPS 140-2)
 
 Find more information https://developers.redhat.com/articles/2023/11/15/whats-new-red-hat-build-keycloak-version-22[here^].
+
+Proceed to the xref:./module-keycloak-instructions.adoc[instructions] for this module.

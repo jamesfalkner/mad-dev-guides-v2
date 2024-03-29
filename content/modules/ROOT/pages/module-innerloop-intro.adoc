@@ -43,3 +43,6 @@ In addition to the application code, you will learn how to deploy the various se
 You will also have the opportunity to look at probes and externalized configuration.
 
 Let's start the workshop with the discovery of OpenShift and OpenShift Dev Spaces.
+
+
+Proceed to the xref:./module-innerloop-instructions.adoc[instructions] for this module.
