@@ -56,14 +56,14 @@ The IDE Plugin for the Migration Toolkit for Applications provides assistance di
 
 You will be using Visual Studio Code (VS Code) based on https://developers.redhat.com/products/openshift-dev-spaces/overview[Red Hat OpenShift Dev Spaces^]. **Changes to files are auto-saved every few seconds**, so you don't need to explicitly save changes.
 
-To get started, {{ DS_URL }}[access the Red Hat OpenShift Dev Spaces instance^] and select *Log in with OpenShift* button:
+To get started, {devspaces_dashboard}[access the Red Hat OpenShift Dev Spaces instance^] and select *Log in with OpenShift* button:
 
 image::eap/login_with_openshift.png[login,800]
 
 Type in the following credentail:
 
-* *Username*: `%USERID%`
-* *Password*: `{openshift-password}`
+* *Username*: `{user_name}`
+* *Password*: `{user_password}`
 
 image::eap/che-login.png[login,800]
 
@@ -76,7 +76,7 @@ image::eap/auth-access.png[auth-access, 800]
 
 Once you log in, you’ll be placed on the *Create Workspace* dashboard. Copy the following `Git Repo URL` and select `Create & Open`.
 
-* *Git Repo URL*: `https://github.com/RedHat-Middleware-Workshops/cloud-native-workshop-v2m1-labs/tree/ocp-4.13`
+* *Git Repo URL*: `https://ggithub.com/rh-mad-workshop/coolstore-monolith-legacy.git`
 
 image::eap/ds-landing.png[ds, 800]
 
