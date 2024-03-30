@@ -23,4 +23,14 @@
 
 The story so far: As part of a multi-year modernization initiative, Globex has begun adopting OpenShift for their core business applications, but is not skilled enough to understand and select the right deployment mechanism for onboarding these applications and their dependencies.
 
+In this exercise you will use https://helm.sh/[Helm^] to simplify managing applications on Red Hat OpenShift (Kubernetes), a platform for container orchestration. Kubernetes itself uses YAML files for configuration, which can become cumbersome to manage, especially for complex deployments with frequent updates.
+
+Helm addresses this challenge by introducing Helm charts, which are essentially packages containing all the configuration files needed for a Kubernetes application. These charts can be easily installed, upgraded, and even shared with others.
+
+Here's a breakdown of what Helm offers:
+
+* *Packaging*: Helm charts group configuration files into reusable packages, making application deployment on Kubernetes streamlined.
+* *Versioning*: Helm charts can be versioned, allowing you to track changes and rollback to previous configurations if necessary.
+* *Sharing and Reusability*: Helm charts can be easily shared and reused across different environments, promoting consistency and efficiency.
+
 Proceed to the xref:./module-deploy-helm-instructions.adoc[instructions] for this module.
