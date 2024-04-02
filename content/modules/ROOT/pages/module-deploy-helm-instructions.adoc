@@ -21,4 +21,25 @@
 </style>
 ++++
 
-== 1. Deploy Globex Coolstore app using Helm
+== 1. Streamline App Deployment on OpenShift with Helm
+
+Helm acts like a software package manager for applications you run on OpenShift Container Platform, similar to app stores on your phone. It simplifies deployment by using pre-configured packages called Helm charts.
+
+* *Helm Charts*: These reusable packages bundle all the configuration files needed for a Kubernetes application.
+* *Deployment Made Easy*: With Helm, you can install, upgrade, and manage your applications efficiently.
+* *Version Control*: Helm charts can be versioned, allowing you to track changes and revert to previous configurations if needed.
+
+When you deploy a Helm chart, you create a running instance called a release. Helm also keeps track of revisions whenever you upgrade or roll back a release, giving you control over your application's history.
+
+Key features
+Helm provides the ability to:
+
+Search through a large collection of charts stored in the chart repository.
+
+Modify existing charts.
+
+Create your own charts with OpenShift Container Platform or Kubernetes resources.
+
+Package and share your applications as charts.
+
+== 2. Deploy Globex Coolstore app using Helm
