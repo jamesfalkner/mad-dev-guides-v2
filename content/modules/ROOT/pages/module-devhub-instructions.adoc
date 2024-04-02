@@ -28,7 +28,7 @@
 
 Red Hat Developer Hub has already been installed and configured in the workshop environment.
 
-To get started, access https://developer-hub-rhdhub.{openshift_subdomain}[Red Hat Developer Hub UI^]
+To get started, access https://developer-hub-backstage-rhdhub.{openshift_subdomain}[Red Hat Developer Hub UI^]
 
 
 Red Hat Developer Hub is already configured with https://access.redhat.com/products/red-hat-single-sign-on/[Red Hat Single Sign On^]. Log in with your OpenShift credentials:
@@ -42,7 +42,7 @@ image::devhub/authentication.png[]
 
 *Welcome to Red Hat Developer Hub!*
 
-image::devhub/welcome.png[]
+image::devhub/welcome.png[width=120%]
 
 On the main screen, you will see the *Quick Access* section:
 
@@ -58,25 +58,25 @@ At your left, the *Red Hat Developer Hub* menu:
 
 *Navigate each of the menu items to explore the different solutions:*
 
-image::devhub/rhdevhub_menu.png[width=45%, float=left]  
+image::devhub/rhdevhub_menu.png[width=90%, float=left]  
 
 * *Catalog* is the Software Catalog available to build and deploy applications. 
 * *APIs* available for developers to consume.
 * *Docs*:  customer documentation that developers and DevOps can access as part of the company guidelines and best practices.
 * *Learning Paths*: Developers and DevOps can utilize customer learning paths to learn and advance their skills.
 
-** Search for the *Learning Path*: *Developing on OpenShift*
+** Search for the *Learning Path*: *Developing with Quarkus*
 ** Click on the link. 
 
 image::devhub/learning_paths_explore.png[width=40%]  
 
 * Continue exploring the menu:
 
-** Go back to the https://developer-hub-rhdhub.{openshift_subdomain}[Red Hat Developer Hub UI^]
+** Go back to the https://developer-hub-backstage-rhdhub.{openshift_subdomain}[Red Hat Developer Hub UI^]
 
 * *Clusters*: will show your managed clusters. At this time, we are not using https://www.redhat.com/en/technologies/management/advanced-cluster-management[Red Hat Advanced Cluster Management for Kubernetes^] for cluster management. You will see a message: *Could not fetch clusters from Hub*.
 
-* *Tech Radar*: Company radar to understand their modernization technology landscape. This information will be customized by each company.
+* *Tech Radar*: Company radar to understand their modernization technology landscape. This information will be customized by each company. For more information, visit our product page https://access.redhat.com/documentation/en-us/red_hat_developer_hub/1.1/html/administration_guide_for_red_hat_developer_hub/rhdh-installing-dynamic-plugins[about plugins configuration^]
 
 image::devhub/tech_radar.png[width=100%] 
 
@@ -185,7 +185,7 @@ image::devhub/st_gitlab_info.png[width=65%]
 
 * *Repo Group*: is the GitLab organization already configured. Red Hat Developer Hub will use this input data to upload the source repository and manifests.
 
-* Click on *Next Step*
+* Click on *Next*
 
 *Step 2* - Provide information about the Cluster Id:
 
@@ -226,7 +226,7 @@ image::devhub/st_component_namespace.png[width=40%]
 
 image::devhub/st_component_owner.png[width=40%]  
 
-* Click on *Next Step*
+* Click on *Next*
 
 *Step 3* - Provide Build information:
 
@@ -246,9 +246,9 @@ inventory-app-{user_name}
 
 image::devhub/st_component_componentid_quarkus.png[width=40%]  
 
-* Click on *Next Step*.
+* Click on *Review*.
 
-* *Review and Create*.
+* Review the data.
 
 *Sample data*
 
@@ -262,7 +262,7 @@ image::devhub/st_component_review_quarkus.png[width=80%]
 
 * With all your activities in green, click *Open Component in catalog*. 
 
-image::devhub/task_activity.png[width=50%]  
+image::devhub/task_activity.png[width=100%]  
 
 * RHDH will open a new tab with the component information. 
 
@@ -274,8 +274,8 @@ image::devhub/inventory_overview.png[width=100%]
 
 image::devhub/inventory_source.png[width=50%] 
 
-* Go back to your inventory component on the Red Hat Developer Hub: https://developer-hub-rhdhub.{openshift_subdomain}/catalog/default/component/inventory-app-{user_name}[Red Hat Developer Hub UI^].
-* Click on *TEKTON* tab to review your pipeline information. The pipeline will be triggered in a few seconds. After a few minutes, you will see the pipeline finished as *Succeeded*.
+* Go back to your inventory component on the Red Hat Developer Hub: https://developer-hub-backstage-rhdhub.{openshift_subdomain}/catalog/default/component/inventory-app-{user_name}[Red Hat Developer Hub UI^].
+* Click on *CI* tab to review your pipeline information. The pipeline will be triggered in a few seconds. After a few minutes, you will see the pipeline finished as *Succeeded*.
 
 image::devhub/inventory_pipeline.png[width=100%] 
 
@@ -317,7 +317,7 @@ image::devhub/st_gitlab_info.png[width=65%]
 
 * *Repo Group*: is the GitLab organization already configured. Red Hat Developer Hub will use this input data to upload the source repository and manifests.
 
-* Click on *Next Step*
+* Click on *Next*
 
 *Step 2* - Provide information about the Cluster Id:
 
@@ -358,7 +358,7 @@ image::devhub/st_component_namespace.png[width=40%]
 
 image::devhub/st_component_owner.png[width=40%]  
 
-Click on *Next Step*.
+Click on *Next*.
 
 *Step 3* - Provide Build information:
 
@@ -378,9 +378,9 @@ catalog-app-{user_name}
 
 image::devhub/st_component_componentid_spring.png[width=50%]  
 
-* Click on *Next Step*.
+* Click on *Review*.
 
-* *Review and Create*.
+* Review the data.
 
 *Sample data*
 
@@ -394,7 +394,7 @@ image::devhub/st_component_review_spring.png[width=80%]
 
 * With all your activities in green, click *Open Component in catalog*. 
 
-image::devhub/task_activity.png[width=65%]   
+image::devhub/task_activity.png[width=100%]   
 
 * RHDH will open a new tab with the component information. 
 
@@ -404,13 +404,15 @@ image::devhub/catalog_overview.png[width=100%]
 
 * In the *Overview* tab, click on *Pipelines* to review the Pipelines details in OpenShift. 
 
+*Note*: If you do not see the Pipelines. Click on the link again to ensure you are redirected to the OpenShift Pipelines details.
+
 image::devhub/overview_pipelines_click.png[width=65%] 
 
 Wait until the Pipeline is green. The Pipeline will take a few minutes to complete.
 
 image::devhub/pipelines_openshift.png[width=65%] 
 
-* Go back to your catalog component on the Red Hat Developer Hub: https://developer-hub-rhdhub.{openshift_subdomain}/catalog/default/component/catalog-app-{user_name}[Red Hat Developer Hub UI^].
+* Go back to your catalog component on the Red Hat Developer Hub: https://developer-hub-backstage-rhdhub.{openshift_subdomain}/catalog/default/component/catalog-app-{user_name}[Red Hat Developer Hub UI^].
 
 * Click on *Deployment* in the *Overview* tab to review your deployment status in OpenShift.
 
@@ -465,7 +467,7 @@ image::devhub/st_gitlab_info.png[width=65%]
 
 * *Repo Group*: is the GitLab organization already configured. Red Hat Developer Hub will use this input data to upload the source repository and manifests.
 
-* Click on *Next Step*
+* Click on *Next*
 
 *Step 2* - Provide information about the Cluster Id :
 
@@ -506,7 +508,7 @@ image::devhub/st_component_namespace.png[width=40%]
 
 image::devhub/st_component_owner.png[width=40%]  
 
-* Click on *Next Step*.
+* Click on *Next*.
 
 *Step 3* - Provide Build information:
 
@@ -526,9 +528,9 @@ gateway-app-{user_name}
 
 image::devhub/st_component_componentid_gateway.png[width=65%]  
 
-* Click on *Next Step*.
+* Click on *Review*.
 
-* *Review and Create*.
+* Review the data.
 
 *Sample data*
 
@@ -542,7 +544,7 @@ image::devhub/st_component_review_gateway.png[width=80%]
 
 * With all your activities in green, click *Open Component in catalog*. 
 
-image::devhub/task_activity.png[width=65%]  
+image::devhub/task_activity.png[width=100%]  
 
 * RHDH will open a new tab with the component information. 
 
@@ -550,7 +552,7 @@ image::devhub/task_activity.png[width=65%]
 
 image::devhub/gateway_overview.png[width=100%]  
 
-* Click on *TEKTON* to review your pipeline information.
+* Click on *CI* to review your pipeline information.
 The pipeline will be triggered in a few seconds. After a few minutes, you will see the pipeline finished as *Succeeded*.
 
 image::devhub/gateway_pipelines.png[width=100%] 
@@ -564,8 +566,10 @@ At your right the application details is available.
 
 image::devhub/gateway_deployment.png[width=80%] 
 
-* Click on *KUBERNETES* to review your application status in the OpenShift cluster.
-You might find the pods still not ready. Wait a few seconds to see everything in green.
+* Click on *KUBERNETES* to review your application status.
+You might find the pods still not ready. Wait a few seconds to see everything in green. 
+
+*Note*: *1 pod with errors* indicates that a pod has failed as it shows on the *Error Reporting* section. The issue was resolved and now all the pods are in green.
 
 image::devhub/gateway_yourclusters.png[width=100%] 
 
@@ -605,7 +609,7 @@ image::devhub/st_gitlab_info.png[width=65%]
 
 * *Repo Group*: is the GitLab organization already configured. Red Hat Developer Hub will use this input data to upload the source repository and manifests.
 
-* Click on *Next Step*.
+* Click on *Next*.
 
 *Step 2* - Provide information about the Cluster Id.
 
@@ -646,7 +650,7 @@ image::devhub/st_component_namespace.png[width=40%]
 
 image::devhub/st_component_owner.png[width=40%]  
 
-* Click on *Next Step*.
+* Click on *Next*.
 
 *Step 3* - Provide Build information.
 
@@ -666,9 +670,9 @@ frontend-app-{user_name}
 
 image::devhub/st_component_componentid_frontend.png[width=65%]  
 
-* Click on *Next Step*.
+* Click on *Review*.
 
-* *Review and Create*.
+* Review the data.
 
 *Sample data*
 
@@ -682,7 +686,7 @@ image::devhub/st_component_review_frontend.png[width=100%]
 
 * With all your activities in green, click *Open Component in catalog*. 
 
-image::devhub/task_activity.png[width=65%]  
+image::devhub/task_activity.png[width=100%]  
 
 * RHDH will open a new tab with the component information. 
 
@@ -690,7 +694,7 @@ image::devhub/task_activity.png[width=65%]
 
 image::devhub/frontend_overview.png[width=100%] 
 
-* Click on *TEKTON* to review your pipeline information.
+* Click on *CI* to review your pipeline information.
 The pipeline will be triggered in a few seconds. After a few minutes, you will see the pipeline finished as *Succeeded*.
 
 image::devhub/frontend_pipeline.png[width=100%] 
@@ -716,13 +720,13 @@ image::devhub/frontend_apiconsume.png[width=100%]
 
 ** Click on the https://frontend-app-{user_name}-rhdhub-{user_name}.{openshift_subdomain}/[Cool Store web page^]
 
-image::devhub/final_web.png[width=100%]
+image::devhub/ui_web.png[width=100%]
 
 == 3.3. Fix an issue reported about the application
 
 As a developer, you need to work on many feature requests or issues. In this use case, you will fix a problem with the title in the front-end application. Red Hat Developer Hub is a single pane of glass that allows you to access all the tools and information for your app from one single place. 
 
-=== 3.3.1. Go back to your frontend component on the Red Hat Developer Hub: https://developer-hub-rhdhub.{openshift_subdomain}/catalog/default/component/frontend-app-{user_name}[Red Hat Developer Hub UI^].
+=== 3.3.1. Go back to your frontend component on the Red Hat Developer Hub: https://developer-hub-backstage-rhdhub.{openshift_subdomain}/catalog/default/component/frontend-app-{user_name}[Red Hat Developer Hub UI^].
 
 === 3.3.2. Look at the GitLab issues by clicking on *ISSUES*. You will be able to see any GitLab issues associated with the application. 
 
@@ -734,7 +738,7 @@ image::devhub/frontend_issues.png[width=100%]
 
 image::devhub/frontend_issue_desc.png[width=100%]
 
-* Go back to your frontend component on the Red Hat Developer Hub: https://developer-hub-rhdhub.{openshift_subdomain}/catalog/default/component/frontend-app-{user_name}[Red Hat Developer Hub UI^].
+* Go back to your frontend component on the Red Hat Developer Hub: https://developer-hub-backstage-rhdhub.{openshift_subdomain}/catalog/default/component/frontend-app-{user_name}[Red Hat Developer Hub UI^].
 
 === 3.3.3. From the *OVERVIEW* tab click on *OpenShift Dev Spaces (VS Code)* to make the necessary source code changes.
 
@@ -816,9 +820,9 @@ image::devhub/dev_confirmed.png[width=100%]
 
 Your source code changes triggered a new pipeline to update the version of the frontend application.
 
-* Go back to your frontend component on the Red Hat Developer Hub: https://developer-hub-rhdhub.{openshift_subdomain}/catalog/default/component/frontend-app-{user_name}[Red Hat Developer Hub UI^].
+* Go back to your frontend component on the Red Hat Developer Hub: https://developer-hub-backstage-rhdhub.{openshift_subdomain}/catalog/default/component/frontend-app-{user_name}[Red Hat Developer Hub UI^].
 
-* Explore the pipelines by clicking on the *TEKTON*.
+* Explore the pipelines by clicking on the *CI*.
 
 image::devhub/frontend_newpipeline.png[width=100%]
 
@@ -832,7 +836,7 @@ image::devhub/final_web.png[width=100%]
 
 === Bonus Point: Explore applications dependencies and APIs
 
-* Go back to your frontend component on the Red Hat Developer Hub: https://developer-hub-rhdhub.{openshift_subdomain}/catalog/default/component/frontend-app-{user_name}[Red Hat Developer Hub UI^].
+* Go back to your frontend component on the Red Hat Developer Hub: https://developer-hub-backstage-rhdhub.{openshift_subdomain}/catalog/default/component/frontend-app-{user_name}[Red Hat Developer Hub UI^].
 
 * Click on the *Overview* tab. Next, click on the *workshop-system-rhdhub-{user_name}* section.
 
@@ -848,4 +852,4 @@ image::devhub/workshop_detail.png[width=100%]
 
 == Summary
 
-You have successfully built the Cool Store application and learn the benefits of Red Hat Developer Hub with Software Templates reduce developer cognitive load by providing pre-architected and supported approaches to building and deploying a service or software component without having to learn all the details of the technology used to create it.
+You have successfully built the Cool Store application and learned the benefits of Red Hat Developer Hub with Software Templates reduce developer cognitive load by providing pre-architected and supported approaches to building and deploying a service or software component without having to learn all the details of the technology used to create it.
