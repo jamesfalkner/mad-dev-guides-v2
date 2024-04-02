@@ -21,11 +21,14 @@
 </style>
 ++++
 
+== 1. Get your Developer Workspace
+:navtitle: Get your Developer Workspace
+
 In this lab you will learn about providing your Developer Workspace with a Kubernetes-native development platform 
 and getting familiar with the OpenShift CLI and OpenShift Web Console.
 
-[#what_is_codeready_workspaces]
-== What is Red Hat OpenShift Dev Spaces?
+[#what_is_openshift_devspaces]
+=== 1.1 What is Red Hat OpenShift Dev Spaces?
 
 .Red Hat OpenShift DevSpaces
 ****
@@ -47,10 +50,9 @@ To achieve those core goals, https://access.redhat.com/products/red-hat-openshif
 ****
 
 [#get_your_developer_workspace]
-== Getting your Developer Workspace with a single click
+=== 1.2 Getting your Developer Workspace with a single click
 
-https://access.redhat.com/products/red-hat-openshift-dev-spaces[OpenShift Dev Spaces^]  will provide you an out-of-the-box 
-*Developer Workspace* with all the tools and the dependencies we need to do the job. **And with only one single click!**
+https://access.redhat.com/products/red-hat-openshift-dev-spaces[OpenShift Dev Spaces^]  will provide you an out-of-the-box *Developer Workspace* with all the tools and the dependencies we need to do the job. **And with only one single click!**
 
 [NOTE]
 .Devfile
@@ -74,31 +76,31 @@ to this file.
 //[link={CHE_URL}/#https://raw.githubusercontent.com/RedHat-EMEA-SSA-Team/end-to-end-developer-workshop/{WORKSHOP_GIT_REF}/devfile.yaml]
 [window=_blank, align="center"]
 [role='params-link']
-image::innerloop//developer-workspace-button.svg[Developer Workspace - Button, 300]
+image::innerloop/developer-workspace-button.svg[Developer Workspace - Button, 300]
 
 Then `*Click 'Log in with OpenShift'*`
 
-image::innerloop//login-with-openshift.png[OpenShift - Login, 500]
+image::innerloop/login-with-openshift.png[OpenShift - Login, 500]
 
 Then `*login as user{USER_ID}/{OPENSHIFT_PASSWORD}*.`
 
-image::innerloop//che-login.png[Che - Login, 500]
+image::innerloop/che-login.png[Che - Login, 500]
 
 Now there are a couple of steps before we can get started. Firstly you need to `*Trust*` the Git source you need to import for this workshop
 
-image::innerloop//vscode-trust.png[Che - Workspace, 500]
+image::innerloop/vscode-trust.png[Che - Workspace, 500]
 
 Then you need to accept or select the Visual Studio Code UI Settings. You can just click `*Mark Done*` to skip these.
 
-image::innerloop//vscode-settings.png[Che - Workspace, 500]
+image::innerloop/vscode-settings.png[Che - Workspace, 500]
 
 Once completed, you will have a fully functional Browser-based IDE within the source code already imported.
 
-image::innerloop//che-workspace.png[Che - Workspace, 700]
+image::innerloop/che-workspace.png[Che - Workspace, 700]
 
 
 [#connect_your_workspace]
-== Connect Your Workspace to Your OpenShift User
+=== 1.3 Connect Your Workspace to Your OpenShift User
 
 First, in your {CHE_URL}[Workspace^, role='params-link'],
 
@@ -110,7 +112,7 @@ IDE Task::
 -- 
 `*Click on 'Terminal' -> 'Run Task...' ->  'devfile: OpenShift - Login'*`
 
-image::innerloop//che-runtask.png[Che - RunTask, 600]
+image::innerloop/che-runtask.png[Che - RunTask, 600]
 --
 
 CLI::
@@ -153,7 +155,7 @@ IDE Task::
 -- 
 `*Click on 'Terminal' -> 'Run Task...' ->  'devfile: OpenShift - Create Development Project'*`
 
-image::innerloop//che-runtask.png[Che - RunTask, 600]
+image::innerloop/che-runtask.png[Che - RunTask, 600]
 --
 
 CLI::
@@ -186,7 +188,7 @@ to build a new example application in Ruby. Or use kubectl to deploy a simple Ku
 ----
 
 [#login_to_openshift]
-== Log in to the OpenShift Developer Console
+=== 1.4 Log in to the OpenShift Developer Console
 
 OpenShift ships with a web-based console that will allow users to
 perform various tasks via a browser.
@@ -196,7 +198,7 @@ perform various tasks via a browser.
 [link={OPENSHIFT_CONSOLE_URL}]
 [window=_blank, align="center"]
 [role='params-link']
-image::innerloop//developer-console-button.png[Developer Workspace - Button, 300]
+image::innerloop/developer-console-button.png[Developer Workspace - Button, 300]
 
 `*Enter your username and password (user{USER_ID}/{OPENSHIFT_PASSWORD})*` and 
 then log in. After you have authenticated to the web console, you will be presented with a
@@ -207,6 +209,2128 @@ which will list all of the routes, services, deployments, and pods that you have
 running as part of your project. There's nothing there now, but that's about to
 change.
 
-image::innerloop//openshift-empty-project.png[OpenShift - Empty Project, 700]
+image::innerloop/openshift-empty-project.png[OpenShift - Empty Project, 700]
 
-Now you are ready to get started with the labs!
+Now you are ready to move forward to the next lab!
+
+== 2. Create Inventory Service with Quarkus
+:navtitle: Create Inventory Service with Quarkus
+
+In this lab you will learn about building microservices using Quarkus.
+
+image::innerloop/coolstore-arch-inventory-quarkus.png[CoolStore Architecture,400]
+
+[#what_is_quarkus]
+=== 2.1. What is Quarkus?
+
+[sidebar]
+--
+image::innerloop/quarkus-logo.png[Quarkus, 500]
+
+https://quarkus.io/[Quarkus^] is a Kubernetes Native Java stack tailored for GraalVM & OpenJDK HotSpot, 
+crafted from the best of breed Java libraries and standards.
+
+**Container First**: https://quarkus.io/[Quarkus^] tailors your application for GraalVM and HotSpot. Amazingly fast boot time, incredibly low RSS memory 
+(not just heap size!) offering near instant scale up and high density memory utilization in container orchestration platforms 
+like Kubernetes. We use a technique we call https://quarkus.io/vision/container-first[compile time boot^].
+
+**Unifies Imperative and Reactive**: Combine both the familiar https://quarkus.io/vision/continuum[imperative code and 
+the non-blocking reactive style^] when developing applications
+
+**Developer Joy**: A cohesive platform for optimized developer joy:
+
+* Unified configuration
+* Zero config, live reload in the blink of an eye
+* Streamlined code for the 80% common usages, flexible for the 20%
+* No hassle native executable generation
+
+**Best of Breed Libraries and Standards**: Quarkus brings a cohesive, fun to use full-stack framework by leveraging best of breed libraries you 
+love and use wired on a https://quarkus.io/vision/standards[standard backbone^].
+--
+
+[#quarkus_maven_project]
+=== 2.2. Quarkus Maven Project
+
+The **inventory-quarkus** project has the following structure which shows the components of 
+the Quarkus project laid out in different subdirectories according to Maven best practices:
+
+image::innerloop/inventory-quarkus-project.png[Inventory Project,500]
+
+The **'/projects/workshop/labs/inventory-quarkus'** folder contents:
+
+* the Maven structure
+* a com.redhat.cloudnative.InventoryResource resource exposed on /hello
+* an associated unit test
+* a landing page that is accessible on http://localhost:8080 after starting the application
+* example Dockerfile files for both native and jvm modes in src/main/docker
+* the application configuration file
+
+`*Look at the pom.xml*`. You will find the import of the Quarkus BOM, allowing you to omit the version 
+on the different Quarkus dependencies. In addition, you can see the **quarkus-maven-plugin** responsible for the packaging 
+of the application and also providing the *dev mode* feature.
+
+[source,xml]
+----
+<dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>${quarkus.platform.group-id}</groupId>
+            <artifactId>quarkus-bom</artifactId>
+            <version>${quarkus.platform.version}</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+    </dependencies>
+</dependencyManagement>
+
+<build>
+    <plugins>
+        <plugin>
+            <groupId>${quarkus.platform.group-id}</groupId>
+            <artifactId>quarkus-maven-plugin</artifactId>
+            <version>${quarkus.platform.version}</version>
+            <executions>
+                <execution>
+                    <goals>
+                        <goal>build</goal>
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
+    </plugins>
+</build>
+----
+
+If we focus on the dependencies section, you can see the following extensions:
+
+[source,xml]
+----
+    <dependency>
+        <groupId>io.quarkus</groupId>
+        <artifactId>quarkus-resteasy-reactive</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>io.quarkus</groupId>
+        <artifactId>quarkus-resteasy-reactive-jsonb</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>io.quarkus</groupId>
+        <artifactId>quarkus-hibernate-orm-panache</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>io.quarkus</groupId>
+        <artifactId>quarkus-jdbc-h2</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>io.quarkus</groupId>
+        <artifactId>quarkus-openshift</artifactId>
+    </dependency>  
+
+----
+
+.Quarkus Extensions
+[%header,cols=2*]
+|===
+|Name 
+|Description
+
+|https://quarkus.io/guides/resteasy-reactive[REST Services with RESTEasy Reactive^]
+|It allows you to develop non-blocking, reactive REST Services
+
+|https://quarkus.io/guides/rest-json-guide[JSON REST Services^]
+|It allows you to develop REST services to consume and produce JSON payloads
+
+|https://quarkus.io/guides/hibernate-orm-panache[Hibernate ORM with Panache^]
+|Hibernate is the de facto JPA implementation and offers you the full breath of an Object Relational Mapper. With Panache you will get additional convenience features. 
+
+|https://quarkus.io/guides/datasource-guide#h2[Datasources (H2)^]
+|Using datasources is the main way of obtaining connections to a database.
+
+|https://quarkus.io/guides/deploying-to-openshift[OpenShift^]
+|Understands how to deploy an application to OpenShift
+
+|===
+
+`*Examine 'src/main/java/com/redhat/cloudnative/InventoryResource.java' file*`:
+
+[source,java]
+----
+package com.redhat.cloudnative;
+
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
+
+@Path("/hello")
+public class InventoryResource {
+
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public String hello() {
+        return "hello";
+    }
+}
+----
+
+It's a very simple REST endpoint, returning "hello" to requests on "/hello".
+
+[TIP]
+====
+With Quarkus, there is no need to create an Application class. It is supported, but not required. In addition, 
+only one instance of the resource is created and not one per request. You can configure this using the different **Scoped** annotations 
+(ApplicationScoped, RequestScoped, etc). In addition, Quarkus is able to mix and match Reactive and Imperative programming, so you won't have to worry about the reactive aspect of the REST service.
+====
+
+[#enable_development_mode]
+=== 2.3. Enable the Development Mode
+
+**quarkus:dev** runs Quarkus in development mode. This enables hot deployment with background compilation, 
+which means that when you modify your Java files and/or your resource files and refresh your browser, these changes will 
+automatically take effect. This works for resource files like the configuration property file as well. Refreshing the browser 
+triggers a scan of the workspace, and if any changes are detected, the affected Java files are recompiled and the application is redeployed; 
+your request is then serviced by the redeployed application. If there are any issues with compilation or deployment an error page will let you know.
+
+First, in your {CHE_URL}[Workspace^, role='params-link'],
+
+[tabs, subs="attributes+,+macros"]
+====
+
+IDE Task::
++
+-- 
+`*Click on 'Terminal' -> 'Run Task...' ->  'devfile: Inventory - Compile (Dev Mode)'*`
+
+image::innerloop/che-runtask.png[Che - RunTask, 600]
+--
+
+CLI::
++
+--
+`*Execute the following commands in the terminal window*`
+
+[source,shell,subs="{markup-in-source}",role=copypaste]
+----
+cd /projects/workshop/labs/inventory-quarkus
+mvn compile quarkus:dev -Ddebug=false
+----
+
+NOTE: To open a terminal window, `*click on 'Terminal' -> 'New Terminal'*`
+
+--
+====
+
+When pop-ups appear, *confirm you want to expose the 8080 port* by `*clicking on 'Open in New Tab'*`.
+
+image::innerloop/che-open-8080-link.png[Che - Open Link, 500]
+
+You then have to confirm the access to external web sites:
+
+image::innerloop/vscode-external-website.png[Che - Open Link, 500]
+
+Your browser will be directed to **your Inventory Service running inside your Workspace**.
+
+image::innerloop/inventory-quarkus.png[Inventory Quarkus,500]
+
+[NOTE]
+====
+If you see the following result in the browser window, please `*click on the browser Refresh icon`*,
+
+image::innerloop/che-preview-na.png[Che - Preview Not Available, 500]
+====
+
+[NOTE]
+====
+Please *don't close* that Inventory output browser tab, you will need it for the next few steps of this lab.
+
+If by accident you close that browser tab then you should be able to reopen it from your browser history.
+It will likely be called *Inventory Service*
+====
+
+Now let's write some code and create an Entity to interact with the Database and a RESTful endpoint to create the Inventory service
+
+[#create_entity]
+== Create an Entity
+
+`*Create the 'src/main/java/com/redhat/cloudnative/Inventory.java' file`* as follows:
+
+[source,java,role=copypaste]
+----
+package com.redhat.cloudnative;
+
+import io.quarkus.hibernate.orm.panache.PanacheEntity;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+
+@Entity // <1> 
+@Table(name = "INVENTORY") // <2> 
+public class Inventory extends PanacheEntity { // <3>
+    public int quantity; // <4>
+}
+----
+<1> **@Entity** marks the class as a JPA entity
+<2> **@Table** customizes the table creation process by defining a table name and database constraint
+<3> **PanacheEntity** is a very useful super class that, among others, autogenerates an id field
+<4> **public int quantity** defines the name of a field. https://quarkus.io/guides/hibernate-orm-panache#how-and-why-we-simplify-hibernate-orm-mappings[Panache will rewrite the access to private] and generate getters and setters during runtime, allowing you to eliminate a lot of boilerplate code.
+
+[NOTE]
+====
+You don't need to press a save button! VS Code automatically saves the changes made to the files.
+====
+
+`*Update the 'src/main/resources/application.properties' file*` to match with the following content:
+
+[source,bash,role=copypaste]
+----
+quarkus.datasource.db-kind=h2
+quarkus.datasource.jdbc.url=jdbc:h2:mem:inventory;DB_CLOSE_ON_EXIT=FALSE;DB_CLOSE_DELAY=-1
+quarkus.datasource.username=sa
+quarkus.datasource.password=sa
+quarkus.hibernate-orm.database.generation=drop-and-create
+quarkus.hibernate-orm.log.sql=true
+quarkus.hibernate-orm.sql-load-script=import.sql
+quarkus.http.host=0.0.0.0
+
+%prod.quarkus.package.type=uber-jar#<1> 
+
+# these value are recommended for a quarkus openshift plugin build<2>
+%prod.quarkus.openshift.route.expose=true
+%prod.quarkus.openshift.deployment-kind=Deployment
+%prod.quarkus.openshift.labels.app=coolstore
+%prod.quarkus.openshift.ports."http".host-port=8080
+%prod.quarkus.openshift.labels.component=inventory
+%prod.quarkus.openshift.part-of=coolstore
+%prod.quarkus.openshift.name=inventory-coolstore
+%prod.quarkus.openshift.add-version-to-label-selectors=false
+%prod.quarkus.openshift.labels."app.kubernetes.io/instance"=inventory
+quarkus.container-image.name=inventory-coolstore
+quarkus.container-image.registry=image-registry.openshift-image-registry.svc:5000
+quarkus.openshift.route.tls.termination=edge
+quarkus.openshift.route.tls.insecure-edge-termination-policy=Redirect
+
+----
+<1> An **uber-jar** contains all the dependencies required packaged in the **jar** to enable running the 
+application with **java -jar**. By default, in Quarkus, the generation of the uber-jar is disabled. With the
+**%prod** prefix, this option is only activated when building the jar intended for deployments.
+<2> Additional configuration to allow the quarkus-maven-plugin to build 
+and then deploy this application to OpenShift - but more of that later
+
+`*Update the 'src/main/resources/import.sql' file`* as follows:
+[source,sql,role=copypaste]
+----
+INSERT INTO INVENTORY(itemId, quantity) VALUES (100000, 0);
+INSERT INTO INVENTORY(itemId, quantity) VALUES (329299, 35);
+INSERT INTO INVENTORY(itemId, quantity) VALUES (329199, 12);
+INSERT INTO INVENTORY(itemId, quantity) VALUES (165613, 45);
+INSERT INTO INVENTORY(itemId, quantity) VALUES (165614, 87);
+INSERT INTO INVENTORY(itemId, quantity) VALUES (165954, 43);
+INSERT INTO INVENTORY(itemId, quantity) VALUES (444434, 32);
+INSERT INTO INVENTORY(itemId, quantity) VALUES (444435, 53);
+----
+
+[#create_restful_service]
+=== 2.4. Create a RESTful Service
+
+Quarkus uses JAX-RS standard for building REST services. 
+
+`*Modify the 'src/main/java/com/redhat/cloudnative/InventoryResource.java' file*` to match with:
+
+[source,java,role=copypaste]
+----
+package com.redhat.cloudnative;
+
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
+
+@Path("/api/inventory")
+@ApplicationScoped
+public class InventoryResource {
+
+    @GET
+    @Path("/{itemId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Inventory getAvailability(@PathParam("itemId") String itemId) {
+        Inventory inventory = Inventory.findById(itemId);
+        return inventory;
+    }
+}
+----
+
+The above REST service defines an endpoint that is accessible via **HTTP GET** at 
+for example **/api/inventory/329299** with 
+the last path param being the product id with which we can check the inventory status.
+
+
+`*Refresh your browser*` (for the *Inventory Service* tab just opened) and you should see the new content **without rebuilding your JAR file**
+
+`*Refresh your Inventory output browser and click on 'Test it'*`. You should have the following output:
+
+[source,json]
+----
+{"itemId":"329299","quantity":35}
+----
+
+The REST API returned a JSON object representing the inventory count for this product. Congratulations!
+
+[NOTE]
+You may have noticed that there are test classes in the project (test/java/com/redhat/cloudnative/InventoryResourceTest.java). Since we changed our code these tests are now broken. Feel free to fix them if you want an extra challenge (or you can ignore the broken tests if you just want to move on). TIP: you can enable live testing while in dev mode by pressing the letter 'r'.
+
+[#stop_dev_mode]
+=== 2.5. Stop Dev Mode
+
+In your {CHE_URL}[Workspace^, role='params-link'], stop the service as follows:
+
+[tabs, subs="attributes+,+macros"]
+====
+
+IDE Task::
++
+-- 
+`*Enter Ctrl+c in the existing '>_ Inventory Compile (Dev Mode)' terminal window*`
+--
+
+CLI::
++
+--
+`*Enter Ctrl+c in the existing terminal window*`
+--
+====
+
+[#deploy_on_openshift]
+=== 2.6. Deploy on OpenShift
+
+Using the Quarkus-maven-plugin, the Quarkus https://quarkus.io/guides/deploying-to-openshift[OpenShift Extension] and Source to Image (S2I)
+it's time to deploy your service on OpenShift using all that information in the *src/main/resources/application.properties* file
+we saw earlier.
+
+In this section you will locally build a .jar file, then *create* the OpenShift build and deployment components
+and *push* the .jar to OpenShift. The OpenShift https://docs.openshift.com/container-platform/4.12/cicd/builds/understanding-image-builds.html[Source-to-Image (S2I)^] builder 
+will then package the .jar file into a container and run it.
+
+[source,java,subs="{markup-in-source}"]
+----
+# these value are recommended for a quarkus openshift plugin build
+%prod.quarkus.openshift.route.expose=true<1>
+%prod.quarkus.openshift.deployment-kind=Deployment<2>
+%prod.quarkus.openshift.labels.app=coolstore
+%prod.quarkus.openshift.labels.component=inventory
+%prod.quarkus.openshift.part-of=coolstore
+%prod.quarkus.openshift.name=inventory-coolstore
+%prod.quarkus.openshift.add-version-to-label-selectors=false
+%prod.quarkus.openshift.labels."app.kubernetes.io/instance"=inventory
+quarkus.container-image.name=inventory-coolstore
+quarkus.container-image.registry=image-registry.openshift-image-registry.svc:5000
+quarkus.openshift.route.tls.termination=edge<3>
+quarkus.openshift.route.tls.insecure-edge-termination-policy=Redirect
+----
+<1> Exposes an external route to access the application
+<2> Deploy the application as a standard Kubernetes Deployment
+<3> Tells Openshift to create a secure (HTTPS) route
+
+
+NOTE: To open a terminal window, `*click on 'Terminal' -> 'New Terminal'*`
+--
+====
+
+We can now **build** and **deploy** your application code/binary to OpenShift. By watching the 
+log output you should see this activity:
+
+* Build the jar file
+* Push the jar file to OpenShift
+* Create OpenShift deployment components
+* Build a container using a Dockerfile/Containerfile
+* Push this container image to the OpenShift registry
+* Deploying the application to OpenShift
+
+[tabs, subs="attributes+,+macros"]
+====
+
+IDE Task::
++
+-- 
+`*Click on 'Terminal' -> 'Run Task...' ->  'devfile: Inventory - Deploy Component'*`
+
+image::innerloop/che-runtask.png[Che - RunTask, 600]
+--
+
+CLI::
++
+--
+`*Execute the following commands in the terminal window*`
+
+[source,shell,subs="{markup-in-source}",role=copypaste]
+----
+cd /projects/workshop/labs/inventory-quarkus
+mvn install -Dquarkus.kubernetes.deploy=true -DskipTests -Dquarkus.container-image.group=$(oc project -q) -Dquarkus.kubernetes-client.trust-certs=true
+----
+
+NOTE: To open a terminal window, `*click on 'Terminal' -> 'New Terminal'*`
+--
+====
+
+The output should look a little bit like this:
+
+[source,shell,subs="{markup-in-source}"]
+----
+[INFO] [io.quarkus...] STEP 3/9: ENV OPENSHIFT_BUILD_NAME="inventory-coolstore-1"     OPENSHIFT_BUILD_NAMESPACE="my-project2"
+[INFO] [io.quarkus....] STEP 4/9: USER root
+[INFO] [io.quarkus....] STEP 5/9: COPY upload/src /tmp/src
+[INFO] [io.quarkus....] STEP 6/9: RUN chown -R 185:0 /tmp/src
+[INFO] [io.quarkus....] STEP 7/9: USER 185
+[INFO] [io.quarkus....] STEP 8/9: RUN /usr/local/s2i/assemble
+[INFO] [io.quarkus....] INFO S2I source build with plain binaries detected
+[INFO] [io.quarkus....] INFO Copying binaries from /tmp/src to /deployments ...
+[INFO] [io.quarkus....] inventory-quarkus-1.0.0-SNAPSHOT-runner.jar
+[INFO] [io.quarkus....] INFO Cleaning up source directory (/tmp/src)
+[INFO] [io.quarkus....] STEP 9/9: CMD /usr/local/s2i/run
+[INFO] [io.quarkus....] COMMIT temp.builder.openshift.io/my-project2/inventory-coolstore-1:2c2db764
+[INFO] [io.quarkus....] Getting image source signatures
+[INFO] [io.quarkus....] Copying blob sha256:34e7a2afb94b75550a0e9b8685ba4edb5472647c08cbc61fa571a4f6d53dc107
+[INFO] [io.quarkus....] Copying blob sha256:7374092de81bae754b7b497cce97eac8bea3f66b6419a74c7e317c3ebb89fc6f
+[INFO] [io.quarkus....] Copying blob sha256:e8e3263c81c9ab945feeb803074259cac5da121ef39cfa0f7b56dd4e92573d25
+[INFO] [io.quarkus....] Copying config sha256:ab940dedfdce810409aec0c2cdd38d337d5e8d610ff5f64211cb3805b07674d4
+[INFO] [io.quarkus....] Writing manifest to image destination
+[INFO] [io.quarkus....] Storing signatures
+[INFO] [io.quarkus....] --> ab940dedfdc
+[INFO] [io.quarkus....] Successfully tagged temp.builder.openshift.io/my-project2/inventory-coolstore-1:2c2db764
+[INFO] [io.quarkus....] ab940dedfdce810409aec0c2cdd38d337d5e8d610ff5f64211cb3805b07674d4
+[INFO] [io.quarkus....] 
+[INFO] [io.quarkus....] Pushing image image-registry.openshift-image-registry.svc:5000/my-project2/inventory-coolstore:1.0.0-SNAPSHOT ...
+[INFO] [io.quarkus....] Getting image source signatures
+[INFO] [io.quarkus....] Copying blob sha256:e8e3263c81c9ab945feeb803074259cac5da121ef39cfa0f7b56dd4e92573d25
+[INFO] [io.quarkus....] Copying blob sha256:3840fdda5b0af7d845fe3540f5ca8b094b19617bcd7837701270a6cefc68811f
+[INFO] [io.quarkus....] Copying blob sha256:ced05cc33f5c3ba56c84452cadaa23602c29aa67649488da2bfc7664bb2f830e
+[INFO] [io.quarkus....] Copying config sha256:ab940dedfdce810409aec0c2cdd38d337d5e8d610ff5f64211cb3805b07674d4
+[INFO] [io.quarkus....] Writing manifest to image destination
+[INFO] [io.quarkus....] Storing signatures
+[INFO] [io.quarkus....] Successfully pushed image-registry.openshift-image-registry.svc:5000/my-project2/inventory-coolstore@sha256:be5b8ccdf161f4166ea0d040fcc78e1a09f8f20b16eb1b0d12ce288cd70c0643
+[INFO] [io.quarkus....] Push successful
+[INFO] [io.quarkus....] Deploying to openshift server: https://172.30.0.1:443/ in namespace: my-project2.
+[INFO] [io.quarkus....] Applied: ImageStream inventory-coolstore.
+[INFO] [io.quarkus....] Applied: Deployment inventory-coolstore.
+[INFO] [io.quarkus....] Applied: ImageStream openjdk-11-rhel7.
+[INFO] [io.quarkus....] Applied: Service inventory-coolstore.
+[INFO] [io.quarkus....] Applied: Route inventory-coolstore.
+[INFO] [io.quarkus....] Applied: BuildConfig inventory-coolstore.
+[INFO] [io.quarkus....] The deployed application can be accessed at: http://inventory-coolstore-my-project2.apps.cluster-qpgl9.qpgl9.sandbox2688.opentlc.com
+[INFO] [io.quarkus.deployment.QuarkusAugmentor] Quarkus augmentation completed in 170564ms
+
+....
+
+[INFO] No primary artifact to install, installing attached artifacts instead.
+[INFO] Installing /projects/workshop/labs/inventory-quarkus/pom.xml to /home/developer/.m2/repository/com/redhat/cloudnative/inventory-quarkus/1.0.0-SNAPSHOT/inventory-quarkus-1.0.0-SNAPSHOT.pom
+[INFO] Installing /projects/workshop/labs/inventory-quarkus/target/inventory-quarkus-1.0.0-SNAPSHOT-runner.jar to /home/developer/.m2/repository/com/redhat/cloudnative/inventory-quarkus/1.0.0-SNAPSHOT/inventory-quarkus-1.0.0-SNAPSHOT-runner.jar
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  03:01 min
+[INFO] Finished at: 2023-05-11T15:19:06Z
+[INFO] ------------------------------------------------------------------------
+====
+--
+
+Once this completes, your application should be up and running. 
+
+OpenShift runs the different components of the application 
+in one or more pods. A pod is the unit of runtime deployment and consists of the running containers for the project.
+
+[#test_your_service]
+=== 2.7. Test your Service
+
+In the {OPENSHIFT_CONSOLE_URL}[OpenShift Web Console^, role=params-link], from the **Developer view**,
+`*click on the 'Open URL' icon of the Inventory Service*`
+
+image::innerloop/openshift-inventory-topology.png[OpenShift - Inventory Topology, 700]
+
+Your browser will be redirected to **your Inventory Service running on OpenShift**.
+
+image::innerloop/inventory-quarkus.png[Inventory Quarkus,500]
+
+Then `*click on 'Test it'*`. You should have the following output:
+
+[source,json]
+----
+{"itemId":"329299","quantity":35}
+----
+
+Well done! You are ready to move on to the next lab, but before you go, you probably should close those Inventory Service output browser tabs from the beginning of this chapter.
+
+== 3. Create Catalog Service with Spring Boot
+:navtitle: Create Catalog Service with Spring Boot
+
+In this lab we will build a second microservice for our application
+using Spring Boot. During this lab, you will create a REST API for 
+the Catalog service in order to provide a list of products for the CoolStore online shop.
+
+image::innerloop/coolstore-arch-catalog-spring-boot.png[CoolStore Architecture,400]
+
+[#what_is_spring_boot]
+=== 3.1. What is Spring Boot?
+
+[sidebar]
+--
+image::innerloop/spring-boot-logo.png[Spring Boot, 400]
+
+Spring Boot is an opinionated framework that makes it easy to create stand-alone Spring based 
+applications with embedded web containers. Spring Boot also allows producing a war 
+file that can be deployed on stand-alone web containers.
+
+The opinionated approach means many choices about Spring platform and third-party libraries 
+are already made by Spring Boot so that you can get started with minimum effort and configuration.
+--
+
+[#spring_boot_maven_project]
+=== 3.2. Spring Boot Maven Project 
+
+The **catalog-spring-boot** project has the following structure which shows the components of 
+the Spring Boot project laid out in different subdirectories according to Maven best practices. 
+
+For the duration of this lab you will be working in the *catalog-spring-boot* directories shown below:
+
+image::innerloop/springboot-catalog-project.png[Catalog Project,400]
+
+This is a minimal Spring Boot project with support for RESTful services and Spring Data with JPA for connecting
+to a database. This project currently contains no code other than the main class, ***CatalogApplication***
+which is there to bootstrap the Spring Boot application.
+
+The database is configured using the Spring application configuration file which is located at 
+**src/main/resources/application.properties**. Examine this file to see the database connection details 
+and note that an in-memory H2 database is used in this lab for local development and will be replaced
+with a PostgreSQL database in the following labs. More on that later.
+
+Let's create a domain model, data repository, and a  
+RESTful endpoint to create the Catalog service:
+
+image::innerloop/springboot-catalog-arch.png[Catalog RESTful Service,640]
+
+[#create_domain_model]
+=== 3.3. Create the Domain Model
+
+In your {CHE_URL}[Workspace^, role='params-link'], `*Add the following code to the 'src/main/java/com/redhat/cloudnative/catalog/Product.java' file`* 
+
+[source,java,role=copypaste]
+----
+package com.redhat.cloudnative.catalog;
+
+import java.io.Serializable;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity // <1> 
+@Table(name = "PRODUCT") // <2> 
+public class Product implements Serializable {
+  
+  private static final long serialVersionUID = 1L;
+
+  @Id // <3> 
+  private String id;
+  
+  private String name;
+  
+  private String description;
+  
+  private double price;
+
+  public Product() {
+  }
+  
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
+  public double getPrice() {
+    return price;
+  }
+
+  public void setPrice(double price) {
+    this.price = price;
+  }
+
+  @Override
+  public String toString() {
+    return "Product [id=" + id + ", name=" + name + ", price=" + price + "]";
+  }
+}
+----
+<1> **@Entity** marks the class as a JPA entity
+<2> **@Table** customizes the table creation process by defining a table name and database constraint
+<3> **@Id** marks the primary key for the table
+
+[#create_data_repository]
+=== 3.4. Create a Data Repository
+
+Create a new Java interface named **ProductRepository** in **com.redhat.cloudnative.catalog** package 
+and extend https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/repository/CrudRepository.html[CrudRepository^] interface in order to indicate to Spring that you want to expose a complete set of methods to manipulate the entity.
+
+In your {CHE_URL}[Workspace^, role='params-link'], 
+`*Add the following code to the 'src/main/java/com/redhat/cloudnative/catalog/ProductRepository.java' file`*.
+
+[source,java,role=copypaste]
+----
+package com.redhat.cloudnative.catalog;
+
+import org.springframework.data.repository.CrudRepository;
+
+public interface ProductRepository extends CrudRepository<Product, String> { // <1> 
+}
+----
+<1> https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/repository/CrudRepository.html[CrudRepository^] interface 
+in order to indicate to Spring that you want to expose a complete set of methods to manipulate the entity
+
+That's it! Now that you have a domain model and a repository to retrieve the domain model, 
+let's create a RESTful service that returns the list of products.
+
+[#create_restful_service]
+=== 3.5. Create a RESTful Service
+
+Spring Boot uses Spring Web MVC as the default RESTful stack in Spring applications. 
+
+In your {CHE_URL}[Workspace^, role='params-link'], 
+`*Add the following code to the 'src/main/java/com/redhat/cloudnative/catalog/CatalogController.java' file`*.
+
+[source,java,role=copypaste]
+----
+package com.redhat.cloudnative.catalog;
+
+import java.util.List;
+import java.util.Spliterator;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping(value = "/api/catalog") // <1> 
+public class CatalogController {
+
+    @Autowired // <2> 
+    private ProductRepository repository; // <3> 
+
+    @ResponseBody
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Product> getAll() {
+        Spliterator<Product> products = repository.findAll().spliterator();
+        return StreamSupport.stream(products, false).collect(Collectors.toList());
+    }
+}
+----
+<1> **@RequestMapping** indicates the above REST service defines an endpoint that is accessible via **HTTP GET** at **/api/catalog**
+<2> Spring Boot automatically provides an implementation for **ProductRepository** at runtime and injects it into the 
+controller using the 
+https://docs.spring.io/spring-boot/docs/current/reference/html/using-boot-spring-beans-and-dependency-injection.html[**@Autowired**^] annotation.
+<3> the **repository** attribute on the controller class is used to retrieve the list of products from the databases. 
+
+Now, let's build and package the updated **Catalog Service** using Maven.
+In your {CHE_URL}[Workspace^, role='params-link'],
+
+[tabs, subs="attributes+,+macros"]
+====
+
+IDE Task::
++
+-- 
+`*Click on 'Terminal' -> 'Run Task...' ->  'devfile: Catalog - Build'*`
+
+image::innerloop/che-runtask.png[Che - RunTask, 600]
+--
+
+CLI::
++
+--
+`*Execute the following commands in the terminal window*`
+
+[source,shell,subs="{markup-in-source}",role=copypaste]
+----
+cd /projects/workshop/labs/catalog-spring-boot
+mvn clean package -DskipTests
+----
+
+NOTE: To open a terminal window, `*click on 'Terminal' -> 'New Terminal'*`
+--
+====
+
+Once done, you can conviently run your service using **Spring Boot maven plugin** and test the endpoint. 
+
+[tabs, subs="attributes+,+macros"]
+====
+
+IDE Task::
++
+-- 
+`*Click on 'Terminal' -> 'Run Task...' ->  'devfile: Catalog - Run'*`
+
+image::innerloop/che-runtask.png[Che - RunTask, 600]
+--
+
+CLI::
++
+--
+`*Execute the following commands in the terminal window*`
+
+[source,shell,subs="{markup-in-source}",role=copypaste]
+----
+cd /projects/workshop/labs/catalog-spring-boot
+mvn spring-boot:run
+----
+
+NOTE: To open a terminal window, `*click on 'Terminal' -> 'New Terminal'*`
+--
+====
+
+
+When pop-ups appear, *confirm you want to expose the 8080 port* by `*clicking on 'Open in New Tab'*`.
+
+image::innerloop/che-open-9000-link.png[Che - Open Link, 500]
+
+Your browser will be directed to **your Catalog Service running inside your Workspace**.
+
+image::innerloop/catalog-service.png[Catalog Service,500]
+
+[NOTE]
+====
+
+image::innerloop/che-preview-na.png[Che - Preview Not Available, 500]
+====
+
+Then `*click on 'Test it'*`. You should have similar output to this array of json:
+
+[source,json]
+----
+[{"id":"329299","name":"Red Fedora","desc":"Official Red Hat Fedora","price":34.99},...]
+----
+
+The REST API returned a JSON object representing the product list. Congratulations!
+
+[#stop_service]
+=== 3.6. Stop the Service
+
+In your {CHE_URL}[Workspace^, role='params-link'], stop the service as follows:
+
+[tabs, subs="attributes+,+macros"]
+====
+
+IDE Task::
++
+-- 
+`*Enter Ctrl+c in the existing '>_ Catalog - Run' terminal window*`
+--
+
+CLI::
++
+--
+`*Enter Ctrl+c in the existing terminal window*`
+--
+====
+
+[#deploy_on_openshift]
+=== 3.7. Deploy on OpenShift
+
+It's time to deploy your service on OpenShift. We are going to use Eclipse https://www.eclipse.org/jkube/docs/openshift-maven-plugin/[JKube] to define the
+build and deployment process on OpenShift, but ultimately we will end up using OpenShift source-to-image (S2I)
+to package up the .jar file into a container and run it.
+
+The JKube configuration for the Catalog application is present in the *pom.xml* file. Feel free to explore the different configuration values in your source code.
+
+[source,xml]
+----
+              <plugin>
+                <groupId>org.eclipse.jkube</groupId>
+                <artifactId>openshift-maven-plugin</artifactId>
+                <version>1.16.1</version>
+                (..)
+            </plugin>
+----
+
+Let's `*Deploy this new Component the OpenShift cluster*`
+
+[tabs, subs="attributes+,+macros"]
+====
+
+IDE Task::
++
+-- 
+`*Click on 'Terminal' -> 'Run Task...' ->  'devfile: Catalog - Deploy Component'*`
+
+image::innerloop/che-runtask.png[Che - RunTask, 600]
+--
+
+CLI::
++
+--
+`*Execute the following commands in the terminal window*`
+
+[source,shell,subs="{markup-in-source}",role=copypaste]
+----
+cd /projects/workshop/labs/catalog-spring-boot
+mvn package -DskipTests oc:build oc:resource oc:apply
+----
+
+NOTE: To open a terminal window, `*click on 'Terminal' -> 'New Terminal'*`
+--
+
+====
+
+ You'll see that the build phase comprises of a few actions:
+
+* Package the application
+* Push the jar file to OpenShift
+* Create OpenShift deployment components
+* Build a container using a Dockerfile/Containerfile
+* Push this container image to the OpenShift registry
+* Deploying the application to OpenShift
+
+Once this completes, your application should be up and running. OpenShift runs the different components of 
+the application in one or more pods (the unit of deployment in Kubernetes/Openshift which consists of one or more containers). 
+
+[#test_your_service]
+=== 3.8. Test your Service
+
+In the {OPENSHIFT_CONSOLE_URL}[OpenShift Web Console^, role='params-link'], from the **Developer view**,
+`*click on the 'Open URL' icon of the Catalog Service*`
+
+image::innerloop/openshift-catalog-topology.png[OpenShift - Catalog Topology, 700]
+
+Your browser will be redirected to **your Catalog Service running on OpenShift**.
+
+image::innerloop/catalog-service.png[Catalog Service,500]
+
+Then `*click on 'Test it'*`. You should have many lines of output similar to this array of json:
+
+[source,json]
+----
+[{"id":"329299","name":"Red Fedora","desc":"Official Red Hat Fedora","price":34.99},...]
+----
+
+Well done! You are ready to move on to the next lab.
+
+== 4. Create Gateway Service with .NET
+:navtitle: Create Gateway Service with .NET
+
+In this lab you will learn how you can 
+build microservices using ASP.NET Core. During this lab you will 
+create a scalable API Gateway that aggregates Catalog and Inventory APIs.
+
+image::innerloop/coolstore-arch-gateway-dotnet.png[CoolStore Architecture,400]
+
+
+=== 4.1. What is .NET (previously .NET Core)?
+
+[sidebar]
+--
+image::innerloop/240px-NET_Core_Logo.png[.NET, 240]
+
+https://docs.microsoft.com/en-us/dotnet/core/introduction/[.NET (Core)^] is a 
+is a free, open-source development platform for building many kinds of apps, from web, serverless, mobile, desktop and console apps.
+
+You can create .NET apps for many operating systems, including Windows, Linux and MacOS on a variety of hardware. .NET lets 
+you use platform-specific capabilities, such as operating system APIs. Examples are Windows Forms and WPF on Windows .NET is open 
+source, https://github.com/dotnet/runtime/blob/master/LICENSE.TXT[using MIT and Apache 2 licenses^] .NET is a project of the https://dotnetfoundation.org/[.NET Foundation.^]
+
+pass:[.NET] supports a number of programming faces and development environments, but today we will be looking at C# inside OpenShift Dev Spaces.
+
+We will also be using the standard web server pattern provided by ASP .NET libraries for creating non-blocking web services.
+--
+
+=== 4.2. .NET Gateway Project 
+
+The **gateway-dotnet** project has the following structure which shows the components of 
+the project laid out in different subdirectories according to ASP .NET best practices:
+
+image::innerloop/dotnet-gateway-project.png[Gateway Project,340]
+
+This is a minimal .NET project with support for asynchronous REST services. 
+
+`*Examine 'Startup.cs' class*` in the **/projects/workshop/labs/gateway-dotnet/** directory.
+
+See how the basic web server is started with minimal services, health checks and a basic REST controller is deployed.
+
+[source,java]
+----
+// This method gets called by the runtime. Use this method to add services to the container.
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddCors();
+
+    services.AddControllers().AddJsonOptions(options=> 
+    {  
+            options.JsonSerializerOptions.IgnoreNullValues = true;
+    });
+
+    services.AddHealthChecks();
+    services.AddControllersWithViews();
+}
+
+// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+{
+    
+    ProductsController.Config();
+
+    if (env.IsDevelopment())
+    {
+        app.UseDeveloperExceptionPage();
+    }
+
+    app.UseCors(builder => builder
+            .AllowAnyOrigin ()
+            .AllowAnyHeader ()
+            .AllowAnyMethod ());
+
+    app.UseHealthChecks("/health");
+
+    app.UseRouting();
+    app.UseDefaultFiles();
+    app.UseStaticFiles();
+
+    app.UseEndpoints(endpoints =>
+    {
+        endpoints.MapControllers();
+        endpoints.MapControllerRoute(
+            name: "default",
+            pattern: "{controller=Home}/{action=Index}/{id?}");
+    });
+
+}
+
+----
+
+`*Examine 'ProductsController.cs' class*` in the **/projects/workshop/labs/gateway-dotnet/Controllers** directory.
+
+[source,java]
+----
+[ApiController]
+[Route("api/[controller]")] // <1>
+public class ProductsController : ControllerBase
+{
+    [HttpGet]
+    public IEnumerable<Products> Get()
+    {            
+        private static HttpClient catalogHttpClient = new HttpClient(); // <4>
+        private static HttpClient inventoryHttpClient = new HttpClient(); 
+
+        try
+        {
+            // get the product list
+            IEnumerable<Products> productsList = GetCatalog(); // <2>
+
+            // update each item with their inventory value
+            foreach(Products p in productsList) // <3>
+            {
+                Inventory inv = GetInventory(p.ItemId);
+                if (inv != null)
+                    p.Availability = new Availability(inv);
+            }    
+
+            return productsList;
+        }
+        catch(Exception e)
+        {
+            Console.WriteLine("Using Catalog service: " + catalogApiHost + " and Inventory service: " + inventoryApiHost);
+            Console.WriteLine("Failure to get service data: " + e.Message);
+            // on failures return error
+            throw e;
+        }
+    }
+
+    private IEnumerable<Products> GetCatalog()
+    { 
+        var data = catalogHttpClient.GetStringAsync("/api/catalog").Result; 
+        return JsonConvert.DeserializeObject<IEnumerable<Products>>(data);
+    }
+    
+    private Inventory GetInventory(string itemId)
+    {
+        var data = inventoryHttpClient.GetStringAsync("/api/inventory/" + itemId).Result;
+        return JsonConvert.DeserializeObject<Inventory>(data);
+    }
+
+}
+----
+<1> Not unlike the Quarkus and Spring boot apps previously built, the ProductsController has a single defined REST entrypoint for GET */api/products*
+<2> In this case the Get() service first requests a list of products from the Catalog microservice
+<3> It then steps through each in turn to discover the amount of product in stock. It does this by calling the Inventory service for each product.
+<4> By using an HttpClient class for each service, .NET will efficiently manage the connection handling.
+
+The location or binding to the existing Catalog and Inventory REST services is determined at runtime.
+
+=== 4.3. Deploy on OpenShift
+
+It's time to build and deploy your service on OpenShift. 
+
+As you did previously for the Inventory and Catalog services in the earlier chapters, you need to `*build a new Component and then Deploy it in to the OpenShift cluster*`
+
+We are still going to use OpenShift S2I, but this time we will invoke it using the OpenShift CLI (oc commands). 
+We will also get S2I to compile the application, create the .NET artefact .dll and then create a container.
+
+There are two ways to get OpenShift S2I to build from source:
+
+* Point S2I at the git repo of the source code
+* Upload the source code and get S2I to build from that
+
+Since we are exploring the Inner Loop and we might have made code changes locally in the IDE we will use the "Upload" method.
+We will go through 4 steps to get the Gateway service running:
+
+* Create an S2I Build for the .NET application with `oc new-build`
+* Start the build by uploading the source with `oc start-build`
+* Create a new application (a deployment) in OpenShift for the application with `oc new-app`
+* Expose the application using a Route (so that we can easily test it) with `oc expose`
+
+[tabs, subs="attributes+,+macros"]
+====
+
+IDE Task::
++
+-- 
+`*Click on 'Terminal' -> 'Run Task...' -> 'devfile: Gateway - Build and Deploy Component'*`
+
+image::innerloop/che-runtask.png[Che - RunTask, 600]
+--
+
+CLI::
++
+--
+`*Execute the following commands in the terminal window*`
+
+[source,shell,subs="{markup-in-source}",role=copypaste]
+----
+cd /projects/workshop/labs/gateway-dotnet
+
+oc new-build dotnet:6.0 --name gateway-coolstore  \
+  --labels=component=gateway \
+  --env DOTNET_STARTUP_PROJECT=app.csproj --binary=true
+
+oc start-build gateway-coolstore --from-dir=. -w 
+
+oc new-app gateway-coolstore:latest --name gateway-coolstore  --labels=app=coolstore,app.kubernetes.io/instance=gateway,app.kubernetes.io/part-of=coolstore,app.kubernetes.io/name=gateway,app.openshift.io/runtime=dotnet,component=gateway 
+
+oc create route edge gateway-coolstore --service=gateway-coolstore
+----
+
+NOTE: To open a terminal window, `*click on 'Terminal' -> 'New Terminal'*`
+--
+====
+
+Once this completes, your application should be up and running. OpenShift runs the different components of the application in one or more pods which are the unit of runtime deployment and consists of the running containers for the project. 
+
+=== 4.4. Test your Service
+
+In the {OPENSHIFT_CONSOLE_URL}[OpenShift Web Console^, role='params-link'], from the **Developer view**,
+`*click on the 'Open URL' icon of the Gateway Service*`
+
+image::innerloop/openshift-gateway-topology.png[OpenShift - Gateway Topology, 700]
+
+Your browser will be redirected to **your Gateway Service running on OpenShift**.
+
+image::innerloop/gateway-service.png[Gateway Service,500]
+
+Then `*click on 'Test it'*`. You should have an array of json output like this but with many more products.
+
+Look in the json to see how the *Gateway service* has combined the *product* information together with the *inventory* (quantity) information: 
+
+[source,json]
+----
+[ {
+  "itemId" : "329299",
+  "name" : "Red Fedora",
+  "desc" : "Official Red Hat Fedora",
+  "price" : 34.99,
+  "availability" : {
+    "quantity" : 35
+  }
+},
+...
+]
+----
+
+=== 4.5. Service discovery
+
+You might be wondering how the Gateway service knows how to contact the *Catalog* and *Inventory* services. 
+These values can be injected as environment variables at runtime for example if running the component locally in the IDE, 
+but by default we have hardcoded the name of the OpenShift *Services* and then use OpenShift local DNS to resolve these names as 
+the application starts. You can see the code that consumes those variables below. This is from *ProductsController.cs class* in the 
+**/projects/workshop/labs/gateway-dotnet/** directory.
+
+[source,java]
+----
+public static void Config()
+{
+    try
+    {
+        // discover the URL of the services we are going to call
+        catalogApiHost = "http://" + 
+            GetEnvironmentVariable("COMPONENT_CATALOG_COOLSTORE_HOST", 
+                "catalog-coolstore") + ":" +
+            GetEnvironmentVariable("COMPONENT_CATALOG_COOLSTORE_PORT", 
+                "8080");                   
+        
+        inventoryApiHost = "http://" +
+            GetEnvironmentVariable("COMPONENT_INVENTORY_COOLSTORE_HOST", 
+                "inventory-coolstore") + ":" +
+            GetEnvironmentVariable("COMPONENT_INVENTORY_COOLSTORE_PORT", 
+                "8080");
+
+        // set up the Http conection pools
+        inventoryHttpClient.BaseAddress = new Uri(inventoryApiHost);
+        catalogHttpClient.BaseAddress = new Uri(catalogApiHost);
+    }
+    catch(Exception e)
+    {
+        Console.WriteLine("Checking catalog api URL " + catalogApiHost);
+        Console.WriteLine("Checking inventory api URL " + inventoryApiHost);
+        Console.WriteLine("Failure to build location URLs for Catalog and Inventory services: " + e.Message);
+        throw;
+    }
+}
+----
+You can try this simple name service discovery for yourself in the Gateway service pod by `*selecting the Gateway
+service and then the running Pod.*`
+
+image::innerloop/openshift-gateway-pod.png[Gateway Service,500]
+
+You can test the connectivity by `*selecting the Pod Terminal*` and by `*executing these shell commands in the terminal window:*`
+
+image::innerloop/openshift-gateway-pod-terminal.png[Gateway Service,500]
+
+[source,shell,subs="{markup-in-source}",role=copypaste]
+----
+curl -w "\n" http://inventory-coolstore:8080/api/inventory/329299
+----
+[source,shell,subs="{markup-in-source}",role=copypaste]
+----
+curl -w "\n" http://catalog-coolstore:8080/api/catalog
+----
+
+Well done! You are ready to move on to the next lab.
+
+== 5. Deploy Web UI with with Node.js and AngularJS
+:navtitle: Deploy Web UI with with Node.js and AngularJS
+
+In this lab you will deploy the Node.js and Angular-based web frontend for the CoolStore online shop which uses the API Gateway services you deployed 
+in previous labs. 
+
+image::innerloop/coolstore-arch-webui-nodejs.png[API Gateway Pattern,400]
+
+[#what_is_nodejs]
+=== 5.1. What is Node.js?
+
+[sidebar]
+--
+image::innerloop/nodejs-logo.png[Node.js, 400]
+
+https://nodejs.org/[Node.js^] is an open source, cross-platform runtime environment for developing server-side 
+applications using JavaScript. https://nodejs.org/[Node.js^] has an event-driven architecture capable of 
+non-blocking I/O. These design choices aim to optimize throughput and scalability in 
+Web applications with many input/output operations, as well as for real-time web applications.
+
+https://nodejs.org/[Node.js^] non-blocking architecture allows applications to process large number of 
+requests (tens of thousands) using a single thread which makes it desirable choice for building 
+scalable web applications.
+--
+
+[#deploy_on_openshift]
+=== 5.2. Deploy on OpenShift
+
+The Web UI is built using Node.js for server-side JavaScript and AngularJS for client-side 
+JavaScript. Let's deploy it on OpenShift using the certified Node.js container image available 
+in OpenShift. 
+
+In this lab, you will use OpenShift https://docs.openshift.com/container-platform/latest/cicd/builds/understanding-image-builds.html[Source-to-Image (S2I)^] again.
+OpenShift will obtain the application code directly from the source repository and then build and deploy a 
+container image of it.
+
+For a change, rather than using the CLI option you will start this process from the web console.
+
+In the {OPENSHIFT_CONSOLE_URL}[OpenShift Web Console^, role='params-link'], from the **Developer view**,
+`*click on '+Add' and select 'Import from Git'*`
+
+image::innerloop/openshift-add-from-git.png[OpenShift - Add from Git, 700]
+
+Then, enter the following information:
+
+.Web UI Project
+[%header,cols=2*]
+|===
+|Parameter 
+|Value
+
+|Git Repo URL
+|**{WORKSHOP_GIT_REPO}**
+
+|Git Reference (see *advanced Git options*)
+|**{WORKSHOP_GIT_REF}**
+
+|Context Dir
+|**/labs/web-nodejs**
+
+|Builder Image
+|**Node.js**
+
+|Application
+|**coolstore**
+
+|Name
+|**web-coolstore**
+
+|Create a route to the application
+|**_Checked_**
+
+|Show advanced Routing options
+|**_Expand - see below_**
+
+|===
+
+From the advanced Routing options `*select the Secure Route option*` and set TLS termination to "Edge", so this creates an *HTTPS* route. 
+like below:-
+
+image::innerloop/openshift-add-https-route.png[OpenShift - Add route, 600]
+
+`*Click on 'Create' button*` 
+
+Now wait a few minutes for the application to built by OpenShift and deployed to your project. In the toplogy view, 
+the web application pod will not be ready until the blue ring goes dark blue.
+
+[#test_your_service]
+=== 5.3 Test your Service
+
+In the {OPENSHIFT_CONSOLE_URL}[OpenShift Web Console^, role='params-link'], from the **Developer view**,
+`*click on the 'Open URL' icon of the Web Service*`
+
+image::innerloop/openshift-web-topology.png[OpenShift - Web Topology, 700]
+
+Your browser will be redirected to **your Web Service running on OpenShift**.
+You should be able to see the CoolStore application with all products and their inventory status.
+
+image::innerloop/coolstore-web.png[CoolStore Shop,840]
+
+Well done! You are ready to move on to the next lab.
+
+== 6. Monitor Application Health
+:navtitle: Monitor Application Health
+
+In this lab we will learn how to monitor application health using OpenShift 
+health probes and how you can see container resource consumption using metrics.
+
+[sidebar]
+.OpenShift Health Probes
+--
+
+When building microservices, monitoring becomes of extreme importance to make sure all services 
+are running at all times, and when they don't there are automatic actions triggered to rectify 
+the issues. 
+
+OpenShift, using Kubernetes health probes, offers a solution for monitoring application 
+health and trying to automatically heal faulty containers through restarting them to fix issues such as
+a deadlock in the application which can be resolved by restarting the container. Restarting a container 
+in such a state can help to make the application more available despite bugs.
+
+Furthermore, there are of course a category of issues that can't be resolved by restarting the container. 
+In those scenarios, OpenShift would remove the faulty container from the built-in load-balancer and send traffic 
+only to the healthy containers that remain.
+
+There are three types of health probes available in OpenShift: https://docs.openshift.com/container-platform/latest/applications/application-health.html#application-health-about_application-health[startup, readiness and liveness probes^]. 
+
+* **Startup probes** determine if the container in which it is scheduled is started
+* **Readiness probes** determine if the container in which it is scheduled is ready to service requests
+* **Liveness probes** determine if the container in which it is scheduled is still running
+
+Health probes also provide crucial benefits when automating deployments with practices like rolling updates in 
+order to remove downtime during deployments. A readiness health probe would signal to OpenShift when to switch traffic from the old version of the container to the new version so that the users don't get affected during deployments.
+
+There are https://docs.openshift.com/container-platform/latest/applications/application-health.html#application-health-about_types_application-health[three ways to define a health probe^] for a container:
+
+* **HTTP Checks:** healthiness of the container is determined based on the response code of an HTTP 
+endpoint. Anything between 200 and 399 is considered success. A HTTP check is ideal for applications 
+that return HTTP status codes when completely initialized.
+
+* **Container Execution Checks:** a specified command is executed inside the container and the healthiness is 
+determined based on the return value (0 is success). 
+
+* **TCP Socket Checks:** a socket is opened on a specified port to the container and it's considered healthy 
+only if the check can establish a connection. TCP socket check is ideal for applications that do not 
+start listening until initialization is complete.
+--
+
+[#understanding_liveness]
+=== 6.1. Understanding Liveness Probes
+
+**What happens if you DON'T setup Liveness checks?**
+
+By default Pods are designed to be resilient, if a pod dies it will get restarted. Let's see
+this happening.
+
+In the {OPENSHIFT_CONSOLE_URL}[OpenShift Web Console^, role='params-link'], from the **Developer view**,
+`*click on 'Topology' -> '(D) inventory-coolstore' -> 'Resources' -> 'P inventory-coolstore-x-xxxxx'*`
+
+image::innerloop/openshift-inventory-pod.png[OpenShift Inventory Pod, 700]
+
+In the {OPENSHIFT_CONSOLE_URL}[OpenShift Web Console^, role='params-link'], `*click on 'Actions' -> 'Delete Pod' -> 'Delete'*`
+
+image::innerloop/openshift-inventory-delete-pod.png[OpenShift Inventory Delete Pod, 700]
+
+A new instance (pod) will be redeployed very quickly. Once deleted `*try to access your http://inventory-coolstore-my-project{USER_ID}.{APPS_HOSTNAME_SUFFIX}[Inventory Service^, role='params-link']*`.
+
+However, imagine the _Inventory Service_ is stuck in a state (Stopped listening, Deadlock, etc)
+where it cannot perform as it should. In this case, the pod will not immeditaely die, it will be in a zombie state.
+
+To make your application more robust and reliable, a **Liveness check**  will be used to check 
+if the container itself has become unresponsive. If the liveness probe fails due to a condition such as a deadlock, 
+the container could automatically restart (based on its restart policy).
+
+[#understanding_readiness]
+=== 6.2. Understanding Readiness Probes
+
+**What happens if you DON'T setup Readiness checks?**
+
+Let's imagine you have traffic coming into the _Inventory Service_. We can do that with simple script.
+
+In your {CHE_URL}[Workspace^, role='params-link'],
+
+[tabs, subs="attributes+,+macros"]
+====
+
+IDE Task::
++
+-- 
+`*Click on 'Terminal' -> 'Run Task...' ->  'devfile: Inventory - Generate Traffic'*`
+
+image::innerloop/che-runtask.png[Che - RunTask, 600]
+--
+
+CLI::
++
+--
+`*Execute the following commands in the terminal window*`
+
+[source,shell,subs="{markup-in-source}",role=copypaste]
+----
+for i in {1..60}
+do 
+    if [ $(curl -s -w "%{http_code}" -o /dev/null http://inventory-coolstore.my-project{USER_ID}.svc:8080/api/inventory/329299) == "200" ]
+    then 
+        MSG="\033[0;32mThe request to Inventory Service has succeeded\033[0m"
+    else 
+        MSG="\033[0;31mERROR - The request to Inventory Service has failed\033[0m" 
+    fi
+    
+    echo -e $MSG
+    sleep 1s
+done
+----
+
+NOTE: To open a terminal window, `*click on 'Terminal' -> 'New Terminal'*`
+--
+====
+
+You should have the following output:
+
+image::innerloop/che-inventory-traffic.png[Che - Catalog Traffic OK, 500]
+
+Now let's scale out your _Inventory Service_ to 2 instances. 
+
+In the {OPENSHIFT_CONSOLE_URL}[OpenShift Web Console^, role='params-link'], from the **Developer view**,
+`*click on 'Topology' -> '(D) inventory-coolstore' -> 'Details' then click once on the up arrows 
+on the right side of the pod blue circle*`.
+
+image::innerloop/openshift-scale-out-inventory.png[OpenShift Scale Out Catalog, 700]
+
+You should see the 2 instances (pods) running. 
+Now, `*switch back to your {CHE_URL}[Workspace^, role='params-link'] and check the output of the 'Inventory Generate Traffic' task*`.
+
+image::innerloop/che-inventory-traffic-ko.png[Che - Catalog Traffic KO, 500]
+
+**Why do some requests failed? Because as soon as the container is created, the traffic is sent to this new instance even if the application is not ready.** 
+(The _Inventory Service_ takes a few seconds to start up). 
+
+In order to prevent this behaviour, a **Readiness check** is needed. It determines if the container is ready to service requests. 
+If the readiness probe fails, the endpoints controller ensures the container has its IP address removed from the endpoints of all services. 
+A readiness probe can be used to signal to the endpoints controller that even though a container is running, it should not receive any traffic from a proxy.
+
+First, scale down your _Inventory Service_ to 1 instance. In the {OPENSHIFT_CONSOLE_URL}[OpenShift Web Console^, role='params-link'], from the **Developer view**,
+`*click on 'Topology' -> '(D) inventory-coolstore' -> 'Details' then click once on the down arrows 
+on the right side of the pod blue circle*`.
+
+Now lets go fix some of these problems.
+
+[#configuring_liveness]
+== Configuring Liveness Probes
+
+https://quarkus.io/guides/health-guide[SmallRye Health^] is a Quarkus extension which utilizes the MicroProfile Health specification.
+It allows applications to provide information about their state to external viewers which is typically useful 
+in cloud environments where automated processes must be able to determine whether the application should be discarded or restarted.
+
+Let's add the needed dependencies to **/projects/workshop/labs/inventory-quarkus/pom.xml**. 
+In your {CHE_URL}[Workspace^, role='params-link'], `*edit the '/projects/workshop/labs/inventory-quarkus/pom.xml' file*`:
+
+[source,xml,subs="{markup-in-source}",role=copypaste]
+----
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-smallrye-health</artifactId>
+    </dependency>
+----
+
+Then, `*build and push the updated Inventory Service to the OpenShift cluster*`.
+
+[tabs, subs="attributes+,+macros"]
+====
+
+IDE Task::
++
+-- 
+`*Click on 'Terminal' -> 'Run Task...' ->  'devfile: Inventory - Push Component'*`
+
+image::innerloop/che-runtask.png[Che - RunTask, 600]
+--
+
+CLI::
++
+--
+`*Execute the following commands in the terminal window*`
+
+[source,shell,subs="{markup-in-source}",role=copypaste]
+----
+cd /projects/workshop/labs/inventory-quarkus
+mvn package -Dquarkus.container-image.build=true -DskipTests -Dquarkus.container-image.group=$(oc project -q) -Dquarkus.kubernetes-client.trust-certs=true
+----
+
+NOTE: To open a terminal window, `*click on 'Terminal' -> 'New Terminal'*`
+--
+====
+
+Wait till the build is complete then, `*Delete the Inventory Pod*` to make it start again with the new code.
+
+[source,shell,subs="{markup-in-source}",role=copypaste]
+----
+oc delete pod -l component=inventory -n my-project{USER_ID}
+----
+
+It will take a few seconds to restart, then verify that the health endpoint works for the **Inventory Service** using `*curl*`
+
+In your {CHE_URL}[Workspace^, role='params-link'], 
+`*execute the following commands in the terminal window*` - it may take a few attempts while the pod restarts.
+
+[source,shell,subs="{markup-in-source}",role=copypaste]
+----
+curl -w "\n" http://inventory-coolstore.my-project{USER_ID}.svc:8080/q/health
+----
+
+NOTE: To open a terminal window, `*click on 'Terminal' -> 'New Terminal'*`
+
+You should have the following output:
+
+[source,json,subs="{markup-in-source}"]
+----
+{
+    "status": "UP",
+    "checks": [
+        {
+            "name": "Database connection(s) health check",
+            "status": "UP"
+        }
+    ]
+}
+----
+
+In the {OPENSHIFT_CONSOLE_URL}[OpenShift Web Console^, role='params-link'], from the **Developer view**,
+`*click on 'Topology' -> '(D) inventory-coolstore' -> 'Add Health Checks'*`.
+
+image::innerloop/openshift-inventory-add-health-check.png[Che - Inventory Add Health Check, 700]
+
+Then `*click on 'Add Liveness Probe'*`
+
+image::innerloop/openshift-inventory-add-liveness-probe.png[Che - Inventory Add Liveness Probe, 500]
+
+`*Enter the following information:*`
+
+.Liveness Probe
+[%header,cols=2*]
+|===
+|Parameter 
+|Value
+
+|Type
+|HTTP GET
+
+|Use HTTPS
+|_Checked_
+
+|HTTP Headers
+|_Empty_
+
+|Path
+|/q/health/live
+
+|Port
+|8080
+
+|Failure Threshold
+|3
+
+|Success Threshold
+|1
+
+|Initial Delay
+|10
+
+|Period
+|10
+
+|Timeout
+|1
+
+|===
+
+Finally `*click on the check icon*`. But don't click *Add* yet, we have more probes to configure.
+
+[#configuring_readiness]
+=== 6.3.  Configuring Inventory Readiness Probes
+
+Now repeat the same task for the *Inventory* service, but this time set the *Readiness* probes:
+
+.Readiness Probe
+[%header,cols=2*]
+|===
+|Parameter
+|Value
+
+|Type
+|HTTP GET
+
+|Use HTTPS
+|_Checked_
+
+|HTTP Headers
+|_Empty_
+
+|Path
+|/q/health/ready
+
+|Port
+|8080
+
+|Failure Threshold
+|3
+
+|Success Threshold
+|1
+
+|Initial Delay
+|0
+
+|Period
+|5
+
+|Timeout
+|1
+
+|===
+
+Finally `*click on the check icon and the 'Add' button*`. OpenShift automates deployments using 
+https://docs.openshift.com/container-platform/4.12/welcome/index.html[deployment triggers^] 
+that react to changes to the container image or configuration. 
+Therefore, as soon as you define the probe, OpenShift automatically redeploys the pod using the new configuration including the liveness probe.
+
+[NOTE]
+You can also configure probes directly in your Quarkus application.properties, or even create custom health check classes. You can read more about it in the https://quarkus.io/guides/smallrye-healt[Quarkus Smallrye Health documentation]
+
+[#testing_Readiness]
+== Testing Inventory Readiness Probes
+
+Now let's test it as you did previously.
+`*Generate traffic to Inventory Service*` and then, in the {OPENSHIFT_CONSOLE_URL}[OpenShift Web Console^, role='params-link'], 
+`*scale out the Inventory Service to 2 instances (pods)*`
+
+In your {CHE_URL}[Workspace^, role='params-link'], `*check the output of the 'Inventory Generate Traffic' task*`.
+
+You should not see any errors, this means that you can now **scale out your _Inventory Service_ with no downtime.**
+
+image::innerloop/che-inventory-traffic.png[Che - Catalog Traffic OK, 500]
+
+Now scale down your _Inventory Service_ back to 1 instance. 
+
+== Catalog Services Probes
+
+http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready[Spring Boot Actuator^] is a 
+sub-project of Spring Boot which adds health and management HTTP endpoints to the application. Enabling Spring Boot 
+Actuator is done via adding **org.springframework.boot:spring-boot-starter-actuator** dependency to the Maven project 
+dependencies which is already done for the **Catalog Service**.
+
+Verify that the health endpoint works for the **Catalog Service** using `*curl*`.
+
+In your {CHE_URL}[Workspace^, role='params-link'], in the *terminal* window, 
+`*execute the following commands*`:
+
+[source,shell,subs="{markup-in-source}",role=copypaste]
+----
+curl -w "\n" http://catalog-coolstore.my-project{USER_ID}.svc:8080/actuator/health
+----
+
+You should have the following output:
+
+[source,json,subs="{markup-in-source}"]
+----
+{"status":"UP"}
+----
+
+Liveness and Readiness health checks values have already been set for this service as part of the build and deploying 
+using Eclipse JKube in combination with the Spring Boot actuator. 
+
+You can check this in the {OPENSHIFT_CONSOLE_URL}[OpenShift Web Console^, role='params-link'], from the **Developer view**,
+`*click on 'Topology' -> '(D) catalog-coolstore' -> 'Actions' -> 'Edit Health Checks'*`.
+
+image::innerloop/openshift-catalog-edit-health.png[Che - Catalog Add Health Check, 700]
+
+[#understanding_startup]
+=== 6.4.  Understanding Startup Probes
+
+**Startup probes** are similar to liveness probes but only executed at startup.
+When a startup probe is configured, the other probes are disabled until it suceeds.
+
+Sometimes, some (legacy) applications might need extra times for their first initialization. 
+In such cases, setting a longer liveness internal might compromise the main benefit of this probe ie providing 
+the fast response to stuck states.
+
+**Startup probes** are useful to cover this worse case startup time.
+
+[#monitoring_application_metrics]
+=== 6.5. Monitoring Applications Metrics
+
+Metrics are another important aspect of monitoring applications which is required in order to 
+gain visibility into how the application behaves and particularly in identifying issues.
+
+OpenShift provides container metrics out-of-the-box and displays how much memory, cpu and network 
+each container has been consuming over time. 
+
+In the {OPENSHIFT_CONSOLE_URL}[OpenShift Web Console^, role='params-link'], from the **Developer view**,
+`*click on 'Observe' then select your 'my-project{USER_ID}' project*`.
+
+In the project overview, you can see the different **Resource Usage** sections. 
+`*click on one graph to get more details*`.
+
+image::innerloop/openshift-monitoring.png[OpenShift Monitoring,740]
+
+From the **Developer view**, `*click on 'Topology' -> any Deployment (D) and click on the associated Pod (P)*`
+
+In the pod overview, you can see a more detailed view of the pod consumption.
+The graphs can be found under the Metrics heading, or Details in earlier versions of the OpenShift console.
+
+image::innerloop/openshift-pod-details.png[OpenShift Pod Details,740]
+
+Well done! You are ready to move on to the next lab.
+
+== 7. Externalize Application Configuration
+:navtitle: Externalize Application Configuration
+
+In this lab you will learn how to manage application configuration and how to provide environment 
+specific configuration to the services.
+
+[sidebar]
+.ConfigMaps
+--
+Applications require configuration in order to tweak the application behavior 
+or adapt it to a certain environment without the need to write code and repackage 
+the application for every change. 
+
+The most common way to provide configurations to applications is using environment 
+variables and external configuration files such as properties, JSON or YAML files, 
+configuration files and command line arguments.
+
+Kubernetes, and by extension OpenShift, provides a mechanism called https://docs.openshift.com/container-platform/latest/welcome/index.html[**ConfigMaps**^] 
+in order to externalize configurations from the applications deployed within containers and provide them to the containers as files and environment variables. OpenShift also offers a way to provide sensitive configuration data such as certificates, credentials, etc. to the application containers in the form of Secrets.
+
+This allows developers to build the container image for their application only once, 
+and reuse that image to deploy the application across various environments with 
+different configurations that are provided to the application at runtime.
+--
+
+[#create_databases]
+=== 7.1.  Create Databases for Inventory and Catalog
+
+So far Catalog and Inventory services have been using an in-memory H2 database. Although H2 
+is a convenient database to run locally on your laptop, it's not really appropriate for production or 
+even integration tests. Since it's strongly recommended to use the same technology stack (operating 
+system, JVM, middleware, database, etc.) that is used in production across all environments, you 
+should modify Inventory and Catalog services to use eg. PostgreSQL or MariaDB instead of the H2 in-memory database.
+
+Let's create a MariaDB database for the **Inventory Service** using the MariaDB template that is provided out-of-the-box:
+
+[TIP]
+====
+https://docs.openshift.com/container-platform/latest/openshift_images/using-templates.html[OpenShift Templates^] use YAML/JSON to compose 
+multiple containers and their configurations as a list of objects to be created and deployed at once, 
+making it simple to re-create complex deployments by just deploying a single template. Templates can 
+be parameterized to get input for fields like service names and generate values for fields like passwords.
+====
+
+In the {OPENSHIFT_CONSOLE_URL}[OpenShift Web Console^, role='params-link'], `*click on '+Add' and select 'Database'*`
+
+image::innerloop/openshift-add-database.png[OpenShift - Add database, 700]
+
+`*Select 'MariaDB (Ephemeral)' and click on 'Instantiate Template'*`
+
+Then, enter the following information:
+
+.Inventory Database
+[%header,cols=2*]
+|===
+|Parameter 
+|Value
+
+|Namespace*
+|my-project{USER_ID}
+
+|Memory Limit*
+|512Mi
+
+|Namespace
+|openshift
+
+|Database Service Name*
+|inventory-mariadb
+
+|MariaDB Connection Username
+|inventory
+
+|MariaDB Connection Password
+|inventory
+
+|MariaDB root Password
+|inventoryadmin
+
+|MariaDB Database Name*
+|inventorydb
+
+|Version of MariaDB Image*
+|10.3-el8
+
+|===
+
+`*Click on 'Create' button*`, shortly a Maria database pod should be created:-
+
+image::innerloop/openshift-inventory-mariadb-topology.png[OpenShift - Inventory MariaDB, 700]
+
+`*Now click again on '+Add' and select 'Database', select 'PostgreSQL (Ephemeral)' and click on 'Instantiate Template'*` 
+to create the Catalog Database as follows:
+
+Then, enter the following information:
+
+.Catalog Database
+[%header,cols=2*]
+|===
+|Parameter 
+|Value
+
+|Namespace*
+|my-project{USER_ID}
+
+|Memory Limit*
+|512Mi
+
+|Namespace
+|openshift
+
+|Database Service Name*
+|catalog-postgresql
+
+|PostgreSQL Connection Username
+|catalog
+
+|PostgreSQL Connection Password
+|catalog
+
+|PostgreSQL Database Name*
+|catalogdb
+
+|Version of PostgreSQL Image*
+|10-el8
+
+|===
+
+`*Click on 'Create' button*`, shortly a Postgresql dtabase pod should be created:-
+
+image::innerloop/openshift-catalog-postgresql-topology.png[OpenShift - Catalog PostgreSQL, 700]
+
+Now you can move on to configure the Inventory and Catalog service to use these databases.
+
+=== 7.2. Give permissions to discover Kubernetes objects
+
+By default, due to security reasons, **containers are not allowed to snoop around OpenShift clusters and discover objects**. Security comes first and discovery is a privilege that needs to be granted to containers in each project. 
+
+Since you do want our applications to discover the config maps inside the **my-project{USER_ID}** project, you need `*to grant permission to the Service Account to access the OpenShift REST API*` and find the config maps. You can do so with the following command:
+
+[source,shell,subs="{markup-in-source}",role=copypaste]
+----
+oc policy add-role-to-user view -n my-project{USER_ID} -z default
+----
+
+[#externalize_quarkus_configuration]
+=== 7.3. Externalize Quarkus (Inventory) Configuration
+
+Quarkus supports multiple mechanisms for externalizing configurations such as environment variables, 
+Maven properties, command-line arguments and more. The recommended approach for the long-term for externalizing 
+configuration is however using an https://quarkus.io/guides/application-configuration-guide#overriding-properties-at-runtime[application.properties^] 
+which you have already packaged within the Inventory Maven project.
+
+In Quarkus, Driver is a build time property and cannot be overridden. So as you are going to change the database
+technology, you need to change the 'quarkus.datasource.driver' parameter 
+in **/projects/workshop/labs/inventory-quarkus/src/main/resources/application.properties** and rebuild the application.
+
+In your {CHE_URL}[Workspace^, role='params-link'], `*edit the '/projects/workshop/labs/inventory-quarkus/pom.xml' file and add the
+'JDBC Driver - MariaDB' dependency*`
+
+[source,xml,subs="{markup-in-source}",role=copypaste]
+----
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-kubernetes-config</artifactId> #<1>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-jdbc-mariadb</artifactId> #<2>
+    </dependency>
+----
+<1> Extension which allows developers to use Kubernetes ConfigMaps and Secrets as a configuration source, without having to mount them into the Pod running the Quarkus application or make any other modifications to their Kubernetes Deployment.
+<2> Extension which allows developers to connect to MariaDB databases using the JDBC driver
+
+Then `*add the '%prod.quarkus.datasource.driver' parameter in 
+ the '/projects/workshop/labs/inventory-quarkus/src/main/resources/application.properties' file*` as follows
+
+[source,properties,subs="{markup-in-source}",role=copypaste]
+----
+%prod.quarkus.datasource.db-kind=mariadb#<1>
+%prod.quarkus.kubernetes-config.enabled=true#<2>
+%prod.quarkus.kubernetes-config.config-maps=inventory#<3>
+----
+<1> The kind of database we will connect to
+<2> If set to true, the application will attempt to look up the configuration from the API server
+<3> ConfigMaps to look for in the namespace that the Kubernetes Client has been configured for
+
+NOTE: With the **%prod** prefix, this option is only activated when building the jar intended for deployments.
+
+[WARNING]
+====
+Leave the **'quarkus.datasource.jdbc.url'**, **'quarkus.datasource.username'** and **'quarkus.datasource.password'**
+parameters unchanged. They will be overridden later.
+====
+
+Now, let's create the Quarkus configuration content using the database credentials.
+
+In the {OPENSHIFT_CONSOLE_URL}[OpenShift Web Console^, role='params-link'], from the **Developer view**,
+`*click on 'Config Maps' then click on the 'Create Config Map' button*`.
+
+image::innerloop/openshift-create-configmap.png[Che - OpenShift Create Config Map, 900]
+
+Then switch to `*YAML view*` and  `*replace the content*` with the following input:
+
+[source,yaml,subs="{markup-in-source}",role=copypaste]
+----
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: inventory
+  namespace: my-project{USER_ID}
+  labels:
+    app: coolstore
+    app.kubernetes.io/instance: inventory
+data:
+  application.properties: |-
+    quarkus.datasource.jdbc.url=jdbc:mariadb://inventory-mariadb.my-project{USER_ID}.svc:3306/inventorydb
+    quarkus.datasource.username=inventory
+    quarkus.datasource.password=inventory
+----
+
+`*Click on the 'Create' button*`.
+
+Once the source code is updated and the ConfigMap is created, as before, build and `*Push the updated Inventory Service to the OpenShift cluster*`.
+
+Wait till the build is complete then, `*Delete the Inventory Pod*` to make it start again and look for the config maps:
+
+[source,shell,subs="{markup-in-source}",role=copypaste]
+----
+oc delete pod -l component=inventory -n my-project{USER_ID}
+----
+
+You have now created a config map that holds the configuration content for Inventory and can be updated 
+at anytime for example when promoting the container image between environments without needing to 
+modify the Inventory container image itself. 
+
+[#externalize_spring_boot_configuration]
+=== 7.4. Externalize Spring Boot (Catalog) Configuration
+
+You should be quite familiar with config maps by now. Spring Boot application configuration is provided 
+via a properties file called **application.properties** and can be 
+https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html[overriden and overlayed via multiple mechanisms^]. 
+
+[NOTE]
+====
+Check out the default Spring Boot configuration in Catalog Maven project **catalog-spring-boot/src/main/resources/application.properties**.
+====
+
+In this lab, you will configure the **Catalog Service** which is based on Spring Boot to override the default 
+configuration using an alternative **application.properties** backed by a config map.
+
+Let's create the Spring Boot configuration content using the database credentials and create the Config Map.
+
+In the {OPENSHIFT_CONSOLE_URL}[OpenShift Web Console^, role='params-link'], from the **Developer view**,
+`*click on 'Config Maps' then click on the 'Create Config Map' button*`.
+
+image::innerloop/openshift-create-configmap.png[Che - OpenShift Create Config Map, 900]
+
+Then switch to `*YAML view*` and `*replace the content*` with the following input:
+
+[source,yaml,subs="{markup-in-source}",role=copypaste]
+----
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: catalog
+  namespace: my-project{USER_ID}
+  labels:
+    app: coolstore
+    app.kubernetes.io/instance: catalog
+data:
+  application.properties: |-
+    spring.datasource.url=jdbc:postgresql://catalog-postgresql.my-project%USER_ID%.svc:5432/catalogdb
+    spring.datasource.username=catalog
+    spring.datasource.password=catalog
+    spring.datasource.driver-class-name=org.postgresql.Driver
+    spring.jpa.hibernate.ddl-auto=create
+    spring.jpa.properties.hibernate.jdbc.lob.non_contextual_creation=true
+----
+
+The https://github.com/spring-cloud-incubator/spring-cloud-kubernetes[Spring Cloud Kubernetes^] plug-in implements 
+the integration between Kubernetes and Spring Boot and is already added as a dependency to the Catalog Maven 
+project. Using this dependency, Spring Boot would search for a config map (by default with the same name as 
+the application) to use as the source of application configurations during application bootstrapping and 
+if enabled, triggers hot reloading of beans or Spring context when changes are detected on the config map.
+
+`*Delete the Catalog Pod*` to make it start again and look for the config maps:
+
+[source,shell,subs="{markup-in-source}",role=copypaste]
+----
+oc delete pod -l component=catalog -n my-project{USER_ID}
+----
+
+When the Catalog container is *ready* (wait at least 30 seconds), verify that the PostgreSQL database is being 
+used. Check the Catalog pod logs repeatedly:
+
+[source,shell,subs="{markup-in-source}",role=copypaste]
+----
+oc logs deployment/catalog-coolstore -n my-project{USER_ID} | grep hibernate.dialect
+----
+
+You should have the following output:
+
+[source,shell,subs="{markup-in-source}"]
+----
+2017-08-10 21:07:51.670  INFO 1 --- [           main] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.PostgreSQL95Dialect
+----
+
+[#explore_secrets]
+=== 7.5. Explore Sensitive Configuration Data
+
+[sidebar]
+.Secrets
+--
+**ConfigMaps** are a superb mechanism for externalizing application configuration while keeping 
+containers independent of in which environment or on what container platform they are running. 
+Nevertheless, due to their clear-text nature, they are not suitable for sensitive data like 
+database credentials, SSH certificates, etc. In the current lab, we used config maps for database 
+credentials to simplify the steps; however, for production environments, you should opt for a more 
+secure way to handle sensitive data.
+
+Fortunately, OpenShift already provides a secure mechanism for handling sensitive data which is 
+called *Secrets*. Secret objects act and are used 
+similarly to config maps however with the difference that they are encrypted as they travel over the wire and also at rest when kept on a persistent disk. Like config maps, secrets can be injected into 
+containers as environment variables or files on the filesystem using a temporary file-storage 
+facility (tmpfs).
+--
+
+You won't create any secrets in this lab; however, you have already created two secrets when you created 
+the PostgreSQL and MariaDB databases. The Database template by default stores 
+the database credentials in a secret in the project in which it's being created:
+
+[source,shell,subs="{markup-in-source}",role=copypaste]
+----
+oc describe secret catalog-postgresql
+----
+
+You should have the following output:
+
+[source,shell,subs="{markup-in-source}"]
+----
+Name:            catalog-postgresql
+Namespace:       coolstore
+Labels:          app=catalog
+                 template=postgresql-persistent-template
+Annotations:     openshift.io/generated-by=OpenShiftNewApp
+                 template.openshift.io/expose-database_name={.data['database-name']}
+                 template.openshift.io/expose-password={.data['database-password']}
+                 template.openshift.io/expose-username={.data['database-user']}
+
+Type:     Opaque
+
+Data
+====
+database-name:        9 bytes
+database-password:    7 bytes
+database-user:        7 bytes
+----
+
+This secret has three encrypted properties defined as **database-name**, **database-user** and **database-password** which hold 
+the PostgreSQL database name, username and password values. These values are injected in the PostgreSQL container as 
+environment variables and used to initialize the database.
+
+In the {OPENSHIFT_CONSOLE_URL}[OpenShift Web Console^, role='params-link'], from the **Developer view**,
+`*click on 'DC catalog-postgresql' -> 'DC catalog-postgresql' -> 'Environment'*`. Notice the values 
+from the secret are defined as env vars on the deployment:
+
+image::innerloop/config-psql-secret.png[Secrets as Env Vars,900]
+
+[#test_your_service]
+=== 7.6. Test your Service (again)
+
+Having made all those changes with adding databases and the application configuration you should now 
+test that the Coolstore application still works. Just like you did a couple of chapters ago you need to use the toplogy 
+display in the web console.
+
+In the {OPENSHIFT_CONSOLE_URL}[OpenShift Web Console^, role='params-link'], from the **Developer view**,
+`*click on the 'Open URL' icon of the Web Service*`
+
+image::innerloop/openshift-web-topology.png[OpenShift - Web Topology, 700]
+
+Your browser will be redirected to **your Web Service running on OpenShift**.
+You should be able to see the CoolStore application with all products and their inventory status.
+
+image::innerloop/coolstore-web.png[CoolStore Shop,840]

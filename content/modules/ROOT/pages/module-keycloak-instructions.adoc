@@ -23,7 +23,7 @@
 
 == 1. Deploy Globex Coolstore app using Helm
 
-Let's first deploy the fully function (but unsecured) application. We'll use a Helm chart to deploy it to your namespace (`{MODULE_NAMESPACE}`). Open the https://console-openshift-console.apps.{ROUTE_SUBDOMAIN}/topology/ns/{MODULE_NAMESPACE}?view=graph[OpenShift console^]. You will see the Keycloak operator already installed:
+Let's first deploy the fully function (but unsecured) application. We'll use a Helm chart to deploy it to your namespace (`globex-keycloak-{user_name}`). Open the {openshift_cluster_console}/topology/ns/globex-keycloak-{user_name}?view=graph[OpenShift console^]. You will see the Keycloak operator already installed:
 
 image::keycloak/start.png[]
 
@@ -59,7 +59,7 @@ You can install Keycloak in many ways, including just downloading and extracting
 
 === 2.1 Deploy Keycloak Database
 
-Keycloak needs a database to store its data. We'll use Postgres. Back on the https://console-openshift-console.apps.{ROUTE_SUBDOMAIN}/topology/ns/{MODULE_NAMESPACE}?view=graph[OpenShift console^], click the Add icon once again, type `postgres ephemeral` into the search box, locate the `Postgres (Ephemeral)` template, click on it, and click *Instantiate Template*:
+Keycloak needs a database to store its data. We'll use Postgres. Back on the {openshift_cluster_console}/topology/ns/globex-keycloak-{user_name}?view=graph[OpenShift console^], click the Add icon once again, type `postgres ephemeral` into the search box, locate the `Postgres (Ephemeral)` template, click on it, and click *Instantiate Template*:
 
 image::keycloak/postgres-create.png[]
 
@@ -103,7 +103,7 @@ spec:
   http:
     tlsSecret: keycloak-cert-secret
   hostname:
-    hostname: keycloak-{MODULE_NAMESPACE}.{ROUTE_SUBDOMAIN}
+    hostname: keycloak-globex-keycloak-{user_name}.{ROUTE_SUBDOMAIN}
   db:
     vendor: postgres
     host: keycloak-postgresql
@@ -133,7 +133,7 @@ image::keycloak/keycloak-adminsecret.png[]
 
 `admin` is pretty easy to remember, but you'll probably want to copy the password to your clipboard (using the copy-to-clipboard icon at the far right, or CTRL-C (CMD-C on a Mac)) to use in a moment.
 
-Back on the https://console-openshift-console.apps.{ROUTE_SUBDOMAIN}/topology/ns/{MODULE_NAMESPACE}?view=graph[OpenShift console^] topology page, click the small "open" icon at the upper right of the Keycloak deployment:
+Back on the {openshift_cluster_console}/topology/ns/globex-keycloak-{user_name}?view=graph[OpenShift console^] topology page, click the small "open" icon at the upper right of the Keycloak deployment:
 
 image::keycloak/keycloak-openicon.png[]
 
@@ -144,7 +144,7 @@ image::keycloak/admin-intro.png[]
 Click *Administration Console* to log in with the following:
 
 * *Username or email*: `admin`
-* *Password*: The password you retrieved from the https://console-openshift-console.{ROUTE_SUBDOMAIN}/k8s/ns/{MODULE_NAMESPACE}/secrets/keycloak-initial-admin[secret^] earlier.
+* *Password*: The password you retrieved from the {openshift_cluster_console}/k8s/ns/globex-keycloak-{user_name}/secrets/keycloak-initial-admin[secret^] earlier.
 
 image::keycloak/admin-pw.png[]
 
@@ -258,8 +258,6 @@ Repeat this process for the user group, assigning it to only the user role: Clic
 
 image::keycloak/keycloak-realmrole4.png[]
 
-
-
 === 3.5 Create Realm Client
 
 For each application wishing to authenticate within the `globex` realm, we will need to create a _Client_ within the realm. Clients are entities that can request authentication of a user for a given realm.
@@ -286,7 +284,7 @@ Click *Next*, and then use these values on the _Capabilities config_ screen:
 
 Click *Next*, and then use these values on the _Login Settings_ screen:
 
-* *Root URL*: `http://inventory-route-{MODULE_NAMESPACE}.{ROUTE_SUBDOMAIN}/``
+* *Root URL*: `http://inventory-route-globex-keycloak-{user_name}.{ROUTE_SUBDOMAIN}/``
 * *Home URL*: Leave blank
 * *Valid redirect URIs*: Leave blank
 * *Valid post logout redirect URIs*: Leave blank

@@ -25,7 +25,7 @@ In this module you’ll work with an existing Java EE application designed for a
 version of the webshop is a Java EE application built for Oracle Weblogic Application Server. As part of a modernization
 strategy you've decided to move this application to JBoss EAP, containerize it, and run it on a Kubernetes platform with OpenShift.
 
-=== What is Migration Toolkit for Applications?
+== 1. What is Migration Toolkit for Applications?
 
 image::eap/mta_icon.png[MTA Logo, 300]
 
@@ -42,7 +42,7 @@ It is used by organizations for:
 
 Read more about it in the https://access.redhat.com/documentation/en-us/migration_toolkit_for_applications/[MTA documentation^]
 
-== 1.1. Analyze app using MTA IDE Plugin
+=== 1.1. Analyze app using MTA IDE Plugin
 
 In this step we will analyze a monolithic application built for use with Oracle WebLogic Server (WLS). This application is a Java
 EE application using a number of different technologies, including standard Java EE APIs as well as proprietary Weblogic APIs and
@@ -52,7 +52,7 @@ For this lab, we will use the MTA https://access.redhat.com/documentation/en-us/
 
 The IDE Plugin for the Migration Toolkit for Applications provides assistance directly in Eclipse and Red Hat OpenShift Dev Spaces for developers making changes for a migration or modernization effort. It analyzes your projects using MTA, marks migration issues in the source code, provides guidance to fix the issues, and offers automatic code replacement when possible.
 
-== 1.2. Access Your Development Environment
+=== 1.2. Access Your Development Environment
 
 You will be using Visual Studio Code (VS Code) based on https://developers.redhat.com/products/openshift-dev-spaces/overview[Red Hat OpenShift Dev Spaces^]. **Changes to files are auto-saved every few seconds**, so you don't need to explicitly save changes.
 
@@ -76,7 +76,7 @@ image::eap/auth-access.png[auth-access, 800]
 
 Once you log in, you’ll be placed on the *Create Workspace* dashboard. Copy the following `Git Repo URL` and select `Create & Open`.
 
-* *Git Repo URL*: `https://ggithub.com/rh-mad-workshop/coolstore-monolith-legacy.git`
+* *Git Repo URL*: `https://github.com/rh-mad-workshop/coolstore-monolith-legacy.git`
 
 image::eap/ds-landing.png[ds, 800]
 
@@ -104,7 +104,7 @@ image::eap/ds-trust-popup.png[ds, 800]
 
 You'll use all of these during the course of this workshop, so keep this browser tab open throughout. **If things get weird, you can simply reload the browser tab to refresh the view.**
 
-== 1.3. Use the configuration editor to setup the analysis
+=== 1.3. Use the configuration editor to setup the analysis
 
 Click on `MTA Explorer` icon on the left. Then, a new MTA configuration will be shown up:
 
@@ -137,7 +137,7 @@ Click on `--source` to migrate from then select `weblogic`. Leave the other conf
 
 image::eap/mta-source.png[MTA Add App, 700]
 
-== 1.4. Run an analysis report
+=== 1.4. Run an analysis report
 
 Click on `Run` icon to analyze the WebLogic application. Note that if you don't see the _Run_ icon, you need to click on the _mtaConfiguration_:
 
@@ -147,7 +147,7 @@ Migration Toolkit for Applications (MTA) CLI will be executed automatically in a
 
 image::eap/mta-analysis-complete.png[MTA Add App, 900]
 
-== 1.5. Review the report
+=== 1.5. Review the report
 
 image::eap/mta_result_landing_page.png[MTA Langing Page, 900]
 
@@ -158,7 +158,7 @@ story points, number of incidents, and technologies encountered in that applicat
 
 image::eap/mta_project_overview.png[MTA Project Overview, 900]
 
-== 1.6. Understanding the report
+=== 1.6. Understanding the report
 
 The Dashboard gives an overview of the entire application migration effort. It summarizes:
 
@@ -178,7 +178,7 @@ You can use this report to estimate how easy/hard each app is, and make decision
 
 On to the next step to change the code!
 
-== 2.1. Migrate to JBoss EAP
+== 2. Migrate to JBoss EAP
 
 In this step you will migrate some Weblogic-specific code in the app to use standard (Jakarta EE) interfaces.
 
@@ -192,7 +192,7 @@ In the Explorer, MTA issues use an icon to indicate their severity level and sta
 
 image::eap/mta-issues-table.png[mta, 700]
 
-== 2.2. View Details about the Migration Issues
+=== 2.1. View Details about the Migration Issues
 
 Let's take a look at the details about the migration issue. Right-click on `WebLogic ApplicationLifecycleListenerEvent[rule-id:xxx]` in _Hints_ of _StartupListener.java_ file. Click on `View Details`:
 
@@ -209,7 +209,7 @@ the application lifecyle achieving the same result but without using proprietary
 
 Using this method makes the code much more portable.
 
-== 2.3. Fix the ApplicationLifecycleListener issues
+=== 2.2. Fix the ApplicationLifecycleListener issues
 
 [INFO]
 ====
@@ -265,7 +265,7 @@ Where is the Save button? VS Code will autosave your changes, that is why you ca
 In case you see the red lines in the source code, you can't ignore it because they are the migration issues rather than compliation errors.
 ====
 
-== 2.4. Test the build
+=== 2.3. Test the build
 
 Open a Terminal window. 
 
@@ -299,7 +299,7 @@ If it builds successfully (you will see `BUILD SUCCESS`), let’s move on to the
 [INFO] ------------------------------------------------------------------------
 ----
 
-== 2.5. View the diffs
+=== 2.4. View the diffs
 
 You can review the changes you've made. On the left, click on the _Version Control_ icon, which shows a list of the changed files. Double-click on `StartupListener.java` to view the differences you've made:
 
@@ -309,7 +309,7 @@ VS Code keeps track (using Git) of the changes you make, and you can use version
 
 For now, go back to the _Explorer_ tree and lets fix the remaining issues.
 
-== 2.6. Fix the logger issues
+=== 2.5. Fix the logger issues
 
 [INFO]
 ====
@@ -387,7 +387,7 @@ public class OrderServiceMDB implements MessageListener {
 
 That one was pretty easy.
 
-== 2.7. Test the build
+=== 2.6. Test the build
 
 Build and package the app again just as before:
 
@@ -399,7 +399,7 @@ mvn -f $PROJECT_SOURCE/monolith clean package
 
 If builds successfully (you will see `BUILD SUCCESS`), then let’s move on to the next issue! If it does not compile, verify you made all the changes correctly and try the build again.
 
-== 2.8. Remove the Weblogic EJB Descriptors
+=== 2.7. Remove the Weblogic EJB Descriptors
 
 [INFO]
 ====
@@ -468,7 +468,7 @@ Whilst still in the Project Explorer, right-click on the `src/main/java/weblogic
 
 image::eap/ds-delete-weblogic.png[ds-convert, 500]
 
-== 2.9. Fix the code
+=== 2.8. Fix the code
 
 Use kbd:[CTRL+p] (or kbd:[CMD+p] on a Mac) to Quickly Open the `monolith/src/main/java/com/redhat/coolstore/service/InventoryNotificationMDB.java` file and replace its contents with:
 
@@ -538,7 +538,7 @@ Lastly, remove Maven dependency on *org.jboss.spec.javax.rmi:jboss-rmi-api_1.0_s
 
 image::eap/mta-remove-dependency.png[rhamt_rerun_analysis_report, 700]
 
-== 2.10. Test the build
+=== 2.9. Test the build
 
 Build once again:
 
@@ -551,7 +551,7 @@ mvn -f $PROJECT_SOURCE/monolith clean package
 If builds successfully (you will see `BUILD SUCCESS`). If it does not compile, verify you
 made all the changes correctly and try the build again.
 
-== 2.11. Re-run the MTA report
+=== 2.10. Re-run the MTA report
 
 In this step we will re-run the MTA report to verify our migration was successful.
 
@@ -569,7 +569,7 @@ If it is taking too long, feel free to skip the next section and proceed to step
 eliminated all the issues.
 ====
 
-== 2.12. View the results
+=== 2.11. View the results
 
 Click on the latest result to go to the report web page and verify that it now reports 0 Story Points:
 
@@ -586,7 +586,7 @@ detail on Red Hat’s Application Migration strategies or contact your local Red
 can help you on your migration path.
 ====
 
-== 2.13. Test the application on JBoss EAP locally
+=== 2.12. Test the application on JBoss EAP locally
 
 In this development environment (GitPod), a JBoss EAP server is already running with a PostgreSQL database. Click on `Start Wildfly server` terminal in the VS Code, take a look at if the EAP server is running properly:
 
