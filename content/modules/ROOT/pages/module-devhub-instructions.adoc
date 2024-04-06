@@ -792,7 +792,7 @@ image::devhub/file_change.png[width=100%]
 
 === 3.4.8 Update the *Title* in *line 12*, adding your preferred city. 
 
-You don't need to save the file because the Red Hat OpenShift Dev Spaces automatically saves the changes while you're updating code.
+You don't need to save the file because the Red Hat OpenShift Dev Spaces automatically saves the changes while you are updating code.
 
 *Sample:*
 
@@ -853,3 +853,7 @@ image::devhub/workshop_detail.png[width=100%]
 == Summary
 
 You have successfully built the Cool Store application and learned the benefits of Red Hat Developer Hub with Software Templates reduce developer cognitive load by providing pre-architected and supported approaches to building and deploying a service or software component without having to learn all the details of the technology used to create it.
+
+Please close all but the Workshop Deployer browser tab to avoid proliferation of browser tabs which can make working on other modules difficult. 
+
+Proceed to the https://workshop-deployer.{openshift_subdomain}[Workshop Deployer] to choose your next module.

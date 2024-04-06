@@ -639,3 +639,7 @@ This would look something like this: `catalog.globex-%USERID%.svc.cluster.local`
 APIcast is an NGINX based API gateway used to integrate your internal and external API services with the Red Hat 3scale Platform. In this workshop we use the two built-in APICast (staging and production) that come by default with the 3scale installation. They come pre-configured and ready to use out-of-the-box. +
 
 << <<manage-apis.adoc#apicast, back to instructions>>
+
+Please close all but the Workshop Deployer browser tab to avoid proliferation of browser tabs which can make working on other modules difficult. 
+
+Proceed to the https://workshop-deployer.{openshift_subdomain}[Workshop Deployer] to choose your next module.

@@ -353,3 +353,7 @@ You can now see exactly where the issue is located in the source code.
 == Summary
 
 You have now successfully analyzed the legacy application to learn what migration issues you have. You'll refactor the application to fix the issues in the next module. Then, you'll deploy the modernized application to Red Hat OpenShift. Let's go!
+
+Please close all but the Workshop Deployer browser tab to avoid proliferation of browser tabs which can make working on other modules difficult. 
+
+Proceed to the https://workshop-deployer.{openshift_subdomain}[Workshop Deployer] to choose your next module.

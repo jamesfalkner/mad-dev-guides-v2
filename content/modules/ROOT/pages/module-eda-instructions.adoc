@@ -272,4 +272,6 @@ https://servicebinding.io/[Read more about Service Binding For Kubernetes,role=e
 * Replicas are copies of partitions in a topic. Partition replicas are distributed over multiple brokers in the cluster to ensure topic availability if a broker fails. When a follower replica is in sync with a partition leader, the follower replica can become the new partition leader if needed.
 * Message retention time is the amount of time that messages are retained in a topic before they are deleted or compacted, depending on the cleanup policy. Retention size is the maximum total size of all log segments in a partition before they are deleted or compacted. For this workshop you can keep the default values.
 
-<< <<add-event-streaming.adoc#kafka-params, back to instructions>>
+Please close all but the Workshop Deployer browser tab to avoid proliferation of browser tabs which can make working on other modules difficult. 
+
+Proceed to the https://workshop-deployer.{openshift_subdomain}[Workshop Deployer] to choose your next module.

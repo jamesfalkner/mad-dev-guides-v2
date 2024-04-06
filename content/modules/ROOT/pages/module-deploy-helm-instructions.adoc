@@ -43,3 +43,8 @@ Create your own charts with OpenShift Container Platform or Kubernetes resources
 Package and share your applications as charts.
 
 == 2. Deploy Globex Coolstore app using Helm
+
+
+Please close all but the Workshop Deployer browser tab to avoid proliferation of browser tabs which can make working on other modules difficult. 
+
+Proceed to the https://workshop-deployer.{openshift_subdomain}[Workshop Deployer] to choose your next module.

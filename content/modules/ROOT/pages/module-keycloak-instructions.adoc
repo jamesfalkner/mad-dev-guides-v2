@@ -80,8 +80,20 @@ image::keycloak/postgres-create3.png[]
 
 TBD
 Run:
-`openssl req -subj '/CN={ROUTE_SUBDOMAIN}/O=Test Keycloak./C=US' -newkey rsa:2048 -nodes -keyout key.pem -x509 -days 365 -out certificate.pem`
-`oc create secret tls keycloak-cert-secret --cert certificate.pem --key key.pem`
+
+[.console-input]
+[source,yaml,subs="+attributes,macros+"]
+----
+openssl req -subj '/CN={openshift_subdomain}/O=Test Keycloak./C=US' -newkey rsa:2048 -nodes -keyout key.pem -x509 -days 365 -out certificate.pem
+----
+
+Then create a secret with the certificate and key:
+
+[.console-input]
+[source,yaml,subs="+attributes,macros+"]
+----
+oc create secret tls keycloak-cert-secret --cert certificate.pem --key key.pem
+----
 
 === 2.3 Create Keycloak instance
 
@@ -103,7 +115,7 @@ spec:
   http:
     tlsSecret: keycloak-cert-secret
   hostname:
-    hostname: keycloak-globex-keycloak-{user_name}.{ROUTE_SUBDOMAIN}
+    hostname: keycloak-globex-keycloak-{user_name}.{openshift_subdomain}
   db:
     vendor: postgres
     host: keycloak-postgresql
@@ -284,7 +296,7 @@ Click *Next*, and then use these values on the _Capabilities config_ screen:
 
 Click *Next*, and then use these values on the _Login Settings_ screen:
 
-* *Root URL*: `http://inventory-route-globex-keycloak-{user_name}.{ROUTE_SUBDOMAIN}/``
+* *Root URL*: `http://inventory-route-globex-keycloak-{user_name}.{openshift_subdomain}/``
 * *Home URL*: Leave blank
 * *Valid redirect URIs*: Leave blank
 * *Valid post logout redirect URIs*: Leave blank
@@ -340,3 +352,7 @@ Congratulations!
 This exercise demonstrated how your applications can use Keycloak to protect APIs in your applications. Here we used bearer tokens to authenticate users, `@RolesAllowed` to specify in the app how to restrict access, and Keycloak's fine-grained permissions to product APIs from Keycloak itself.
 
 More information about Red Hat build of Keycloak is available in its https://access.redhat.com/documentation/en-us/red_hat_build_of_keycloak[Red Hat build of Keycloak documentation^]
+
+Please close all but the Workshop Deployer browser tab to avoid proliferation of browser tabs which can make working on other modules difficult. 
+
+Proceed to the https://workshop-deployer.{openshift_subdomain}[Workshop Deployer] to choose your next module.
