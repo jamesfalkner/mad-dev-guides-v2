@@ -66,4 +66,4 @@ In the next step, you'll begin the application modernization journey by choosing
 
 Please close all but this *Instructions browser tab* to avoid proliferation of tabs which can make working on other modules difficult. 
 
-Proceed to the https://workshop-deployer.{openshift_subdomain}[Workshop Deployer] to choose your next module.
+Please close this browser tab after you go back to the `Workshop Deployer` browser tab to choose your next module!
