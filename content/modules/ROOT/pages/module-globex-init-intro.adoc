@@ -64,6 +64,6 @@ You have now successfully learned about the architecture of the application and 
 
 In the next step, you'll begin the application modernization journey by choosing the modules that you want to learn today.
 
-Please close all but this *Instructions browser tab* to avoid proliferation of tabs which can make working on other modules difficult. 
+Please close all but the Workshop Deployer browser tab to avoid proliferation of browser tabs which can make working on other modules difficult. 
 
-Please close this browser tab after you go back to the `Workshop Deployer` browser tab to choose your next module!
+Go back to the `Workshop Deployer` browser tab to choose your next module!
