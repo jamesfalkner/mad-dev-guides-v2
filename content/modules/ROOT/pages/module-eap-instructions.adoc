@@ -64,8 +64,7 @@ Type in the following credentail:
 
 * *Username*: 
 
-[.console-input]
-[source,bash]
+[source,yaml,subs="attributes"]
 ----
 {user_name}
 ----
