@@ -101,7 +101,7 @@ image::eap/ds-delete.png[ds, 800]
 [.console-input]
 [source,bash]
 ----
- https://github.com/rh-mad-workshop/coolstore-monolith-legacy.git
+https://github.com/rh-mad-workshop/coolstore-monolith-legacy.git
 ----
 
 image::eap/ds-landing.png[ds, 800]
