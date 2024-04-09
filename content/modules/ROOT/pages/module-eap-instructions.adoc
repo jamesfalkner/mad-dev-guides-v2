@@ -73,7 +73,7 @@ Type in the following credentail:
 * *Password*: 
 
 [.console-input]
-[source,bash]
+[source,yaml,subs="attributes"]
 ----
 {user_password}
 ----
