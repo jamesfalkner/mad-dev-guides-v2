@@ -435,7 +435,7 @@ You also need to update the `pom.xml` file to use the Jakarta EE 10 APIs. Open t
 
 image::eap/ea8_pom.png[XSD Issues, 900]
 
-== 3.5. Re-run the analysis report
+=== 3.5. Re-run the analysis report
 
 Wwe will re-run the analysis report to verify the EAP 8 upgrade was successful.
 
@@ -503,7 +503,7 @@ Open the `Dockerfile` in the `monolith` directory and review the contents.
 
 image::eap/wildfly-dockerfile.png[MTA Add App, 800]
 
-Build the container image using the following `podman` command:
+Build the container image using the following `podman` command in the terminal:
 
 [.console-input]
 [source,bash,subs="+attributes,macros+"]
@@ -535,7 +535,7 @@ Successfully tagged localhost/wildfly-app:latest
 0ef447d5913c9d3a7e5015d122441b44924a3942d433f9580ab737fba9f8083b
 ----
 
-You can vefiry the image is built by running the following command:
+You can vefiry the image is built by running the following command in the terminal:
 
 [.console-input]
 [source,bash,subs="+attributes,macros+"]
@@ -556,6 +556,8 @@ quay.io/wildfly/wildfly  28.0.1.Final-jdk17  994438f4d5be  10 months ago   883 M
 === 3.8. Run the application locally
 
 Now that you have built the container image, you can run the application locally using Podman. This will start the JBoss EAP server and deploy the application to it.
+
+Run the follwoing command in the terminal:
 
 [.console-input]
 [source,bash,subs="+attributes,macros+"]
