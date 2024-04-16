@@ -292,7 +292,7 @@ We have also created a _Client_ within the realm that will be used by our backen
 
 image::keycloak/new-client.png[]
 
-Click on **Realm Roles** to see the roles our users are grouped into, `admin`, `confidential`, and `user` (and a few others). For example, clicking on `Admin`->`Users in role` you can see only Alex Admin is in this role. In the `user` role, we have all of our fake users.
+Click on **Realm Roles** to see the roles our users are grouped into, `admin`, `confidential`, and `user` (and a few others). For example, clicking on `Admin` > `Users in role` you can see only Alex Admin is in this role. In the `user` role, we have all of our fake users.
 
 We have also defined a `Confidential` resource mapping that allows us to use Keycloak's fine-grained authorization policies to restrict access to certain endpoints without having to change our application code. We'll explore this later!
 
@@ -335,13 +335,9 @@ Next, we'll add the necessary configurations to our application to enable it to 
 ----
 mp.jwt.verify.publickey.location=https://keycloak-globex-keycloak-{user_name}.{openshift_subdomain}/realms/globex/protocol/openid-connect/certs<1>
 mp.jwt.verify.issuer=https://keycloak-globex-keycloak-{user_name}.{openshift_subdomain}/realms/globex<2>
-quarkus.smallrye-jwt.auth-mechanism=MP-JWT<3>
-quarkus.smallrye-jwt.realm-name=quarkus
-quarkus.smallrye-jwt.enabled=true
 ----
 <1> Sets public key location for JWT authentication. Keycloak exports this for you at the URL.
 <2> Issuer URL. This must match the incoming JWT `iss` _claims_ or else authentication fails.
-<3> Sets authentication mechanism name to `MP-JWT`, the MicroProfile JWT RBAC specification standard name for the token based authentication mechanism.
 
 === 4.1 Add endpoints
 
@@ -397,7 +393,7 @@ public class SecuredResource {
     @Path("/me/admin")
     @RolesAllowed("admin")
     @Produces(MediaType.TEXT_PLAIN)
-    public String meJwt(@Context SecurityContext ctx) {   // <4>
+    public String meJwt(@Context SecurityContext ctx) {   // <5>
         Principal caller = ctx.getUserPrincipal();
         String name = caller == null ? "anonymous" : caller.getName();
         boolean hasJWT = jwt != null;
@@ -672,7 +668,7 @@ public class AuthorizedResource {
 
 
     @GET
-    @Path("/confidential") // <1>
+    @Path("/confidential") // <3>
     @Produces(MediaType.TEXT_PLAIN)
     public String confidential() {
         return ("confidential access for: " + identity.getPrincipal().getName() +
@@ -683,6 +679,7 @@ public class AuthorizedResource {
 ----
 <1> Note that we do not use any `@RolesAllowed` or any other instrumentation on the endpoint to specify access policy. It looks like an ordinary endpoint. Keycloak (the server) is the one enforcing access here, not Quarkus directly.
 <2> The `SecurityIdentity` is a generic object produced by the Keycloak extension that you can use to obtain information about the security principals and attributes embedded in the request.
+<3> The path defined here aligns with the definition in the Keycloak server for protecting the `/secured/confidential` endpoint. In this case, only user `jdoe` is authorized.
 
 === Rebuild and redeploy app
 
