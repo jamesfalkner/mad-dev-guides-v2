@@ -167,7 +167,7 @@ image::eap/mta-run-report.png[MTA Add App, 700]
 
 Windup (MTA) CLI will be executed automatically in a new terminal then it will take a few mins to complete the analysis. Click on `Open Report`:
 
-image::eap/mta-analysis-complete.png[MTA Add App, 900]
+image::eap/mta-analysis-complete.png[MTA Add App, 1100]
 
 === 1.5. Review the report
 
@@ -333,7 +333,7 @@ image::eap/mta-rerun-report.png[rhamt_rerun_analysis_report, 700]
 
 Windup (MTA) CLI will be executed automatically in a new terminal then it will take a few mins to complete the analysis. Click on `Open Report`:
 
-image::eap/mta-analysis-rerun-complete.png[MTA Add App, 900]
+image::eap/mta-analysis-rerun-complete.png[MTA Add App, 1100]
 
 === 2.7. View the results
 
@@ -359,7 +359,7 @@ image::eap/mta-rerun-report.png[rhamt_rerun_analysis_report, 700]
 
 It will take a few mins to complete the analysis. Click on `Open Report`:
 
-image::eap/mta-analysis-rerun-complete.png[MTA Add App, 800]
+image::eap/mta-analysis-rerun-complete.png[MTA Add App, 1100]
 
 Review the report for the EAP 8 upgrade.
 
@@ -445,7 +445,7 @@ image::eap/mta-rerun-report.png[rhamt_rerun_analysis_report, 700]
 
 Windup (MTA) CLI will be executed automatically in a new terminal then it will take a few mins to complete the analysis. Click on `Open Report`:
 
-image::eap/mta-analysis-rerun-complete.png[MTA Add App, 700]
+image::eap/mta-analysis-rerun-complete.png[MTA Add App, 1100]
 
 Well done! You will see `0` stopry points in the report:
 
