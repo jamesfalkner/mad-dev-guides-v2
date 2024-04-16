@@ -38,7 +38,7 @@ It is used by organizations for:
 * Rule extensibility and customization
 * Ability to analyze source code or application archives
 
-Read more about it in the https://access.redhat.com/documentation/en-us/migration_toolkit_for_applications/[MTA documentation^]
+Read more about it in the https://access.redhat.com/documentation/en-us/migration_toolkit_for_applications/[MTA documentation^].
 
 === 1.1. Analyze app using MTA(Windup) IDE Plugin
 
@@ -46,9 +46,9 @@ In this step we will analyze a monolithic application built for use with Oracle 
 EE application using a number of different technologies, including standard Java EE APIs as well as proprietary Weblogic APIs and
 best practices.
 
-For this lab, we will use the MTA https://access.redhat.com/documentation/en-us/migration_toolkit_for_applications/6.1/html-single/visual_studio_code_extension_guide/index[Visual Studio Code Extension^] based on Red Hat OpenShift Dev Spaces.
+For this lab, we will use the https://marketplace.visualstudio.com/items?itemName=redhat.windup-vscode-extension[Application Migration and Modernization using Windup Visual Studio Extension^] based on https://developers.redhat.com/products/openshift-dev-spaces/overview[Red Hat OpenShift Dev Spaces^].
 
-The IDE Plugin for the Migration Toolkit for Applications provides assistance directly in Eclipse and Red Hat OpenShift Dev Spaces for developers making changes for a migration or modernization effort. It analyzes your projects using MTA, marks migration issues in the source code, provides guidance to fix the issues, and offers automatic code replacement when possible.
+The VS Code Extension for the *Application Migration and Modernization using Windup* provides assistance directly in Eclipse and Red Hat OpenShift Dev Spaces for developers making changes for a migration or modernization effort. It analyzes your projects using Windup (MTA), marks migration issues in the source code, provides guidance to fix the issues, and offers automatic code replacement when possible.
 
 === 1.2. Access Your Development Environment
 
@@ -117,6 +117,11 @@ image::eap/ds-workspace.png[ds, 800]
 In case you see existing workspace, check on `Trust the authors of all files in the parent folder 'projects'`. Then, select `Yes, I trust the authors`.
 
 image::eap/ds-trust-popup.png[ds, 800]
+
+You can ignore the warning popup below.
+
+image::eap/kubectl-warning-popup.png[ds, 500]
+
 ====
 
 You'll use all of these during the course of this workshop, so keep this browser tab open throughout. **If things get weird, you can simply reload the browser tab to refresh the view.**
@@ -160,7 +165,7 @@ Click on `Run` icon to analyze the WebLogic application. Note that if you don't 
 
 image::eap/mta-run-report.png[MTA Add App, 700]
 
-Migration Toolkit for Applications (MTA) CLI will be executed automatically in a new terminal then it will take a few mins to complete the analysis. Click on `Open Report`:
+Windup (MTA) CLI will be executed automatically in a new terminal then it will take a few mins to complete the analysis. Click on `Open Report`:
 
 image::eap/mta-analysis-complete.png[MTA Add App, 900]
 
@@ -214,7 +219,7 @@ image::eap/mta-issues-table.png[mta, 700]
 
 Let's take a look at the details about the migration issue. Right-click on `WebLogic ApplicationLifecycleListenerEvent[rule-id:xxx]` in _Hints_ of _StartupListener.java_ file. Click on `View Details`:
 
-image::eap/mta-issue-detail.png[rhamt_project_issues, 900]
+image::eap/mta-issue-detail.png[rhamt_project_issues, 800]
 
 The WebLogic `ApplicationLifecycleListener` abstract class is used to perform functions or schedule jobs in Oracle WebLogic, like server start and stop. In this case we have code in the `postStart` and `preStop` methods which are executed after Weblogic starts up and before it shuts down, respectively.
 
@@ -304,13 +309,6 @@ Much of Weblogic’s interfaces for EJB components like MDBs reside in Weblogic 
 
 Remove the unneeded `weblogic-ejb-jar.xml` file from the **Project Explorer** (not the **Windup Explorer**). This file is proprietary to Weblogic and not recognized or processed by JBoss EAP. Delete the file by right-clicking on the `src/main/webapp/WEB-INF/weblogic-ejb-jar.xml` file from the **Project Explorer** and choosing **Delete**, and click **OK**.
 
-[TIP]
-====
-If you have the tab for the `weblogic-ejb-jar.xml` file open (or handy) you can quickly find it in the Project Explorer by right-clicking on the tab and then selecting **Reveal in Explorer** as shown.  You can also use the `ALT+R` (or `Option+R` on Mac).
-
-image:reveal_in_explorer.png[reveal-in-explorer, 600]
-====
-
 image::eap/ds-delete-jar.png[ds-convert, 500]
 
 While we’re at it, let’s remove the stub weblogic implementation classes added as part of the scenario.
@@ -333,9 +331,9 @@ Click on `Run` icon to analyze the WebLogic application:
 
 image::eap/mta-rerun-report.png[rhamt_rerun_analysis_report, 700]
 
-Migration Toolkit for Applications (MTA) CLI will be executed automatically in a new terminal then it will take a few mins to complete the analysis. Click on `Open Report`:
+Windup (MTA) CLI will be executed automatically in a new terminal then it will take a few mins to complete the analysis. Click on `Open Report`:
 
-image::eap/mta-analysis-rerun-complete.png[MTA Add App, 700]
+image::eap/mta-analysis-rerun-complete.png[MTA Add App, 900]
 
 === 2.7. View the results
 
@@ -343,7 +341,7 @@ Click on the latest result to go to the report web page and verify that it now r
 
 You have successfully migrated this app to `JBoss EAP 7`, congratulations!
 
-image::eap/mta_project_issues_story.png[mta_project_issues_story, 700]
+image::eap/mta_project_issues_story.png[mta_project_issues_story, 900]
 
 == 3. Upgrade to JBoss EAP 8
 
@@ -353,7 +351,7 @@ image::eap/mta_project_issues_story.png[mta_project_issues_story, 700]
 
 Go back to the `Windup Explorer` icon on the left. Then, update the existing configuration to *unselect* `eap7` and *select* `eap8` in _--target_ server to upgrade:
 
-image::eap/mta-target.png[MTA Add App, 700]
+image::eap/eap8-target.png[MTA Add App, 700]
 
 Click on `Run` icon to analyze the EAP 8 upgrade:
 
@@ -361,9 +359,17 @@ image::eap/mta-rerun-report.png[rhamt_rerun_analysis_report, 700]
 
 It will take a few mins to complete the analysis. Click on `Open Report`:
 
-image::eap/mta-analysis-rerun-complete.png[MTA Add App, 700]
+image::eap/mta-analysis-rerun-complete.png[MTA Add App, 800]
 
-=== 3.2. Fix the javax package issues
+Review the report for the EAP 8 upgrade.
+
+image::eap/eap8_result_landing_page.png[MTA Langing Page, 900]
+
+**Click on the `monolith` link** to access details for the EAP 8 upgrade issues in:
+
+image::eap/eap8_project_overview.png[MTA Project Overview, 900]
+
+=== 3.2. Fix the Javax package issues
 
 Navigate to the *Issues* tab in the analysis report, then click on `javax.persistence has been replaced by jakarta.persistence`. 
 
@@ -373,24 +379,37 @@ Lots of existing Java code uses the `javax.persistence` package, which has been 
 
 The Windup (MTA) extension provides a way to automatically fix these issues. Click on `Apply All Fixes` when you _mouse right click_ on the *coolstore-monolith-legathy* folder in the Windup explorer.
 
-image::eap/apply_for_all_issues.png[Apply All Fixes]
+image::eap/apply_for_all_issues.png[Apply All Fixes, 900]
 
 It takes 10 - 20 seconds to finish the quick fixes. You can navigate to the `OrderItem.java` file in the *src/main/java/com/redhat/coolstore/model* folder in the project tree, then you will see the `jakarta.persistence.x` package is imported instead of `javax.persistence.x`.
 
-image::eap/fixed_order_item.png[fixed_order_item]
+image::eap/fixed_order_item.png[fixed_order_item, 900]
 
 Let's continue to fix the remaining issues.
 
-=== 3.3. Fix the Replace the Java EE XSD with the Jakarta equivalent issues
+=== 3.3. Fix the "Replace the Java EE XSD with the Jakarta equivalent" issues
 
-Search `Replace the Java EE XSD with the Jakarta equivalent` in the _Issues_ tab. 
+Search `Replace the Java EE namespace, schemaLocation and version with the Jakarta equivalent` _Issues_. 
 
-Replace persistence_2_1.xsd with persistence_3_0.xsd and update the version attribute to "3.0"
+image::eap/report_beans_xsd_issues.png[XSD Issues, 900]
 
-Replace beans_1_1.xsd with beans_3_0.xsd and update the version attribute to "3.0"
+The Java EE XSDs have been replaced by Jakarta EE XSDs. You will need to update your XML files to use the new XSDs. 
 
+Open the `beans.xml` file in the *src/main/webapp/WEB-INF/* directory. Replace the the schema version number from `1.1` to `3.0` and the schema location from `beans_1_1.xsd` to `beans_3_0.xsd`.
+
+image::eap/ea8_beans_3_0.png[XSD Issues, 900]
+
+Then, you also need to replace the Java EE persistence namespace, schemaLocation and version with the Jakarta equivalent.
+
+image::eap/report_persistence_xsd_issues.png[XSD Issues, 900]
+
+Open the `persistence.xml` file in the *src/main/resources/META-INF/* directory. Replace the the schema version number from `2.1` to `3.0` and the schema location from `http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd` to `http://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd`.
+
+image::eap/ea8_persistence_3_0.png[XSD Issues, 900]
 
 === 3.4. Update the pom.xml
+
+You also need to update the `pom.xml` file to use the Jakarta EE 10 APIs. Open the `pom.xml` file in the *monolith* directory and replace the `jakarta.jakartaee-web-api` and `jakarta.jakartaee-api` dependencies with the following:
 
 [.console-input]
 [source,xml,subs="+attributes,macros+"]
@@ -414,27 +433,23 @@ Replace beans_1_1.xsd with beans_3_0.xsd and update the version attribute to "3.
         </dependency>
 ----
 
-image::eap/wildfly-dockerfile.png[MTA Add App, 700]
+image::eap/ea8_pom.png[XSD Issues, 900]
 
 == 3.5. Re-run the analysis report
 
-In this step we will re-run the analysis report to verify our migration was successful.
+Wwe will re-run the analysis report to verify the EAP 8 upgrade was successful.
 
-Click on `Run` icon to analyze the WebLogic application:
+Click on `Run` icon to analyze the EAP 8 application:
 
 image::eap/mta-rerun-report.png[rhamt_rerun_analysis_report, 700]
 
-Migration Toolkit for Applications (MTA) CLI will be executed automatically in a new terminal then it will take a few mins to complete the analysis. Click on `Open Report`:
+Windup (MTA) CLI will be executed automatically in a new terminal then it will take a few mins to complete the analysis. Click on `Open Report`:
 
 image::eap/mta-analysis-rerun-complete.png[MTA Add App, 700]
 
-=== 3.6. View the results
+Well done! You will see `0` stopry points in the report:
 
-Click on the latest result to go to the report web page and verify that it now reports 0 Story Points:
-
-You have successfully migrated this app to `JBoss EAP 7`, congratulations!
-
-image::eap/mta_project_issues_story.png[mta_project_issues_story, 700]
+image::eap/eap8_complete_page.png[eap8_result_landing_page, 900]
 
 [NOTE]
 ====
@@ -444,13 +459,13 @@ detail on Red Hat’s Application Migration strategies or contact your local Red
 can help you on your migration path.
 ====
 
-=== 3.7. Build the application
+=== 3.6. Build the application
 
 Open a Terminal window. 
 
 image::eap/new-terminal.png[new-terminal, 500]
 
-In the terminal, issue the following command to build the application. This will clean the project and then package it into a WAR file. This is the same command you would use to build the application in a local development environment.:
+In the terminal, run the following command to build the application. This will clean the project and then package it into a WAR file. This is the same command you would use to build the application in a local development environment.:
 
 [.console-input]
 [source,bash,subs="+attributes,macros+"]
@@ -470,19 +485,25 @@ If it builds successfully (you will see `BUILD SUCCESS`), let’s move on to the
 [INFO] Assembling webapp [monolith] in [/projects/coolstore-monolith-legacy/monolith/target/ROOT]
 [INFO] Processing war project
 [INFO] Copying webapp resources [/projects/coolstore-monolith-legacy/monolith/src/main/webapp]
-[INFO] Webapp assembled in [849 msecs]
+[INFO] Webapp assembled in [825 msecs]
 [INFO] Building war: /projects/coolstore-monolith-legacy/monolith/target/ROOT.war
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  10.975 s
-[INFO] Finished at: 2024-04-07T20:53:09Z
+[INFO] Total time:  10.775 s
+[INFO] Finished at: YYYY-MM-DDTHH:MM:SSZ
 [INFO] ------------------------------------------------------------------------
 ----
 
-=== 3.8. Containerize the application with JBoss EAP 8
+=== 3.7. Containerize the application with JBoss EAP 8
 
 We will now build a container image for the application using the `Dockerfile` provided in the project. This Dockerfile is based on the `Wildfly 28` image (JBoss EAP 8 built on Wildfly 28) and copies the WAR file into the deployments directory of the JBoss EAP server.
+
+Open the `Dockerfile` in the `monolith` directory and review the contents.
+
+image::eap/wildfly-dockerfile.png[MTA Add App, 800]
+
+Build the container image using the following `podman` command:
 
 [.console-input]
 [source,bash,subs="+attributes,macros+"]
@@ -495,26 +516,23 @@ The output will look like this:
 [.console-output]
 [source,sh]
 ----
-STEP 1/2: FROM quay.io/wildfly/wildfly
+STEP 1/2: FROM quay.io/wildfly/wildfly:28.0.1.Final-jdk17
 Trying to pull quay.io/wildfly/wildfly:28.0.1.Final-jdk17...
 Getting image source signatures
-Copying blob 5c24c84935d8 [--------------------------------------] 0.0b / 138.2MiB (skipped: 0.0b = 0.00%)
-Copying blob 5c24c84935d8 [--------------------------------------] 0.0b / 138.2MiB (skipped: 0.0b = 0.00%)
-Copying blob 15960cc89bfb done  
-Copying blob 5c24c84935d8 done  
-Copying blob f44f3f3bbaff done  
-Copying blob 670e08a29d06 done  
-Copying blob 2d473b07cdd5 done  
-Copying blob 775ea128c839 done  
-Copying blob 3de6a9a858a1 done  
-Copying blob 3be3e6dad5b8 done  
-Copying config 55ca26c913 done  
+Copying blob 4ca5b6bbd9fe done   | 
+Copying blob 50e770a96dde done   | 
+Copying blob 2d473b07cdd5 done   | 
+Copying blob 5fd1f22c1224 done   | 
+Copying blob fea6f29e8c83 done   | 
+Copying blob 66dbb7c2557e done   | 
+Copying blob d77bbd32b412 done   | 
+Copying config 994438f4d5 done   | 
 Writing manifest to image destination
-STEP 2/2: ADD target/ROOT.war /opt/jboss/wildfly/standalone/deployments/
+STEP 2/2: ADD monolith/target/ROOT.war /opt/jboss/wildfly/standalone/deployments/
 COMMIT wildfly-app
---> ab4bedd7fe87
+--> 0ef447d5913c
 Successfully tagged localhost/wildfly-app:latest
-ab4bedd7fe8765a3fbe1a5f722ac6d12777dcd3aa03995693ec201b39c7dccaf
+0ef447d5913c9d3a7e5015d122441b44924a3942d433f9580ab737fba9f8083b
 ----
 
 You can vefiry the image is built by running the following command:
@@ -530,19 +548,19 @@ The output will look like this:
 [.console-output]
 [source,sh]
 ----
-REPOSITORY               TAG         IMAGE ID      CREATED        SIZE
-localhost/wildfly-app    latest      ab4bedd7fe87  3 minutes ago  857 MB
-quay.io/wildfly/wildfly  latest      55ca26c91356  5 weeks ago    842 MB
+REPOSITORY               TAG                 IMAGE ID      CREATED         SIZE
+localhost/wildfly-app    latest              0ef447d5913c  28 seconds ago  898 MB
+quay.io/wildfly/wildfly  28.0.1.Final-jdk17  994438f4d5be  10 months ago   883 MB
 ----
 
-=== 3.9. Run the application locally
+=== 3.8. Run the application locally
 
 Now that you have built the container image, you can run the application locally using Podman. This will start the JBoss EAP server and deploy the application to it.
 
 [.console-input]
 [source,bash,subs="+attributes,macros+"]
 ----
-podman run -p 8080:8080 -it localhost/wildfly-app:latest /opt/jboss/wildfly/bin/standalone.sh -c standalone-full.xml -b 0.0.0.0
+podman run -p 8080:8080 -it localhost/wildfly-app:latest /opt/jboss/wildfly/bin/standalone.sh -b 0.0.0.0
 ----
 
 The output will look like this:
@@ -550,16 +568,22 @@ The output will look like this:
 [.console-output]
 [source,sh]
 ----
-=========================================================================
-
-  JBoss Bootstrap Environment
-
-  JBOSS_HOME: /opt/jboss/wildfly
-
-  JAVA: /usr/lib/jvm/java-11-openjdk-
+....
+INFO  [org.wildfly.extension.undertow] (ServerService Thread Pool -- 79) WFLYUT0021: Registered web context: '/' for server 'default-server'
+INFO  [org.jboss.as.server] (ServerService Thread Pool -- 45) WFLYSRV0010: Deployed "ROOT.war" (runtime-name : "ROOT.war")
+INFO  [org.jboss.as.server] (Controller Boot Thread) WFLYSRV0212: Resuming server
+INFO  [org.jboss.as] (Controller Boot Thread) WFLYSRV0060: Http management interface listening on http://127.0.0.1:9990/management
+INFO  [org.jboss.as] (Controller Boot Thread) WFLYSRV0051: Admin console listening on http://127.0.0.1:9990
+INFO  [org.jboss.as] (Controller Boot Thread) WFLYSRV0025: WildFly Full 28.0.1.Final (WildFly Core 20.0.2.Final) started in 6184ms - Started 514 of 714 services (322 services are lazy, passive or on-demand) - Server configuration file in use: standalone.xml
 ----
 
-You can now access the application by opening a browser and navigating to `http://localhost:8080/`. You should see the application running in the browser.
+The application is now running in the container. You can access it by opening a browser. You should see the following popup at the right bottom in the VS Code.
+
+Click on `Yes` to open the application in the browser.
+
+image::eap/eap-8-8080.png[coolstore_web, 700]
+
+Finally, you can access the frontend of the cool store application.
 
 image::eap/coolstore_web.png[coolstore_web, 700]
 
