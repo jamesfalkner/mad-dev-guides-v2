@@ -585,7 +585,7 @@ image::eap/eap-8-8080.png[coolstore_web, 700]
 
 Finally, you can access the frontend of the cool store application.
 
-image::eap/coolstore_web.png[coolstore_web, 700]
+image::eap/coolstore_web.png[coolstore_web, 900]
 
 *Congratulations!* You have successfully migrated the application to JBoss EAP 8 and containerized it.
 
