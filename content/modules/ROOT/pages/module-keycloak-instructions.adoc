@@ -39,7 +39,7 @@ You should see a number of microservices begin deploying:
 
 image::keycloak/helmcreated.png[]
 
-It will only take a few seconds for all of the services to deploy and turn dark blue.
+It will only take a few seconds for all of the services to deploy and turn dark blue. This is our starting point - a fully functional (but not yet API-secured) app.
 
 === 1.1 Test the app
 
@@ -52,6 +52,77 @@ You should see the application's frontend open in a separate browser tab:
 image::keycloak/app-open.png[]
 
 Feel free to click on the various menu items on the left and ensure you see valid customer and product details. Globex recently had an outage, where a hacker was able to infiltrate the inventory data and wreak havoc. So Globex has decided that the product inventory should only be accessible by authorized users, and has asked you to product that particular endpoint with authentication and authorization. Let's use Keycloak to do this.
+
+=== 1.2. Access Your Development Environment
+
+You will be using Visual Studio Code (VS Code) based on https://developers.redhat.com/products/openshift-dev-spaces/overview[Red Hat OpenShift Dev Spaces^] to make a few changes to the app. **Changes to files are auto-saved every few seconds**, so you don't need to explicitly save changes.
+
+To get started, {devspaces_dashboard}[access the Red Hat OpenShift Dev Spaces instance^] and select *Log in with OpenShift* button:
+
+image::eap/login_with_openshift.png[login,800]
+
+Type in the following credentail:
+
+* *Username*:
+
+[.console-input]
+[source,yaml,subs="attributes"]
+----
+{user_name}
+----
+
+* *Password*:
+
+[.console-input]
+[source,yaml,subs="attributes"]
+----
+{user_password}
+----
+
+image::eap/che-login.png[login,800]
+
+[NOTE]
+====
+In case you see the *Authorize Access* page as below, select *Allow selected permissions* button.
+
+image::eap/auth-access.png[auth-access, 800]
+====
+
+Once you log in, you’ll be placed on the *Create Workspace* dashboard. Copy the following `Git Repo URL` and select `Create & Open`.
+
+[NOTE]
+====
+In case you see existing workspace, delete the workspace first.
+
+image::eap/ds-delete.png[ds, 800]
+====
+
+* *Git Repo URL*:
+
+[.console-input]
+[source,bash]
+----
+https://github.com/rh-mad-workshop/coolstore-microservice.git
+----
+
+image::keycloak/create-ws.png[ds, 800]
+
+A new window or tab in your web browser will open automatically to showcase the progess about *Starting workspace coolstore-microservice*. It takes about *60* seconds to finish the process.
+
+image::keycloak/init-ws.png[ds, 800]
+
+After a few seconds, you’ll be placed in the workspace.
+
+image::keycloak/new-ws.png[ds, 800]
+
+[NOTE]
+====
+In case you see existing workspace, check on `Trust the authors of all files in the parent folder 'projects'`. Then, select `Yes, I trust the authors`.
+
+image::eap/ds-trust-popup.png[ds, 800]
+====
+
+You'll use all of these during the course of this workshop, so keep this browser tab open throughout. **If things get weird, you can simply reload the browser tab to refresh the view.**
 
 == 2. Deploy Keycloak instance
 
@@ -78,26 +149,41 @@ image::keycloak/postgres-create3.png[]
 
 === 2.2 Create self-signed certificate
 
-TBD
-Run:
+In the DevSpaces window, Open a Terminal window.
+
+image::eap/new-terminal.png[new-terminal, 500]
+
+In the terminal, make sure you are logged in as your user by running this command:
 
 [.console-input]
-[source,yaml,subs="+attributes,macros+"]
+[source,bash,subs="+attributes,macros+"]
 ----
-openssl req -subj '/CN={openshift_subdomain}/O=Test Keycloak./C=US' -newkey rsa:2048 -nodes -keyout key.pem -x509 -days 365 -out certificate.pem
+oc whoami
 ----
 
-Then create a secret with the certificate and key:
+You should see your username `{user_name}`.
+
+Now, switch to the new project that was created for you:
 
 [.console-input]
-[source,yaml,subs="+attributes,macros+"]
+[source,bash,subs="+attributes,macros+"]
 ----
-oc create secret tls keycloak-cert-secret --cert certificate.pem --key key.pem
+oc project globex-keycloak-{user_name}
 ----
+
+Keycloak needs a certificate pair to use for TLS communication. We will use OpenSSL to generate the key pair. Run this command to create it and then create an OpenShift _Secret_ that holds the resulting key pair:
+
+[.console-input]
+[source,bash,subs="+attributes,macros+"]
+----
+openssl req -subj '/CN={openshift_subdomain}/O=Test Keycloak./C=US' -newkey rsa:2048 -nodes -keyout key.pem -x509 -days 365 -out certificate.pem && \
+oc -n globex-keycloak-{user_name} create secret tls keycloak-cert-secret --cert certificate.pem --key key.pem
+----
+This secret will be used in the next step.
 
 === 2.3 Create Keycloak instance
 
-By creating an instance of a `Keycloak` object, the Keycloak operator will process it and instantiate a new Keycloak server. Once again, click the `Add` icon, type `keycloak` into the search box, click on the "Keycloak" item, and click Create:
+By creating an instance of a `Keycloak` object, the Keycloak operator will process it and instantiate a new Keycloak server. In the OpenShift console, click the `Add` icon, type `keycloak` into the search box, click on the "Keycloak" item, and click Create:
 
 image::keycloak/keycloak-create1.png[]
 
@@ -164,195 +250,536 @@ Once logged in, you should be at the Admin home screen:
 
 image::keycloak/admin-home.png[]
 
-== 3. Define Realm, users, and groups in Keycloak
+== 3. Import Realm
 
-For authentication purposes, we'll create 2 users that we can test our authenticated endpoint code with, as well as define a "confidential resource" based on access path, which will enable Keycloak to enforce authorization to this resource without code change.
+A Keycloak _realm_ is a space where you manage objects, including users, applications, roles, and groups. A user belongs to and logs into a realm. One Keycloak deployment can define, store, and manage as many realms as there is space for in the database. Keycloak comes with a `master` realm but that's designed to be used for managing Keycloak itself, not for applications.
 
-=== 3.1 Create a new Realm
+For authentication purposes, we'll import a new realm called `globex` that has multiple users that we can test our authenticated endpoint code with, as well as a "confidential resource" based on access path, which will enable Keycloak to enforce authorization to this resource without code change.
 
-A _realm_ is a space where you manage objects, including users, applications, roles, and groups. A user belongs to and logs into a realm. One Keycloak deployment can define, store, and manage as many realms as there is space for in the database.
+=== 3.1 Create a KeycloakRealmImport
 
-Keycloak comes with a `master` realm but that's designed to be used for managing Keycloak itself. For application usage, let's create a new realm.
+The Keycloak operator can import realms you supply by creating an instance of a KeycloakRealmImport object in Kubernetes.
 
-On the realm dropdown at the upper right, select *Create Realm*:
+We have pre-defined a new realm for this lab, in the `inventory/src/main/resources/globex-realm.yaml` file. The file contains a definition of the realm, which you can see by opening the file in DevSpaces:
 
-image::keycloak/keycloak-realm1.png[]
+image::keycloak/realm-file.png[]
 
-Name the realm `globex`, leave other settings unchanged, and click *Create*:
+Run the following command to create this object and cause the Keycloak operator to import the realm via a `Job`:
 
-image::keycloak/keycloak-realm2.png[]
+[.console-input]
+[source,bash,subs="+attributes,macros+"]
+----
+oc apply -n globex-keycloak-{user_name} -f $PROJECT_SOURCE/inventory/src/main/resources/globex-realm.yaml
+----
 
-You should see a success message.
+You will see a new `Job` created, wait for it to complete (for the circle to turn green) and for the Keycloak pod to automatically restart:
 
-With `globex` selected as the current realm, let's create our two users in the realm.
+image::keycloak/realm-job.png[]
 
-Click *Users* -> *Add User*
+=== 3.2 Explore Realm
 
-image::keycloak/keycloak-user1.png[]
+Go back to the https://keycloak-globex-keycloak-{user_name}.{openshift_subdomain}/[Keycloak administration console] and login as `admin` user (using the password from the {openshift_cluster_console}/k8s/ns/globex-keycloak-{user_name}/secrets/keycloak-initial-admin[Secret^] as before). You should now see a new realm in the Realm dropdown. Select the `globex` realm by clicking on it.
 
-Set the following fields, leaving the others as-is:
+Within the new realm, click on `Users` to see the pre-created users `admin`, `alice`, and `jdoe`:
 
-* *Username*: `alice`
-* *Email verified*: _Yes_
-* *First name*: `Alice`
-* *Last name*: `Admin`
+image::keycloak/new-users.png[]
 
-Alice is our administrator (get it? A for Alice, A for Administrator).
+* `alice` is an ordinary user (will have the `user` role) whose password is `alice`
+* `admin` is an Administrator (has the `admin` and `user` role) and their password is `admin`
+* `jdoe` is an ordinary user (has the `user` role) but has also been granted access to `confidential` resources in Keycloak, and their password is `jdoe`
 
-And click *Create*:
+We have also created a _Client_ within the realm that will be used by our backend inventory service called `backend-service`. This enables the service itself to authenticate with Keycloak to retrieve realm data.  Click on **Clients** to see this client.
 
-image::keycloak/keycloak-user2.png[]
+image::keycloak/new-client.png[]
 
-You will now be on the _User Details* screen for Alice. Click the _Credentials_ Tab, and then _Set password_:
+Click on **Realm Roles** to see the roles our users are grouped into, `admin`, `confidential`, and `user` (and a few others). For example, clicking on `Admin`->`Users in role` you can see only Alex Admin is in this role. In the `user` role, we have all of our fake users.
 
-image::keycloak/keycloak-user3.png[]
-
-Set the password to `alice` (this is not a very secure password), and uncheck the _Temporary_ toggle to indicate the password does not need updating on first login, and then click *Save*, and *Confirm* the confirmation message.
-
-image::keycloak/keycloak-user4.png[]
-
-Repeat the same process to create another new user. Click the *Users* link on the left (you will see Alice), and *Add user* to repeat the process:
-
-* *Username*: `bob`
-* *Email verified*: _Yes_
-* *First name*: `Bob`
-* *Last name*: `User`
-
-Bob will be our "ordinary" (non-superuser) user. Remember to click the *Credentials* tab once Bob is created, set their password to `bob`, and uncheck _Temporary_.
-
-=== 3.2 Create groups
-
-With our new users, let's create two corresponding groups to group together admin users and non-admin users. Click *Groups* -> *Create group*:
-
-image::keycloak/keycloak-group1.png[]
-
-Name the group `admins`, and click *Create*.
-
-Do the same process, and create another group named `users`. Once complete, you should have two groups defined:
-
-image::keycloak/keycloak-group2.png[]
-
-We now need to assign Alice to both groups, and Bob to just the `users` group (Bob is not an admin and is not to be trusted).
-
-Click *Groups* and then click on the newly-created `admins` group:
-
-image::keycloak/keycloak-group3.png[]
-
-Click on the _Members_ tab, and click *Add member*:
-
-image::keycloak/keycloak-group4.png[]
-
-Assign Alice by checking the box next to their name and click *Add*:
-
-image::keycloak/keycloak-group5.png[]
-
-Repeat the same process for the `users` group: Click _Groups_, select the `users` group, click on the _Members_ tab, but this time choose both Alice and Bob as members (since they are both users) and click *Add*:
-
-image::keycloak/keycloak-group6.png[]
-
-=== 3.4 Create Realm Roles
-
-We now need to map our groups and users to roles associated with the realm. We will then refer to this role in our application to specify which roles can access a given API. Click *Realm Roles* on the left, and then *Create role*. Create a role named `admin` and click *Save*.
-
-image::keycloak/keycloak-realmrole1.png[]
-
-Repeat this process to create a role named `user`.
-
-To assign our groups to these roles, click on _Groups_ on the left, and select the `admins` group. Click the _Role mapping_ tab, and click *Assign Role*:
-
-image::keycloak/keycloak-realmrole2.png[]
-
-Since admins are also users, select both admin and user to assign all of our admins as both admins and users.
-
-image::keycloak/keycloak-realmrole3.png[]
-
-Repeat this process for the user group, assigning it to only the user role: Click on _Groups_ on the left, and select the `users` group. Click the _Role mapping_ tab, and click *Assign Role*. Assign only the user role to the user group:
-
-image::keycloak/keycloak-realmrole4.png[]
-
-=== 3.5 Create Realm Client
-
-For each application wishing to authenticate within the `globex` realm, we will need to create a _Client_ within the realm. Clients are entities that can request authentication of a user for a given realm.
-
-Click *Clients* to see the list of default clients for a new realm:
-
-image::keycloak/keycloak-client1.png[]
-
-Click *Create client*. Our new client will be used by our application to which we will add authentication and authorization.
-
-Use the following values on the General Settings form:
-
-* *Client Type*: `OpenID Connect`
-* *Client ID*: `globex-inventory-service`
-* *Name*: `Globex Inventory Service`
-* *Description*: `The Inventory service listing product details for Globex retail`
-* *Always display in UI*: _On_
-
-Click *Next*, and then use these values on the _Capabilities config_ screen:
-
-* *Client authentication*: _On_
-* *Authorization*: _On_
-* *Authentication flow*: Leave this as-is (_Standard flow_ and _Direct access grants_)
-
-Click *Next*, and then use these values on the _Login Settings_ screen:
-
-* *Root URL*: `http://inventory-route-globex-keycloak-{user_name}.{openshift_subdomain}/``
-* *Home URL*: Leave blank
-* *Valid redirect URIs*: Leave blank
-* *Valid post logout redirect URIs*: Leave blank
-* *Web origins*: Set this to `*` (to accept all web origins for our exercise)
-
-Note that when using the full OpenID Connect authentication flow, these values would need to be set to appropriate values. For our exercise, we will not be using these.
-
-Click *Save*.
-
-You will land on the Client details screen.
-
-image::keycloak/keycloak-clientsecret.png[]
-
-Click on the _Credentials_ tab and make note of the `Client secret` - this value will be needed when configuring the application. We'll come back to that later.
+We have also defined a `Confidential` resource mapping that allows us to use Keycloak's fine-grained authorization policies to restrict access to certain endpoints without having to change our application code. We'll explore this later!
 
 === 3.3 Create Secured Resources
 
-There are multiple ways to product a given API. One way, in Java, is to add `@RolesAllowed` annotations to RESTful resource paths that should only all certain roles to access. In this way, applications can request a list of which roles a given user is in, and only allow access to an API if the user is in the right role. This decision is made on the application side.
+There are multiple ways to protect a given API. One way, in Java, is to add `@RolesAllowed` annotations to RESTful resource paths that should only all certain roles to access. In this way, applications can request a list of which roles a given user is in, and only allow access to an API if the user is in the right role. This decision is made on the application side.
 
 Keycloak's _Authorization Services_ provides fine-grained authorization policies that decouples the authorization policy from your code, allowing Keycloak to protect access, so when your policies change, your code doesn't have to.
 
-We will use both ways (`@RolesAllowed` as well as Keycloak Authorization as described above). To enable Keycloak Authorization, we need to define the resources that are to be protected, along with a policy to enforce that protection.
+We will use both ways (`@RolesAllowed` as well as Keycloak Authorization as described above).
 
-On the _Client Details_ screen, click on the _Authorization_ tab, and then the _Resources_ sub-tab:
-
-image::keycloak/keycloak-authz1.png[]
-
-Click *Create resource* to begin defining the resource. Use the following values (leave the others as-is):
-
-* *Name*: `product-futures-resource`
-* *Display name*: `Future product direction`
-* *URIs*: `/product/futures`
-
-Click *Save*. Return to the Client Details screen, and click on the
-
-TBD
-
-== 4. Add secured endpoints using DevSpaces
+== 4. Add secured endpoints using `@RolesAllowed`
 
 [NOTE]
 ====
-In this exercise we are **short-circuiting typical web authentication flows** to illustrate the ease of protecting APIs. In a typical web authentication, users are redirected (via their browser) to a login page, after which a negotiation is performed to retrieve _access tokens_ used on behalf of the user to access protected resources. Here we will be doing this manually with `curl`.
+In this exercise we are **short-circuiting typical web authentication flows** to illustrate the ease of protecting APIs. In a typical web authentication, users are redirected (via their browser) to a login page, after which a negotiation is performed to retrieve _access tokens_ used on behalf of the user to access protected resources. Here we will be doing this manually with `curl` and directly testing the backend service's authorization and authentication capabilities.
 ====
 
-TBD
+Our **inventory service** is built on Quarkus, so we'll need to add a Quarkus extension to our app to enable securing endpoints. In the Terminal window, use this command to add the extension for this, which comes as part of https://github.com/eclipse/microprofile-jwt-auth/[Microprofile JSON Web Token (JWT)^]. We'll also add the OpenShift extension allowing us easy deploys to OpenShift:
+
+[source,sh,role="copypaste"]
+----
+mvn -f $PROJECT_SOURCE/inventory quarkus:add-extension -Dextensions="smallrye-jwt,openshift"
+----
+
+You should see:
+
+[source,console]
+----
+[INFO] [SUCCESS] ✅  Extension io.quarkus:quarkus-smallrye-jwt has been installed
+[INFO] [SUCCESS] ✅  Extension io.quarkus:quarkus-openshift has been installed
+----
+
+This will add the necessary entries in your `pom.xml` to bring in JWT and OpenShift support.
+
+
+Next, we'll add the necessary configurations to our application to enable it to locate and authenticate with our Keycloak instance. Open `inventory/src/main/resources/application.properties` which contains application configuration values. Add the following values to the end of the file:
+
+[source,properties,role="copypaste"]
+----
+mp.jwt.verify.publickey.location=https://keycloak-globex-keycloak-{user_name}.{openshift_subdomain}/realms/globex/protocol/openid-connect/certs<1>
+mp.jwt.verify.issuer=https://keycloak-globex-keycloak-{user_name}.{openshift_subdomain}/realms/globex<2>
+quarkus.smallrye-jwt.auth-mechanism=MP-JWT<3>
+quarkus.smallrye-jwt.realm-name=quarkus
+quarkus.smallrye-jwt.enabled=true
+----
+<1> Sets public key location for JWT authentication. Keycloak exports this for you at the URL.
+<2> Issuer URL. This must match the incoming JWT `iss` _claims_ or else authentication fails.
+<3> Sets authentication mechanism name to `MP-JWT`, the MicroProfile JWT RBAC specification standard name for the token based authentication mechanism.
+
+=== 4.1 Add endpoints
+
+== Create protected endpoints
+
+We'll create 2 protected endpoints. Create a new class file `SecuredResource.java` in the `com.redhat.coolstore.inventory.controller` package (in the `inventory/src/main/java/com/redhat/coolstore/inventory/controller` directory) with the following code:
+
+[source,java,role="copypaste"]
+----
+package com.redhat.coolstore.inventory.controller;
+
+import java.security.Principal;
+import java.util.Optional;
+
+import jakarta.annotation.security.RolesAllowed;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.json.JsonString;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.SecurityContext;
+
+import org.eclipse.microprofile.jwt.Claim;
+import org.eclipse.microprofile.jwt.Claims;
+import org.eclipse.microprofile.jwt.JsonWebToken;
+
+@Path("/secured")
+@RequestScoped // <1>
+public class SecuredResource {
+
+    @Inject
+    JsonWebToken jwt;  // <2>
+
+    @Inject
+    @Claim(standard = Claims.iss)
+    Optional<JsonString> issuer; // <3>
+
+    @GET
+    @Path("/me")
+    @RolesAllowed("user")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String me(@Context SecurityContext ctx) {  // <4>
+        Principal caller = ctx.getUserPrincipal();
+        String name = caller == null ? "anonymous" : caller.getName();
+        boolean hasJWT = jwt != null;
+        return String.format("hello %s, isSecure: %s, authScheme: %s, hasJWT: %s\n", name, ctx.isSecure(), ctx.getAuthenticationScheme(), hasJWT);
+    }
+
+    @GET
+    @Path("/me/admin")
+    @RolesAllowed("admin")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String meJwt(@Context SecurityContext ctx) {   // <4>
+        Principal caller = ctx.getUserPrincipal();
+        String name = caller == null ? "anonymous" : caller.getName();
+        boolean hasJWT = jwt != null;
+
+        final StringBuilder helloReply = new StringBuilder(String.format("hello %s, isSecure: %s, authScheme: %s, hasJWT: %s\n", name, ctx.isSecure(), ctx.getAuthenticationScheme(), hasJWT));
+        if (hasJWT && (jwt.getClaimNames() != null)) {
+            helloReply.append("Injected issuer: [" + issuer.get() + "]\n"); // <5>
+            jwt.getClaimNames().forEach(n -> {
+                helloReply.append("\nClaim Name: [" + n + "] Claim Value: [" + jwt.getClaim(n) + "]");
+            });
+        }
+        return helloReply.toString();
+    }
+}
+----
+<1> Adds a `@RequestScoped` as Quarkus uses a default scoping of `ApplicationScoped` and this will produce undesirable behavior since JWT claims are naturally request scoped.
+<2> `JsonWebToken` provides access to the claims associated with the incoming authenticated JWT token.
+<3> When using JWT Authentication, claims encoded in tokens can be `@Inject` ed into your class for convenient access.
+<4> The `/me` and `/me/admin` endpoints demonstrate how to access the security context for Quarkus apps secured with JWT. Here we are using a `@RolesAllowed` annotation to make sure that only users granted a specific role can access the endpoint.
+<5> Use of injected JWT Claim to print the all the claims
+
+=== 4.1 Redeploy to OpenShift
+
+First, add the following properties to your `inventory/src/main/resources/application.properties` file to configure the OpenShift extension:
+
+[source,properties,role="copypaste"]
+----
+%prod.quarkus.kubernetes-client.trust-certs=true
+%prod.quarkus.kubernetes.deploy=true
+%prod.quarkus.kubernetes.deployment-target=openshift
+%prod.quarkus.openshift.route.expose=true
+quarkus.openshift.ports."http".host-port=8080
+----
+
+Let's re-build and re-deploy the application on top of the old (unsecured) inventory service. Run this command, which will cause the OpenShift plugin to re-deploy:
+
+[source,sh,role="copypaste"]
+----
+oc project globex-keycloak-{user_name} && \
+mvn clean package -DskipTests
+----
+
+You should see `BUILD SUCCESS`. The new application will begin deploying. Wait for it to complete (dark blue circle for the `inventory` service on the OpenShift console).
 
 == 5. Test different user access scenarios
 
-TBD
+The first thing to do to test any endpoint is obtain an access token from your authentication server in order to access the application resources. We've pre-created a few users in Keycloak for you to use:
 
-Congratulations!
+* `alice` is an ordinary user (will have the `user` role) whose password is `alice`
+* `admin` is an Administrator (has the `admin` and `user` role) and their password is `admin`
+* `jdoe` is an ordinary user (has the `user` role) but has also been granted access to `confidential` endpoints in Keycloak, and their password is `jdoe`
+
+Try to access the endpoint as an anonymous unauthenticated user:
+
+[source,sh,role="copypaste"]
+----
+curl -i http://$(oc get route inventory -o=go-template --template={% raw %}'{{ .spec.host }}'{% endraw %})/secured/me
+----
+
+It should fail with:
+
+[source,none]
+----
+HTTP/1.1 401 Unauthorized
+www-authenticate: Bearer {token}
+Content-Length: 0
+Set-Cookie: 2a1b392100b8b2cb3705c68f4ecbaf66=1b3560b80b9fad566e105aff1f31f880; path=/; HttpOnly
+----
+
+Let's try with an authenticated user next.
+
+=== Test Alice
+
+Get a token for user `alice` with this command:
+
+[source,sh,role="copypaste"]
+----
+export ALICE_TOKEN=$(\
+    curl -s -X POST https://keycloak-globex-keycloak-{user_name}.{openshift_subdomain}/realms/globex/protocol/openid-connect/token \
+    --user backend-service:secret \
+    -H 'content-type: application/x-www-form-urlencoded' \
+    -d 'username=alice&password=alice&grant_type=password' | jq --raw-output '.access_token' \
+ ) && echo $ALICE_TOKEN
+----
+This issues a `curl` command to Keycloak (using `backend-service` credentials which is a special user that is allowed acess to the Keycloak REST API), and fetches a token for Alice using their credentials.
+
+Try out the JWT-secured API as Alice:
+
+[source,sh,role="copypaste"]
+----
+curl -i http://$(oc get route inventory -o=go-template --template={% raw %}'{{ .spec.host }}'{% endraw %})/secured/me \
+  -H "Authorization: Bearer $ALICE_TOKEN"
+----
+
+You should see:
+
+[source,none]
+----
+HTTP/1.1 200 OK
+Content-Length: 63
+Content-Type: text/plain;charset=UTF-8
+Set-Cookie: 2a1b392100b8b2cb3705c68f4ecbaf66=1b3560b80b9fad566e105aff1f31f880; path=/; HttpOnly
+Cache-control: private
+
+hello alice, isSecure: false, authScheme: Bearer, hasJWT: true
+----
+
+Now try to access the `/me/admin` endpoint as `alice`:
+
+[source,sh,role="copypaste"]
+----
+curl -i http://$(oc get route inventory -o=go-template --template={% raw %}'{{ .spec.host }}'{% endraw %})/secured/me/admin \
+  -H "Authorization: Bearer $ALICE_TOKEN"
+----
+
+You'll get:
+
+[source,none]
+----
+HTTP/1.1 403 Forbidden
+Content-Length: 9
+Content-Type: text/plain;charset=UTF-8
+Set-Cookie: 2a1b392100b8b2cb3705c68f4ecbaf66=1b3560b80b9fad566e105aff1f31f880; path=/; HttpOnly
+
+Forbidden
+----
+
+Alice is not an admin. Let's try with admin!
+
+[WARNING]
+====
+Access Tokens have a defined lifespan that's typically short (e.g. 5 minutes), so if you wait too long, the token will expire and you'll get denied access. In this case, just re-fetch a new token using the same `curl` command used the first time. Full-fledged applications can take advantage of things like https://oauth.net/2/grant-types/refresh-token/[_Refresh Tokens_^] to do this automatically to ensure a good user experience even for slow users.
+====
+
+=== Test Admin
+
+Obtain an Admin token:
+
+[source,sh,role="copypaste"]
+----
+export ADMIN_TOKEN=$(\
+    curl -s -X POST https://keycloak-globex-keycloak-{user_name}.{openshift_subdomain}/realms/globex/protocol/openid-connect/token \
+    --user backend-service:secret \
+    -H 'content-type: application/x-www-form-urlencoded' \
+    -d 'username=admin&password=admin&grant_type=password' | jq --raw-output '.access_token' \
+ ) && echo $ADMIN_TOKEN
+----
+
+And try again with your new token:
+
+[source,sh,role="copypaste"]
+----
+curl -i http://$(oc get route inventory -o=go-template --template={% raw %}'{{ .spec.host }}'{% endraw %})/secured/me/admin \
+  -H "Authorization: Bearer $ADMIN_TOKEN"
+----
+
+You should see:
+
+[source,none]
+----
+HTTP/1.1 200 OK
+Content-Length: 2256
+Content-Type: text/plain;charset=UTF-8
+Set-Cookie: 2a1b392100b8b2cb3705c68f4ecbaf66=1b3560b80b9fad566e105aff1f31f880; path=/; HttpOnly
+Cache-control: private
+
+hello admin, isSecure: false, authScheme: Bearer, hasJWT: true
+Injected issuer: ["https://keycloak-globex-keycloak-{user_name}.{openshift_subdomain}/realms/quarkus"]
+
+Claim Name: [sub] Claim Value: [af134cab-f41c-4675-b141-205f975db679]
+Claim Name: [groups] Claim Value: [[admin, user]]
+Claim Name: [typ] Claim Value: [Bearer]
+Claim Name: [preferred_username] Claim Value: [admin]
+... <more claims>
+----
+
+Success! We dump all of the claims from the JWT token for inspection.
+
+=== Using Keycloak fine-grained Authentication
+
+Frequently, resource servers only perform authorization decisions based on role-based access control (RBAC), where the roles granted to the user trying to access protected resources are checked against the roles mapped to these same resources. While roles are very useful and used by applications, they also have a few limitations:
+
+* Resources and roles are tightly coupled and changes to roles (such as adding, removing, or changing an access context) can impact multiple resources
+* Changes to your security requirements can imply deep changes to application code to reflect these changes
+* Depending on your application size, role management might become difficult and error-prone
+
+Keycloak's _Authorization Services_ provides fine-grained authorization policies that decouples the authorization policy from your code, so when your policies change, your code doesn't have to. In this exercise we'll use Keycloak's Authorization Services to protect our Quarkus APIs.
+
+== Enable Quarkus Keycloak and OpenID Connect Extensions
+
+First, you'll need to enable the Keycloak extension by running this command in a Terminal:
+
+[source,sh,role="copypaste"]
+----
+mvn -f $PROJECT_SOURCE/inventory quarkus:add-extension -Dextensions="oidc, keycloak-authorization"
+----
+
+You should see:
+
+[source,console]
+----
+[INFO] [SUCCESS] ✅  Extension io.quarkus:quarkus-oidc has been installed
+[INFO] [SUCCESS] ✅  Extension io.quarkus:quarkus-keycloak-authorization has been installed
+----
+
+== Disable MicroProfile JWT Extension
+
+Since we will use Keycloak authentication rather than JWT, we'll need to disable the JWT extension. To remove the extension, run this command in a Terminal:
+
+[source,sh,role="copypaste"]
+----
+mvn -f $PROJECT_SOURCE/inventory quarkus:remove-extension -Dextensions="smallrye-jwt"
+----
+
+You should see:
+
+[source,console]
+----
+[INFO] [SUCCESS] ✅  Extension io.quarkus:quarkus-smallrye-jwt has been uninstalled
+----
+
+=== Configuring Keycloak
+
+Next, add these to your `application.properties` for Keycloak:
+
+[source,none,role="copypaste"]
+----
+# OIDC config
+quarkus.oidc.auth-server-url=https://keycloak-globex-keycloak-{user_name}.{openshift_subdomain}/realms/globex
+quarkus.oidc.client-id=backend-service
+quarkus.oidc.credentials.secret=secret
+quarkus.http.cors=true
+
+# Enable Policy Enforcement
+quarkus.keycloak.policy-enforcer.enable=true
+quarkus.keycloak.policy-enforcer.paths.ready.name=Readiness
+quarkus.keycloak.policy-enforcer.paths.ready.path=/q/health/ready
+quarkus.keycloak.policy-enforcer.paths.ready.enforcement-mode=DISABLED
+quarkus.keycloak.policy-enforcer.paths.live.name=Liveness
+quarkus.keycloak.policy-enforcer.paths.live.path=/q/health/live
+quarkus.keycloak.policy-enforcer.paths.live.enforcement-mode=DISABLED
+----
+
+This configures the extension with the necessary configuration ( https://www.keycloak.org/docs/latest/securing_apps/index.html#_java_adapter_config[read more^] about what these do).
+
+[NOTE]
+====
+We explicitly disable authorization checks for the `/health/*` endpoints so that the container platform can access them. To support secured health checks, https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/[different health check mechanisms] like TCP or `exec` methods can be used.
+====
+
+=== Create Keycloak endpoints
+
+Create a new class file called `AuthorizedResource.java` in the `com.redhat.coolstore.inventory.controller` package (in the `inventory/src/main/java/com/redhat/coolstore/inventory/controller` directory) with the following code:
+
+[source,java,role=copypaste]
+----
+package com.redhat.coolstore.inventory.controller;
+
+import jakarta.inject.Inject;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
+
+import io.quarkus.security.identity.SecurityIdentity;
+
+@Path("/secured") // <1>
+public class AuthorizedResource {
+
+    @Inject
+    SecurityIdentity identity; // <2>
+
+
+    @GET
+    @Path("/confidential") // <1>
+    @Produces(MediaType.TEXT_PLAIN)
+    public String confidential() {
+        return ("confidential access for: " + identity.getPrincipal().getName() +
+          " with attributes:" + identity.getAttributes());
+    }
+}
+
+----
+<1> Note that we do not use any `@RolesAllowed` or any other instrumentation on the endpoint to specify access policy. It looks like an ordinary endpoint. Keycloak (the server) is the one enforcing access here, not Quarkus directly.
+<2> The `SecurityIdentity` is a generic object produced by the Keycloak extension that you can use to obtain information about the security principals and attributes embedded in the request.
+
+=== Rebuild and redeploy app
+
+Let's re-build and re-deploy the application once again. Run this command, which will cause the OpenShift plugin to re-deploy:
+
+[source,sh,role="copypaste"]
+----
+oc project globex-keycloak-{user_name} && \
+mvn clean package -DskipTests
+----
+
+You should see `BUILD SUCCESS`. The new application will begin deploying. Wait for it to complete (dark blue circle for the `inventory` service on the OpenShift console).
+
+=== Test confidential
+
+The `/secured/confidential` endpoint is protected with a policy defined in the Keycloak Server. The policy only grants access to the resource if the user is granted with a `confidential` role. The difference here is that the application is delegating the access decision to Keycloak, so no explicit source code instrumentation is required.
+
+[NOTE]
+====
+Keycloak caches the resource paths that it is protecting, so that every access doesn't cause a roundtrip back to the server to check whether the user is authorized to access the resource. The lifespan of these cached entries can be controlled through https://www.keycloak.org/docs/latest/authorization_services/index.html#_enforcer_filter[Policy Enforcer Configuration^].
+====
+
+First make sure even `admin` can't access the endpoint:
+
+Refresh the admin token (it may have expired):
+
+[source,sh,role="copypaste"]
+----
+export ADMIN_TOKEN=$(\
+    curl -s -X POST https://keycloak-globex-keycloak-{user_name}.{openshift_subdomain}/realms/globex/protocol/openid-connect/token \
+    --user backend-service:secret \
+    -H 'content-type: application/x-www-form-urlencoded' \
+    -d 'username=admin&password=admin&grant_type=password' | jq --raw-output '.access_token' \
+ ) && echo $ADMIN_TOKEN
+----
+
+And then try to access with it:
+
+[source,sh,role="copypaste"]
+----
+curl -i -X GET \
+  http://$(oc get route inventory -o=go-template --template={% raw %}'{{ .spec.host }}'{% endraw %})/secured/confidential \
+  -H "Authorization: Bearer $ADMIN_TOKEN"
+----
+
+You should see in the returned HTTP headers:
+
+[source,none]
+----
+HTTP/1.1 403 Forbidden
+content-length: 0
+set-cookie: xxxxxxxxxxxx; path=/; HttpOnly
+----
+
+`Failed` as expected!
+
+To access the confidential endpoint, you should obtain an access token for user `jdoe` (the only user authorized to access this endpoint):
+
+[source,sh,role="copypaste"]
+----
+export JDOE_TOKEN=$(\
+    curl -s -X POST https://keycloak-globex-keycloak-{user_name}.{openshift_subdomain}/realms/globex/protocol/openid-connect/token \
+    --user backend-service:secret \
+    -H 'content-type: application/x-www-form-urlencoded' \
+    -d 'username=jdoe&password=jdoe&grant_type=password' | jq --raw-output '.access_token' \
+ ) && echo $JDOE_TOKEN
+----
+
+And access the confidential endpoint with your new token:
+
+[source,sh,role="copypaste"]
+----
+curl -i -X GET \
+  http://$(oc get route inventory -o=go-template --template={% raw %}'{{ .spec.host }}'{% endraw %})/secured/confidential \
+  -H "Authorization: Bearer $JDOE_TOKEN"
+----
+
+You should see:
+
+[source,none]
+----
+HTTP/1.1 200 OK
+content-length: 503
+content-type: text/plain;charset=UTF-8
+set-cookie: 2a1b392100b8b2cb3705c68f4ecbaf66=1bc7e0de32a148dfdf0fc11eff5c9e2c; path=/; HttpOnly
+
+confidential access for: jdoe with attributes:{configuration-metadata=io.quarkus.oidc.OidcConfigurationMetadata@1e3c7d7f, io.quarkus.security.identity.AuthenticationRequestContext=io.quarkus.security.runtime.QuarkusIdentityProviderManagerImpl$1@2bc2d50d, permissions=[Permission {id=99856673-24fa-431b-9e26-93e2113f69db
+----
+
+Success! Even though our code did not explicitly protect the `/secured/confidential` endpoint, we can protect arbitrary URLs in Quarkus apps when using Keycloak.
+
+=== Congratulations!
 
 This exercise demonstrated how your applications can use Keycloak to protect APIs in your applications. Here we used bearer tokens to authenticate users, `@RolesAllowed` to specify in the app how to restrict access, and Keycloak's fine-grained permissions to product APIs from Keycloak itself.
 
 More information about Red Hat build of Keycloak is available in its https://access.redhat.com/documentation/en-us/red_hat_build_of_keycloak[Red Hat build of Keycloak documentation^]
 
-Please close all but the Workshop Deployer browser tab to avoid proliferation of browser tabs which can make working on other modules difficult. 
+Please close all but the Workshop Deployer browser tab to avoid proliferation of browser tabs which can make working on other modules difficult.
 
 Go back to the `Workshop Deployer` browser tab to choose your next module!
