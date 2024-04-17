@@ -793,7 +793,7 @@ image::devhub/devspaces_loading.png[width=60%]
 
 image::devhub/devspaces_trustauthors.png[800]
 
-** Click on *Mark Done*
+** Click on *Mark Done* 
 
 image::devhub/devspaces_view.png[800]
 
