@@ -23,13 +23,7 @@
 
 == 1. Streamline App Deployment on OpenShift with Helm
 
-Helm acts like a software package manager for applications you run on OpenShift Container Platform, similar to app stores on your phone. It simplifies deployment by using pre-configured packages called Helm charts.
-
-* *Helm Charts*: These reusable packages bundle all the configuration files needed for a Kubernetes application.
-* *Deployment Made Easy*: With Helm, you can install, upgrade, and manage your applications efficiently.
-* *Version Control*: Helm charts can be versioned, allowing you to track changes and revert to previous configurations if needed.
-
-When you deploy a Helm chart, you create a running instance called a release. Helm also keeps track of revisions whenever you upgrade or roll back a release, giving you control over your application's history.
+*Helm* acts like a _software package manager_ for applications you run on OpenShift Container Platform, similar to app stores on your phone. It simplifies deployment by using pre-configured packages called Helm charts. When you deploy a Helm chart, you create a running instance called a *release*. Helm also keeps track of revisions whenever you upgrade or roll back a release, giving you control over your application's history.
 
 Helm charts offer several key benefits that streamline application deployment and management in Kubernetes environments:
 
@@ -41,16 +35,57 @@ Helm charts offer several key benefits that streamline application deployment an
 * *Version Control*: Helm charts can be versioned alongside your application code, ensuring consistency between deployments and your development process.
 * *Community and Reusability*: A vast repository of Helm charts exists, allowing you to leverage pre-built charts for commonly used applications or create your own and share them with the community.
 
-=== 1.1. Build and deploy a new Java application using Helm
+=== 1.1. Access your working project in the OpenShift web console
 
-In this module, you will deploy a new Java application using Helm. The application is a simple to-do list manager built with Quarkus, a Kubernetes-native Java framework. You will use Helm to streamline the deployment process and create a running instance of the application on OpenShift.
+In this step, you will deploy a new Java application using Helm. The application is a simple to-do list manager built with https://quarkus.io/[Quarkus^], a Kubernetes-native Java framework. You will use Helm to streamline the deployment process and create a running instance of the application on OpenShift.
 
-== 2. Deploy Globex Coolstore app using Helm
+Access your working project in the OpenShift web console by clicking on the following link: link:{console_url}/topology/ns/globex-deploy-helm-{user_name}?view=graph[OpenShift web console].
 
+image::deploy-helm/kc_login.png[]
 
-Please close all but the Workshop Deployer browser tab to avoid proliferation of browser tabs which can make working on other modules difficult. 
+Type in the following credentail:
 
-Go back to the `Workshop Deployer` browser tab to choose your next module!
+* *Username*: 
+
+[.console-input]
+[source,yaml,subs="attributes"]
+----
+{user_name}
+----
+
+* *Password*: 
+
+[.console-input]
+[source,yaml,subs="attributes"]
+----
+{user_password}
+----
+
+Click on the `Sign In` button.
+
+You will be redirected to the Topology view of your empty project in the OpenShift web console.
+
+image::deploy-helm/user_landing.png[]
+
+=== 1.2. Create a new Helm release for a Java application
+
+Click on `Add to Project` icon in the Topology view. Then, type`quarkus` in the search bar and select the `Quarkus Helm Chart` tile from the list of available resources.
+
+image::deploy-helm/search_quarkus_helm.png[]
+
+Click on `Create`.
+
+You will be redirected to the `Create Quarkus Helm Chart` form view that includes mandatory and optional values such as Release name, image, build, deploy, and other configurations. 
+
+image::deploy-helm/quarkus_helm_formview.png[]
+
+Select the `YAML view` button to view the Helm chart configuration in YAML format.
+
+image::deploy-helm/quarkus_helm_yamlview.png[]
+
+=== 1.3. Customize the build and deploy configurations
+
+Copy the following Helm chart configuration and `replace` it into the `YAML view` editor. This configuration specifies the build and deployment settings for the Quarkus application.
 
 [.console-input]
 [source,yaml,subs="+attributes,macros+"]
@@ -80,6 +115,45 @@ deploy:
   serviceType: ClusterIP
 ----
 
+image::deploy-helm/edit_quarkus_helm_yamlview.png[]
+
+Click on `Create` to deploy the Quarkus application using the Helm chart configuration.
+
+You will be redirected to the Topology view where you can see the Quarkus application deployment in progress.
+
+image::deploy-helm/quarkus_helm_deploying.png[]
+
+=== 1.4. Verify the deployment of the Quarkus application
+
+Once the deployment is complete, click on the `Open URL` icon in the Topology view to view the details of the deployment.
+
+image::deploy-helm/quarkus_helm_deployed.png[]
+
+You can also acccess the Quarkus application by clicking on the following link: link:https://quarkus-globex-deploy-helm-{user_name}.{openshift_subdomain}/todo.html[Quarkus Todo App].
+
+image::deploy-helm/quarkus_todo_app.png[]
+
+Try to add a new to-do item in the Quarkus Todo App to verify that the application is running successfully.
+
+image::deploy-helm/quarkus_todo_app_add_todo.png[]
+
+For example, you can type `Quarkus app using Helm` in to add a new to-do item, press `Enter`, and verify that the item is added to the list.
+
+image::deploy-helm/quarkus_todo_app_added_todo.png[]
+
+=== 1.5. Upgrade the helm release
+
+In case you need to upgrade the Helm release for changing your Kubernetes manifests, you can do so by modifying the Helm chart configuration and redeploying the application. For example, you can increase the number of replicas to *2* by modifying the `replicas` value in the Helm chart configuration.
+
+Navigate to the `Helm` menu in the Developer perspective, and click on the `Upgrade` icon in the `quarkus` Helm releases.
+
+image::deploy-helm/quarkus_helm_upgrade.png[]
+
+You will be redirected to the `Upgrade Quarkus Helm Chart` YAML view where you can modify the Helm chart configuration.
+
+The Quarkus application doesn't have a liveness probe configured by default. You can add a liveness probe to the Quarkus application by modifying the Helm chart configuration.
+
+Copy the following Helm chart configuration and `append` it under `deploy` section. You need to remove the existing `relicas` configuration to increases the number of replicas to *2* for the Quarkus application.
 
 [.console-input]
 [source,yaml,subs="+attributes,macros+"]
@@ -93,3 +167,38 @@ deploy:
       port: http
   replicas: 2
 ----
+
+image::deploy-helm/quarkus_helm_upgrade_yamlview.png[]
+
+Click on `Upgrade` to apply the changes to the Quarkus application deployment.
+
+You will be redirected to the Helm Release view where you can see the revision (`2`) and status (`Deployed`).
+
+image::deploy-helm/quarkus_helm_upgraded.png[]
+
+Go back to the `Topology view`` to verify that the Quarkus application has been upgraded successfully. You can see that the number of replicas has been increased to *2*.
+
+image::deploy-helm/quarkus_helm_upgraded_topology.png[]
+
+Click on `Actions` selection in the *Details* tab, then select the `Edit Health Checks` to view the details of the upgraded Quarkus application. 
+
+image::deploy-helm/quarkus_helm_upgraded_healthchecks.png[]
+
+You will be redirected to the `Edit Health Checks` view where you can see the liveness and readiness probes configured for the Quarkus application.
+
+image::deploy-helm/quarkus_helm_upgraded_healthchecks_details.png[]
+
+Great! You have successfully deployed a Java application using Helm on OpenShift. Helm simplifies the deployment process by providing pre-configured packages called Helm charts that encapsulate all the necessary resources and configurations for your application. This allows you to deploy applications quickly and consistently, streamlining the deployment process and improving productivity.
+
+== 2. Create an advanced enterprise applications using Helm
+
+In this step, you will deploy the *Globex Coolstore* application using Helm. The Globex Coolstore is a sample e-commerce application that showcases various features of OpenShift Container Platform, including microservices, service discovery, and externalized configuration. You will use Helm to streamline the deployment process and create a running instance of the Globex Coolstore application on OpenShift.
+
+Navigate to the `Developer` perspective in the OpenShift web console by clicking on the following link: link:{console_url}/developer[OpenShift web console].
+
+Please close all but the Workshop Deployer browser tab to avoid proliferation of browser tabs which can make working on other modules difficult. 
+
+Go back to the `Workshop Deployer` browser tab to choose your next module!
+
+
+

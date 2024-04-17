@@ -23,7 +23,7 @@
 
 == 1. Deploy Globex Coolstore app using Helm
 
-Let's first deploy the fully function (but unsecured) application. We'll use a Helm chart to deploy it to your namespace (`globex-keycloak-{user_name}`). Open the {openshift_cluster_console}/topology/ns/globex-keycloak-{user_name}?view=graph[OpenShift console^]. You will see the Keycloak operator already installed:
+Let's first deploy the fully function (but unsecured) application. We'll use a Helm chart to deploy it to your namespace (`globex-keycloak-{user_name}`). Open the {openshift_cluster_console}/topology/ns/globex-keycloak-{user_name}?view=graph[OpenShift web console^]. You will see the Keycloak operator already installed:
 
 image::keycloak/start.png[]
 
@@ -130,7 +130,7 @@ You can install Keycloak in many ways, including just downloading and extracting
 
 === 2.1 Deploy Keycloak Database
 
-Keycloak needs a database to store its data. We'll use Postgres. Back on the {openshift_cluster_console}/topology/ns/globex-keycloak-{user_name}?view=graph[OpenShift console^], click the Add icon once again, type `postgres ephemeral` into the search box, locate the `Postgres (Ephemeral)` template, click on it, and click *Instantiate Template*:
+Keycloak needs a database to store its data. We'll use Postgres. Back on the {openshift_cluster_console}/topology/ns/globex-keycloak-{user_name}?view=graph[OpenShift web console^], click the Add icon once again, type `postgres ephemeral` into the search box, locate the `Postgres (Ephemeral)` template, click on it, and click *Instantiate Template*:
 
 image::keycloak/postgres-create.png[]
 
@@ -183,7 +183,7 @@ This secret will be used in the next step.
 
 === 2.3 Create Keycloak instance
 
-By creating an instance of a `Keycloak` object, the Keycloak operator will process it and instantiate a new Keycloak server. In the OpenShift console, click the `Add` icon, type `keycloak` into the search box, click on the "Keycloak" item, and click Create:
+By creating an instance of a `Keycloak` object, the Keycloak operator will process it and instantiate a new Keycloak server. In the OpenShift web console, click the `Add` icon, type `keycloak` into the search box, click on the "Keycloak" item, and click Create:
 
 image::keycloak/keycloak-create1.png[]
 
@@ -231,7 +231,7 @@ image::keycloak/keycloak-adminsecret.png[]
 
 `admin` is pretty easy to remember, but you'll probably want to copy the password to your clipboard (using the copy-to-clipboard icon at the far right, or CTRL-C (CMD-C on a Mac)) to use in a moment.
 
-Back on the {openshift_cluster_console}/topology/ns/globex-keycloak-{user_name}?view=graph[OpenShift console^] topology page, click the small "open" icon at the upper right of the Keycloak deployment:
+Back on the {openshift_cluster_console}/topology/ns/globex-keycloak-{user_name}?view=graph[OpenShift web console^] topology page, click the small "open" icon at the upper right of the Keycloak deployment:
 
 image::keycloak/keycloak-openicon.png[]
 
@@ -436,7 +436,7 @@ oc project globex-keycloak-{user_name} && \
 mvn clean package -DskipTests
 ----
 
-You should see `BUILD SUCCESS`. The new application will begin deploying. Wait for it to complete (dark blue circle for the `inventory` service on the OpenShift console).
+You should see `BUILD SUCCESS`. The new application will begin deploying. Wait for it to complete (dark blue circle for the `inventory` service on the OpenShift web console).
 
 == 5. Test different user access scenarios
 
@@ -691,7 +691,7 @@ oc project globex-keycloak-{user_name} && \
 mvn clean package -DskipTests
 ----
 
-You should see `BUILD SUCCESS`. The new application will begin deploying. Wait for it to complete (dark blue circle for the `inventory` service on the OpenShift console).
+You should see `BUILD SUCCESS`. The new application will begin deploying. Wait for it to complete (dark blue circle for the `inventory` service on the OpenShift web console).
 
 === Test confidential
 
