@@ -168,7 +168,7 @@ Copy the following Helm chart configuration and `append` it under `deploy` secti
   replicas: 2
 ----
 
-image::deploy-helm/quarkus_helm_upgrade_yamlview.png[]
+image::deploy-helm/quarkus_helm_upgrade_yamlview.png[quarkus_helm_upgrade_yamlview, 900]
 
 Click on `Upgrade` to apply the changes to the Quarkus application deployment.
 
