@@ -41,7 +41,7 @@ In this step, you will deploy a new Java application using Helm. The application
 
 Access your working project in the OpenShift web console by clicking on the following link: link:{console_url}/topology/ns/globex-deploy-helm-{user_name}?view=graph[OpenShift web console].
 
-image::deploy-helm/kc_login.png[500]
+image::deploy-helm/kc_login.png[kc_login, 500]
 
 Type in the following credentail:
 
