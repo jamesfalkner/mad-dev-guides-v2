@@ -41,7 +41,7 @@ In this step, you will deploy a new Java application using Helm. The application
 
 Access your working project in the OpenShift web console by clicking on the following link: link:{console_url}/topology/ns/globex-deploy-helm-{user_name}?view=graph[OpenShift web console].
 
-image::deploy-helm/kc_login.png[kc_login, 500]
+image::deploy-helm/kc_login.png[kc_login, 600]
 
 Type in the following credentail:
 
@@ -131,15 +131,15 @@ image::deploy-helm/quarkus_helm_deployed.png[]
 
 You can also acccess the Quarkus application by clicking on the following link: link:https://quarkus-globex-deploy-helm-{user_name}.{openshift_subdomain}/todo.html[Quarkus Todo App].
 
-image::deploy-helm/quarkus_todo_app.png[900]
+image::deploy-helm/quarkus_todo_app.png[quarkus_todo_app, 900]
 
 Try to add a new to-do item in the Quarkus Todo App to verify that the application is running successfully.
 
-image::deploy-helm/quarkus_todo_app_add_todo.png[900]
+image::deploy-helm/quarkus_todo_app_add_todo.png[quarkus_todo_app_add_todo, 900]
 
 For example, you can type `Quarkus app using Helm` in to add a new to-do item, press `Enter`, and verify that the item is added to the list.
 
-image::deploy-helm/quarkus_todo_app_added_todo.png[900]
+image::deploy-helm/quarkus_todo_app_added_todo.png[quarkus_todo_app_added_todo, 900]
 
 === 1.5. Upgrade the helm release
 
@@ -174,7 +174,7 @@ Click on `Upgrade` to apply the changes to the Quarkus application deployment.
 
 You will be redirected to the Helm Release view where you can see the revision (`2`) and status (`Deployed`).
 
-image::deploy-helm/quarkus_helm_upgraded.png[900]
+image::deploy-helm/quarkus_helm_upgraded.png[quarkus_helm_upgraded,900]
 
 Go back to the `Topology view`` to verify that the Quarkus application has been upgraded successfully. You can see that the number of replicas has been increased to *2*.
 
@@ -186,7 +186,7 @@ image::deploy-helm/quarkus_helm_upgraded_healthchecks.png[]
 
 You will be redirected to the `Edit Health Checks` view where you can see the liveness and readiness probes configured for the Quarkus application.
 
-image::deploy-helm/quarkus_helm_upgraded_healthchecks_details.png[900]
+image::deploy-helm/quarkus_helm_upgraded_healthchecks_details.png[quarkus_helm_upgraded_healthchecks_details, 900]
 
 Great! You have successfully deployed a Java application using Helm on OpenShift. Helm simplifies the deployment process by providing pre-configured packages called Helm charts that encapsulate all the necessary resources and configurations for your application. This allows you to deploy applications quickly and consistently, streamlining the deployment process and improving productivity.
 
