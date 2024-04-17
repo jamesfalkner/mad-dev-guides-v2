@@ -91,7 +91,7 @@ image::devhub/learning_paths_explore.png[learning_paths_explore, 800]
 
 * *Tech Radar*: Company radar to understand their modernization technology landscape. This information will be customized by each company. For more information, visit our product page https://access.redhat.com/documentation/en-us/red_hat_developer_hub/1.1/html/administration_guide_for_red_hat_developer_hub/rhdh-installing-dynamic-plugins[about plugins configuration^]
 
-image::devhub/tech_radar.png[width=100%] 
+image::devhub/tech_radar.png[900] 
 
 * *Create*: Developers can build and deploy their applications by creating a component by choosing a pre-defined template. You will spend most of your time during this module on this feature.
 
@@ -122,7 +122,7 @@ The Software templates are stored on our instance of GitLab created for this wor
 ** Go back to the *rhdhub/software-templates* folder
 ** Click on *scaffolder-templates* and then click on the *quarkus-backend* folder to explore the software templates for the quarkus application.
 
-image::devhub/gitlab_st_details.png[width=30%]  
+image::devhub/gitlab_st_details.png[800]  
 
 1 - The *template file* is the one defining your workflow when creating a component. 
 
@@ -178,7 +178,7 @@ As part of the modernization process, Globex is looking to accelerate the softwa
 
 * Select the *Quarkus Backend Application* Template:
 
-image::devhub/software_template_quarkus.png[600]  
+image::devhub/software_template_quarkus.png[700]  
 
 Follow the next steps to create a component based on the pre-defined Software Templates:
 
@@ -194,7 +194,7 @@ Follow the next steps to create a component based on the pre-defined Software Te
 gitlab-gitlab.{openshift_subdomain}
 ----
 
-image::devhub/st_gitlab_info.png[width=65%]  
+image::devhub/st_gitlab_info.png[800]  
 
 * *Repo Group*: is the GitLab organization already configured. Red Hat Developer Hub will use this input data to upload the source repository and manifests.
 
@@ -212,7 +212,7 @@ image::devhub/st_gitlab_info.png[width=65%]
 .{openshift_subdomain}
 ----
 
-image::devhub/st_component_clusterid.png[width=65%]  
+image::devhub/st_component_clusterid.png[800]  
 
 * *Namespace*:  is the OpenShift namespace. Red Hat Developer Hub will use this input data to build and deploy the application in that namespace.
 
@@ -224,7 +224,7 @@ image::devhub/st_component_clusterid.png[width=65%]
 rhdhub-{user_name}
 ----
 
-image::devhub/st_component_namespace.png[width=40%]  
+image::devhub/st_component_namespace.png[800]  
 
 *Note*: Each lab participant is already assigned a unique namespace to be used for all the applications. Each application will have a shared identification based on your user name. 
 
@@ -237,7 +237,7 @@ image::devhub/st_component_namespace.png[width=40%]
 {user_name}
 ----
 
-image::devhub/st_component_owner.png[width=40%]  
+image::devhub/st_component_owner.png[800]  
 
 * Click on *Next*
 
@@ -257,7 +257,7 @@ image::devhub/st_component_owner.png[width=40%]
 inventory-app-{user_name}
 ----
 
-image::devhub/st_component_componentid_quarkus.png[width=40%]  
+image::devhub/st_component_componentid_quarkus.png[800]  
 
 * Click on *Review*.
 
@@ -265,7 +265,7 @@ image::devhub/st_component_componentid_quarkus.png[width=40%]
 
 *Sample data*
 
-image::devhub/st_component_review_quarkus.png[width=80%]  
+image::devhub/st_component_review_quarkus.png[800]  
 
 * Click on *Create*.
 
@@ -275,22 +275,22 @@ image::devhub/st_component_review_quarkus.png[width=80%]
 
 * With all your activities in green, click *Open Component in catalog*. 
 
-image::devhub/task_activity.png[width=100%]  
+image::devhub/task_activity.png[900]
 
 * RHDH will open a new tab with the component information. 
 
 ** Take some time to review the information in the screen:
 
-image::devhub/inventory_overview.png[width=100%] 
+image::devhub/inventory_overview.png[900] 
 
 * Click on *VIEW SOURCE* to access the new source code repository created.
 
-image::devhub/inventory_source.png[width=50%] 
+image::devhub/inventory_source.png[800] 
 
 * Go back to your inventory component on the Red Hat Developer Hub: https://developer-hub-backstage-globex-devhub.{openshift_subdomain}/catalog/default/component/inventory-app-{user_name}[Red Hat Developer Hub UI^].
 * Click on *CI* tab to review your pipeline information. The pipeline will be triggered in a few seconds. After a few minutes, you will see the pipeline finished as *Succeeded*.
 
-image::devhub/inventory_pipeline.png[width=100%] 
+image::devhub/inventory_pipeline.png[900] 
 
 * Click on *TOPOLOGY* to review your deployment status. The deployment will be in *blue* immediately after the pipeline succeeds.
 
@@ -298,7 +298,7 @@ image::devhub/inventory_pipeline.png[width=100%]
 
 At your right the application details is available. 
 
-image::devhub/inventory_deployment.png[width=100%] 
+image::devhub/inventory_deployment.png[900] 
 
 *Note*: We will continue exploring this view in the next section.
 
@@ -407,13 +407,13 @@ image::devhub/st_component_review_spring.png[width=80%]
 
 * With all your activities in green, click *Open Component in catalog*. 
 
-image::devhub/task_activity.png[width=100%]   
+image::devhub/task_activity.png[900]   
 
 * RHDH will open a new tab with the component information. 
 
 ** Take some time to review the information in the screen:
 
-image::devhub/catalog_overview.png[width=100%] 
+image::devhub/catalog_overview.png[900] 
 
 * In the *Overview* tab, click on *Pipelines* to review the Pipelines details in OpenShift. 
 
@@ -557,18 +557,18 @@ image::devhub/st_component_review_gateway.png[width=80%]
 
 * With all your activities in green, click *Open Component in catalog*. 
 
-image::devhub/task_activity.png[width=100%]  
+image::devhub/task_activity.png[900]  
 
 * RHDH will open a new tab with the component information. 
 
 ** Take some time to review the information in the screen:
 
-image::devhub/gateway_overview.png[width=100%]  
+image::devhub/gateway_overview.png[900]  
 
 * Click on *CI* to review your pipeline information.
 The pipeline will be triggered in a few seconds. After a few minutes, you will see the pipeline finished as *Succeeded*.
 
-image::devhub/gateway_pipelines.png[width=100%] 
+image::devhub/gateway_pipelines.png[900] 
 
 * Click on *TOPOLOGY* to review your deployment status.
 The deployment will be in *blue* immediately after the pipeline succeeds.
@@ -584,11 +584,11 @@ You might find the pods still not ready. Wait a few seconds to see everything in
 
 *Note*: *1 pod with errors* indicates that a pod has failed as it shows on the *Error Reporting* section. The issue was resolved and now all the pods are in green.
 
-image::devhub/gateway_yourclusters.png[width=100%] 
+image::devhub/gateway_yourclusters.png[900] 
 
 ** Expand the pods information:
 
-image::devhub/gateway_kubernetes_clusters_ok.png[width=100%] 
+image::devhub/gateway_kubernetes_clusters_ok.png[900] 
 
 With everything in green, you are ready to move to the next session.
 
@@ -689,7 +689,7 @@ image::devhub/st_component_componentid_frontend.png[width=65%]
 
 *Sample data*
 
-image::devhub/st_component_review_frontend.png[width=100%]  
+image::devhub/st_component_review_frontend.png[900]  
 
 * Click on *Create*.
 
@@ -699,18 +699,18 @@ image::devhub/st_component_review_frontend.png[width=100%]
 
 * With all your activities in green, click *Open Component in catalog*. 
 
-image::devhub/task_activity.png[width=100%]  
+image::devhub/task_activity.png[900]  
 
 * RHDH will open a new tab with the component information. 
 
 ** Review the information in the screen:
 
-image::devhub/frontend_overview.png[width=100%] 
+image::devhub/frontend_overview.png[900] 
 
 * Click on *CI* to review your pipeline information.
 The pipeline will be triggered in a few seconds. After a few minutes, you will see the pipeline finished as *Succeeded*.
 
-image::devhub/frontend_pipeline.png[width=100%] 
+image::devhub/frontend_pipeline.png[900] 
 
 * Click on *TOPOLOGY* to review your deployment status.
 The deployment will be in *blue* immediately after the pipeline succeeds.
@@ -719,21 +719,21 @@ The deployment will be in *blue* immediately after the pipeline succeeds.
 
 At your right the application details is available. 
 
-image::devhub/frontend_topology.png[width=100%] 
+image::devhub/frontend_topology.png[900] 
 
 * Click on *CD* to review ARGOCD History.
 
-image::devhub/frontend_argohistory.png[width=100%] 
+image::devhub/frontend_argohistory.png[900] 
 
 * Click on *API* to review the consumed/provided API for the frontend application.
 
-image::devhub/frontend_apiconsume.png[width=100%] 
+image::devhub/frontend_apiconsume.png[900] 
 
 * Access the Cool Store UI to verify everything is working as expected:
 
 ** Click on the https://frontend-app-{user_name}-globex-devhub-{user_name}.{openshift_subdomain}/[Cool Store web page^]
 
-image::devhub/ui_web.png[width=100%]
+image::devhub/ui_web.png[900]
 
 == 3.3. Fix an issue reported about the application
 
@@ -745,11 +745,11 @@ As a developer, you need to work on many feature requests or issues. In this use
 
 There is an issue to be fixed:
 
-image::devhub/frontend_issues.png[width=100%]
+image::devhub/frontend_issues.png[900]
 
 * Click on the *issue link* to read the information.
 
-image::devhub/frontend_issue_desc.png[width=100%]
+image::devhub/frontend_issue_desc.png[900]
 
 * Go back to your frontend component on the Red Hat Developer Hub: https://developer-hub-backstage-globex-devhub.{openshift_subdomain}/catalog/default/component/frontend-app-{user_name}[Red Hat Developer Hub UI^].
 
@@ -800,7 +800,7 @@ image::devhub/devspaces_view.png[width=80%]
 
 === 3.4.7 Expand the `frontend-app-{user_name}` to find for the file: `header.html` as shown in the picture below.
 
-image::devhub/file_change.png[width=100%]
+image::devhub/file_change.png[900]
 
 
 === 3.4.8 Update the *Title* in *line 12*, adding your preferred city. 
@@ -827,7 +827,7 @@ image::devhub/dev_commit.png[width=60%]
 
 * Confirm the changes
 
-image::devhub/dev_confirmed.png[width=100%]
+image::devhub/dev_confirmed.png[900]
 
 * Explore Pipelines from Red Hat Developer Hub.
 
@@ -837,13 +837,13 @@ Your source code changes triggered a new pipeline to update the version of the f
 
 * Explore the pipelines by clicking on the *CI*.
 
-image::devhub/frontend_newpipeline.png[width=100%]
+image::devhub/frontend_newpipeline.png[900]
 
 * Refresh the Cool Store web page.
 
 You will see the *new title* in the Cool Store web page.
 
-image::devhub/final_web.png[width=100%]
+image::devhub/final_web.png[900]
 
 *Congratulations!*  You have finished your git request.
 
@@ -858,7 +858,7 @@ image::devhub/overview_workshop.png[width=80%]
 * Explore the application components and APIs. 
 ** This function is ideal for understanding how systems interact with each other.
 
-image::devhub/workshop_detail.png[width=100%]
+image::devhub/workshop_detail.png[900]
 
 * The *Relations* section shows all the services you have installed on your namespace. 
 * The *APIs* section shows the Gateway API the frontend application is consuming to access the backend services information from product catalog to inventory. 
