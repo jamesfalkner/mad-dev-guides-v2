@@ -31,16 +31,19 @@ Helm acts like a software package manager for applications you run on OpenShift 
 
 When you deploy a Helm chart, you create a running instance called a release. Helm also keeps track of revisions whenever you upgrade or roll back a release, giving you control over your application's history.
 
-Key features
-Helm provides the ability to:
+Helm charts offer several key benefits that streamline application deployment and management in Kubernetes environments:
 
-Search through a large collection of charts stored in the chart repository.
+* *Increased Productivity*: Helm charts act as pre-packaged applications, eliminating the need to manually write individual YAML files for each deployment. This saves developers significant time and effort.
+* *Simplified Deployments*: Helm charts standardize deployments by encapsulating all the necessary configuration files and resources within a single unit. This simplifies the deployment process and reduces the risk of errors.
+* *Improved Configurability*: Helm charts often come with default configurations that can be overridden with custom values during deployment. This allows for easy adaptation to different environments and user requirements.
+* *Enhanced Repeatability*: Deployments performed using Helm charts are guaranteed to be identical each time, leading to more consistent and reliable deployments.
+* *Streamlined Rollbacks*: In case of issues, Helm allows for easy rollbacks to previous versions of the application with a single command. This minimizes downtime and simplifies troubleshooting.
+* *Version Control*: Helm charts can be versioned alongside your application code, ensuring consistency between deployments and your development process.
+* *Community and Reusability*: A vast repository of Helm charts exists, allowing you to leverage pre-built charts for commonly used applications or create your own and share them with the community.
 
-Modify existing charts.
+=== 1.1. Build and deploy a new Java application using Helm
 
-Create your own charts with OpenShift Container Platform or Kubernetes resources.
-
-Package and share your applications as charts.
+In this module, you will deploy a new Java application using Helm. The application is a simple to-do list manager built with Quarkus, a Kubernetes-native Java framework. You will use Helm to streamline the deployment process and create a running instance of the application on OpenShift.
 
 == 2. Deploy Globex Coolstore app using Helm
 
