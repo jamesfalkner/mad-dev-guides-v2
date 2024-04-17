@@ -48,3 +48,45 @@ Package and share your applications as charts.
 Please close all but the Workshop Deployer browser tab to avoid proliferation of browser tabs which can make working on other modules difficult. 
 
 Go back to the `Workshop Deployer` browser tab to choose your next module!
+
+[.console-input]
+[source,yaml,subs="+attributes,macros+"]
+----
+build:
+  enabled: true
+  jvm:
+    imageStreamTag:
+      name: 'java:openjdk-17-ubi8'
+      namespace: openshift
+  mode: jvm
+  uri: 'https://github.com/rh-mad-workshop/quarkus-todo-app.git'
+deploy:
+  ports:
+    - name: http
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+  replicas: 1
+  route:
+    enabled: true
+    targetPort: http
+    tls:
+      enabled: true
+      insecureEdgeTerminationPolicy: Redirect
+      termination: edge
+  serviceType: ClusterIP
+----
+
+
+[.console-input]
+[source,yaml,subs="+attributes,macros+"]
+----
+  livenessProbe:
+    tcpSocket:
+      port: http
+  readinessProbe:
+    httpGet:
+      path: /
+      port: http
+  replicas: 2
+----

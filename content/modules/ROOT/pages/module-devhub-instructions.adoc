@@ -28,13 +28,26 @@
 
 Red Hat Developer Hub has already been installed and configured in the workshop environment.
 
-To get started, access https://developer-hub-backstage-rhdhub.{openshift_subdomain}[Red Hat Developer Hub UI^]
+To get started, access https://developer-hub-backstage-globex-devhub.{openshift_subdomain}[Red Hat Developer Hub UI^]
 
 
 Red Hat Developer Hub is already configured with https://access.redhat.com/products/red-hat-single-sign-on/[Red Hat Single Sign On^]. Log in with your OpenShift credentials:
 
- * *Username*: `{user_name}`
- * *Password*: `{user_password}`
+* *Username*: 
+
+[.console-input]
+[source,yaml,subs="attributes"]
+----
+{user_name}
+----
+
+* *Password*: 
+
+[.console-input]
+[source,yaml,subs="attributes"]
+----
+{user_password}
+----
  
 image::devhub/authentication.png[]
 
@@ -58,7 +71,7 @@ At your left, the *Red Hat Developer Hub* menu:
 
 *Navigate each of the menu items to explore the different solutions:*
 
-image::devhub/rhdevhub_menu.png[width=90%, float=left]  
+image::devhub/rhdevhub_menu.png[rhdevhub_menu, 500]  
 
 * *Catalog* is the Software Catalog available to build and deploy applications. 
 * *APIs* available for developers to consume.
@@ -68,11 +81,11 @@ image::devhub/rhdevhub_menu.png[width=90%, float=left]
 ** Search for the *Learning Path*: *Developing with Quarkus*
 ** Click on the link. 
 
-image::devhub/learning_paths_explore.png[width=40%]  
+image::devhub/learning_paths_explore.png[learning_paths_explore, 800]  
 
 * Continue exploring the menu:
 
-** Go back to the https://developer-hub-backstage-rhdhub.{openshift_subdomain}[Red Hat Developer Hub UI^]
+** Go back to the https://developer-hub-backstage-globex-devhub.{openshift_subdomain}[Red Hat Developer Hub UI^]
 
 * *Clusters*: will show your managed clusters. At this time, we are not using https://www.redhat.com/en/technologies/management/advanced-cluster-management[Red Hat Advanced Cluster Management for Kubernetes^] for cluster management. You will see a message: *Could not fetch clusters from Hub*.
 
@@ -134,7 +147,7 @@ image::devhub/gitlab_st_details.png[width=30%]
 
 Red Hat Developer Hub is flexible and supports multiple plugins. The following diagram describes how the components described interact with each other.
 
-image::devhub/rhdh_architecture.png[width=50%]  
+image::devhub/rhdh_architecture.png[700]  
 
 *Congratulations!* You have completed the introduction module and learned about Red Hat Developer Hub. In the following modules, you will experience firsthand the value added to the business by simplifying the developer experience.
 
@@ -165,7 +178,7 @@ As part of the modernization process, Globex is looking to accelerate the softwa
 
 * Select the *Quarkus Backend Application* Template:
 
-image::devhub/software_template_quarkus.png[width=50%]  
+image::devhub/software_template_quarkus.png[600]  
 
 Follow the next steps to create a component based on the pre-defined Software Templates:
 
@@ -176,7 +189,7 @@ Follow the next steps to create a component based on the pre-defined Software Te
 ** Replace the *Repo Host* with the OpenShift domain: 
 
 [.console-input]
-[source,bash]
+[source,bash,subs="attributes"]
 ----
 gitlab-gitlab.{openshift_subdomain}
 ----
@@ -194,7 +207,7 @@ image::devhub/st_gitlab_info.png[width=65%]
 ** Replace the *Cluster Id* with the OpenShift domain: 
 
 [.console-input]
-[source,bash]
+[source,bash,subs="attributes"]
 ----
 .{openshift_subdomain}
 ----
@@ -206,7 +219,7 @@ image::devhub/st_component_clusterid.png[width=65%]
 ** Replace the *N* with the user number:
 
 [.console-input]
-[source,bash]
+[source,bash,subs="attributes"]
 ----
 rhdhub-{user_name}
 ----
@@ -219,7 +232,7 @@ image::devhub/st_component_namespace.png[width=40%]
 ** Write your user id: 
 
 [.console-input]
-[source,bash]
+[source,bash,subs="attributes"]
 ----
 {user_name}
 ----
@@ -239,7 +252,7 @@ image::devhub/st_component_owner.png[width=40%]
 ** Replace the *Component ID* using *YOUR* user number: 
 
 [.console-input]
-[source,bash]
+[source,bash,subs="attributes"]
 ----
 inventory-app-{user_name}
 ----
@@ -274,7 +287,7 @@ image::devhub/inventory_overview.png[width=100%]
 
 image::devhub/inventory_source.png[width=50%] 
 
-* Go back to your inventory component on the Red Hat Developer Hub: https://developer-hub-backstage-rhdhub.{openshift_subdomain}/catalog/default/component/inventory-app-{user_name}[Red Hat Developer Hub UI^].
+* Go back to your inventory component on the Red Hat Developer Hub: https://developer-hub-backstage-globex-devhub.{openshift_subdomain}/catalog/default/component/inventory-app-{user_name}[Red Hat Developer Hub UI^].
 * Click on *CI* tab to review your pipeline information. The pipeline will be triggered in a few seconds. After a few minutes, you will see the pipeline finished as *Succeeded*.
 
 image::devhub/inventory_pipeline.png[width=100%] 
@@ -308,7 +321,7 @@ Follow the next steps to create a component based on the pre-defined Software Te
 ** Replace the *Repo Host* with the OpenShift domain: 
 
 [.console-input]
-[source,bash]
+[source,bash,subs="attributes"]
 ----
 gitlab-gitlab.{openshift_subdomain}
 ----
@@ -326,7 +339,7 @@ image::devhub/st_gitlab_info.png[width=65%]
 ** Replace the *Cluster Id* with the OpenShift domain: 
 
 [.console-input]
-[source,bash]
+[source,bash,subs="attributes"]
 ----
 .{openshift_subdomain}
 ----
@@ -338,7 +351,7 @@ image::devhub/st_component_clusterid.png[width=40%]
 ** Replace the *Namespace* with: 
 
 [.console-input]
-[source,bash]
+[source,bash,subs="attributes"]
 ----
 rhdhub-{user_name}
 ----
@@ -351,7 +364,7 @@ image::devhub/st_component_namespace.png[width=40%]
 ** Write your user id: 
 
 [.console-input]
-[source,bash]
+[source,bash,subs="attributes"]
 ----
 {user_name}
 ----
@@ -371,7 +384,7 @@ Click on *Next*.
 ** Replace the *Component ID* using *YOUR* user number: 
 
 [.console-input]
-[source,bash]
+[source,bash,subs="attributes"]
 ----
 catalog-app-{user_name}
 ----
@@ -412,7 +425,7 @@ Wait until the Pipeline is green. The Pipeline will take a few minutes to comple
 
 image::devhub/pipelines_openshift.png[width=65%] 
 
-* Go back to your catalog component on the Red Hat Developer Hub: https://developer-hub-backstage-rhdhub.{openshift_subdomain}/catalog/default/component/catalog-app-{user_name}[Red Hat Developer Hub UI^].
+* Go back to your catalog component on the Red Hat Developer Hub: https://developer-hub-backstage-globex-devhub.{openshift_subdomain}/catalog/default/component/catalog-app-{user_name}[Red Hat Developer Hub UI^].
 
 * Click on *Deployment* in the *Overview* tab to review your deployment status in OpenShift.
 
@@ -458,7 +471,7 @@ Follow the next steps to create a component based on the pre-defined Software Te
 ** Replace the *Repo Host* with the OpenShift domain: 
 
 [.console-input]
-[source,bash]
+[source,bash,subs="attributes"]
 ----
 gitlab-gitlab.{openshift_subdomain}
 ----
@@ -476,7 +489,7 @@ image::devhub/st_gitlab_info.png[width=65%]
 ** Replace the *Cluster Id* with the OpenShift domain:
 
 [.console-input]
-[source,bash]
+[source,bash,subs="attributes"]
 ----
 .{openshift_subdomain}
 ----
@@ -488,7 +501,7 @@ image::devhub/st_component_clusterid.png[width=65%]
 ** Replace the *Namespace* with:
 
 [.console-input]
-[source,bash]
+[source,bash,subs="attributes"]
 ----
 rhdhub-{user_name}
 ----
@@ -501,7 +514,7 @@ image::devhub/st_component_namespace.png[width=40%]
 ** Write your user id: 
 
 [.console-input]
-[source,bash]
+[source,bash,subs="attributes"]
 ----
 {user_name}
 ----
@@ -521,7 +534,7 @@ image::devhub/st_component_owner.png[width=40%]
 ** Replace the *Component ID* using *YOUR* user number: 
 
 [.console-input]
-[source,bash]
+[source,bash,subs="attributes"]
 ----
 gateway-app-{user_name}
 ----
@@ -600,7 +613,7 @@ Follow the next steps to create a component based on the pre-defined Software Te
 ** Replace the *Repo Host* with the OpenShift domain: 
 
 [.console-input]
-[source,bash]
+[source,bash,subs="attributes"]
 ----
 gitlab-gitlab.{openshift_subdomain}
 ----
@@ -618,7 +631,7 @@ image::devhub/st_gitlab_info.png[width=65%]
 ** Replace the *Cluster Id* with the OpenShift domain:
 
 [.console-input]
-[source,bash]
+[source,bash,subs="attributes"]
 ----
 .{openshift_subdomain}
 ----
@@ -630,7 +643,7 @@ image::devhub/st_component_clusterid.png[width=65%]
 ** Replace the *Namespace* with:
 
 [.console-input]
-[source,bash]
+[source,bash,subs="attributes"]
 ----
 rhdhub-{user_name}
 ----
@@ -643,7 +656,7 @@ image::devhub/st_component_namespace.png[width=40%]
 ** Write your user id: 
 
 [.console-input]
-[source,bash]
+[source,bash,subs="attributes"]
 ----
 {user_name}
 ----
@@ -663,7 +676,7 @@ image::devhub/st_component_owner.png[width=40%]
 ** Replace the *Component ID* using *YOUR* user number: 
 
 [.console-input]
-[source,bash]
+[source,bash,subs="attributes"]
 ----
 frontend-app-{user_name}
 ----
@@ -718,7 +731,7 @@ image::devhub/frontend_apiconsume.png[width=100%]
 
 * Access the Cool Store UI to verify everything is working as expected:
 
-** Click on the https://frontend-app-{user_name}-rhdhub-{user_name}.{openshift_subdomain}/[Cool Store web page^]
+** Click on the https://frontend-app-{user_name}-globex-devhub-{user_name}.{openshift_subdomain}/[Cool Store web page^]
 
 image::devhub/ui_web.png[width=100%]
 
@@ -726,7 +739,7 @@ image::devhub/ui_web.png[width=100%]
 
 As a developer, you need to work on many feature requests or issues. In this use case, you will fix a problem with the title in the front-end application. Red Hat Developer Hub is a single pane of glass that allows you to access all the tools and information for your app from one single place. 
 
-=== 3.3.1. Go back to your frontend component on the Red Hat Developer Hub: https://developer-hub-backstage-rhdhub.{openshift_subdomain}/catalog/default/component/frontend-app-{user_name}[Red Hat Developer Hub UI^].
+=== 3.3.1. Go back to your frontend component on the Red Hat Developer Hub: https://developer-hub-backstage-globex-devhub.{openshift_subdomain}/catalog/default/component/frontend-app-{user_name}[Red Hat Developer Hub UI^].
 
 === 3.3.2. Look at the GitLab issues by clicking on *ISSUES*. You will be able to see any GitLab issues associated with the application. 
 
@@ -738,7 +751,7 @@ image::devhub/frontend_issues.png[width=100%]
 
 image::devhub/frontend_issue_desc.png[width=100%]
 
-* Go back to your frontend component on the Red Hat Developer Hub: https://developer-hub-backstage-rhdhub.{openshift_subdomain}/catalog/default/component/frontend-app-{user_name}[Red Hat Developer Hub UI^].
+* Go back to your frontend component on the Red Hat Developer Hub: https://developer-hub-backstage-globex-devhub.{openshift_subdomain}/catalog/default/component/frontend-app-{user_name}[Red Hat Developer Hub UI^].
 
 === 3.3.3. From the *OVERVIEW* tab click on *OpenShift Dev Spaces (VS Code)* to make the necessary source code changes.
 
@@ -820,7 +833,7 @@ image::devhub/dev_confirmed.png[width=100%]
 
 Your source code changes triggered a new pipeline to update the version of the frontend application.
 
-* Go back to your frontend component on the Red Hat Developer Hub: https://developer-hub-backstage-rhdhub.{openshift_subdomain}/catalog/default/component/frontend-app-{user_name}[Red Hat Developer Hub UI^].
+* Go back to your frontend component on the Red Hat Developer Hub: https://developer-hub-backstage-globex-devhub.{openshift_subdomain}/catalog/default/component/frontend-app-{user_name}[Red Hat Developer Hub UI^].
 
 * Explore the pipelines by clicking on the *CI*.
 
@@ -836,9 +849,9 @@ image::devhub/final_web.png[width=100%]
 
 === Bonus Point: Explore applications dependencies and APIs
 
-* Go back to your frontend component on the Red Hat Developer Hub: https://developer-hub-backstage-rhdhub.{openshift_subdomain}/catalog/default/component/frontend-app-{user_name}[Red Hat Developer Hub UI^].
+* Go back to your frontend component on the Red Hat Developer Hub: https://developer-hub-backstage-globex-devhub.{openshift_subdomain}/catalog/default/component/frontend-app-{user_name}[Red Hat Developer Hub UI^].
 
-* Click on the *Overview* tab. Next, click on the *workshop-system-rhdhub-{user_name}* section.
+* Click on the *Overview* tab. Next, click on the *workshop-system-globex-devhub-{user_name}* section.
 
 image::devhub/overview_workshop.png[width=80%]
 
