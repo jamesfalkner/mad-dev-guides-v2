@@ -777,11 +777,11 @@ image::devhub/devspaces_authorize.png[800]
  ** *Username*: `{user_name}`
  ** *Password*: `{user_password}`
 
-image::devhub/gitlab_authentication.png[700]
+image::devhub/gitlab_authentication.png[500]
 
 === 3.4.4 Authorize *devspaces* to use your account by clicking on the *Authorize* button.
 
-image::devhub/devspaces_authorize_user.png[500]
+image::devhub/devspaces_authorize_user.png[400]
 
 === 3.4.5 Wait for your Red Hat OpenShift Dev Spaces workspace to be ready. This can take a few minutes. 
 
