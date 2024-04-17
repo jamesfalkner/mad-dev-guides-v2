@@ -801,7 +801,7 @@ image::devhub/devspaces_view.png[800]
 === 3.4.7 Expand the `frontend-app-{user_name}` to find for the file: `header.html` as shown in the picture below.
 
 image::devhub/file_change.png[900]
-
+ss
 
 === 3.4.8 Update the *Title* in *line 12*, adding your preferred city. 
 
