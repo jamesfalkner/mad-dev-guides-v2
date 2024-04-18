@@ -190,11 +190,47 @@ image::deploy-helm/quarkus_helm_upgraded_healthchecks_details.png[quarkus_helm_u
 
 Great! You have successfully deployed a Java application using Helm on OpenShift. Helm simplifies the deployment process by providing pre-configured packages called Helm charts that encapsulate all the necessary resources and configurations for your application. This allows you to deploy applications quickly and consistently, streamlining the deployment process and improving productivity.
 
-== 2. Create an advanced enterprise applications using Helm
+== 2. Deploy an advanced enterprise applications using Helm
 
 In this step, you will deploy the *Globex Coolstore* application using Helm. The Globex Coolstore is a sample e-commerce application that showcases various features of OpenShift Container Platform, including microservices, service discovery, and externalized configuration. You will use Helm to streamline the deployment process and create a running instance of the Globex Coolstore application on OpenShift.
 
-Navigate to the `Developer` perspective in the OpenShift web console by clicking on the following link: link:{console_url}/developer[OpenShift web console].
+=== 2.1. Create a new Helm release for the Globex Coolstore application
+
+Click on `Add to Project` icon in the Topology view. Then, type `coolstore` in the search bar and select the `Coolstore Microservice Helm Chart` tile from the list of available resources.
+
+image::deploy-helm/search_coolstore_helm.png[]
+
+You will be redirected to the `Create Coolstore Microservice Helm Chart` YAML view that includes application details (e.g., _image, imagePullPolicy, runtime, and name_) for each customers, orders, gateway, frontend, and inventory service.
+
+You can switch to the `Form view` to view the Helm chart configuration in visualization format.
+
+image::deploy-helm/coolstore_helm_formview.png[]
+
+Click on `Create` to deploy the Globex Coolstore application using the Helm chart configuration.
+
+You will be redirected to the Topology view where you can see the Globex Coolstore application deployment in progress. The deployment will take a few seconds to complete.
+
+image::deploy-helm/coolstore_helm_deploying.png[]
+
+=== 2.2. Verify the deployment of the Globex Coolstore application
+
+Once the deployment is complete, click on the `Open URL` icon of the *frontend* application in the Topology view to view the details of the deployment. 
+
+You can also access the Globex Coolstore application by clicking on the `Routes URL` on the right bottom in the *Resources* tab.
+
+image::deploy-helm/coolstore_helm_deployed.png[]
+
+The frontend of the Globex Coolstore application will be displayed in the separate browser or tab window.
+
+image::deploy-helm/coolstore_helm_frontend.png[]
+
+You can navigate through the Globex Coolstore application to view the various features and functionalities, including the product catalog, orders, and customers.
+
+*Congratulations!* You have successfully deployed the Globex Coolstore application using Helm on OpenShift. This allows you to deploy complex enterprise applications quickly and consistently, streamlining the deployment process and improving productivity.
+
+== Summary
+
+In this module, you learned how to streamline application deployment on OpenShift using Helm. Helm acts as a software package manager for applications running on OpenShift, simplifying the deployment process by using pre-configured packages called Helm charts. You deployed a Java application and the Globex Coolstore application using Helm, showcasing the benefits of Helm charts in streamlining the deployment process and improving productivity.
 
 Please close all but the Workshop Deployer browser tab to avoid proliferation of browser tabs which can make working on other modules difficult. 
 
