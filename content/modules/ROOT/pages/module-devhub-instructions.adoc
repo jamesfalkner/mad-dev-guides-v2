@@ -71,7 +71,7 @@ At your left, the *Red Hat Developer Hub* menu:
 
 *Navigate each of the menu items to explore the different solutions:*
 
-image::devhub/rhdevhub_menu.png[rhdevhub_menu, 500]  
+image::devhub/rhdevhub_menu.png[rhdevhub_menu, 400]  
 
 * *Catalog* is the Software Catalog available to build and deploy applications. 
 * *APIs* available for developers to consume.
@@ -81,7 +81,7 @@ image::devhub/rhdevhub_menu.png[rhdevhub_menu, 500]
 ** Search for the *Learning Path*: *Developing with Quarkus*
 ** Click on the link. 
 
-image::devhub/learning_paths_explore.png[learning_paths_explore, 800]  
+image::devhub/learning_paths_explore.png[]  
 
 * Continue exploring the menu:
 
@@ -91,7 +91,7 @@ image::devhub/learning_paths_explore.png[learning_paths_explore, 800]
 
 * *Tech Radar*: Company radar to understand their modernization technology landscape. This information will be customized by each company. For more information, visit our product page https://access.redhat.com/documentation/en-us/red_hat_developer_hub/1.1/html/administration_guide_for_red_hat_developer_hub/rhdh-installing-dynamic-plugins[about plugins configuration^]
 
-image::devhub/tech_radar.png[tech_radar, 900] 
+image::devhub/tech_radar.png[] 
 
 * *Create*: Developers can build and deploy their applications by creating a component by choosing a pre-defined template. You will spend most of your time during this module on this feature.
 
@@ -122,7 +122,7 @@ The Software templates are stored on our instance of GitLab created for this wor
 ** Go back to the *rhdhub/software-templates* folder
 ** Click on *scaffolder-templates* and then click on the *quarkus-backend* folder to explore the software templates for the quarkus application.
 
-image::devhub/gitlab_st_details.png[gitlab_st_details, 800]  
+image::devhub/gitlab_st_details.png[]  
 
 1 - The *template file* is the one defining your workflow when creating a component. 
 
@@ -147,7 +147,7 @@ image::devhub/gitlab_st_details.png[gitlab_st_details, 800]
 
 Red Hat Developer Hub is flexible and supports multiple plugins. The following diagram describes how the components described interact with each other.
 
-image::devhub/rhdh_architecture.png[rhdh_architecture, 800]  
+image::devhub/rhdh_architecture.png[rhdh_architecture, 700]  
 
 *Congratulations!* You have completed the introduction module and learned about Red Hat Developer Hub. In the following modules, you will experience firsthand the value added to the business by simplifying the developer experience.
 
@@ -178,7 +178,7 @@ As part of the modernization process, Globex is looking to accelerate the softwa
 
 * Select the *Quarkus Backend Application* Template:
 
-image::devhub/software_template_quarkus.png[software_template_quarkus, 700]  
+image::devhub/software_template_quarkus.png[software_template_quarkus, 600]  
 
 Follow the next steps to create a component based on the pre-defined Software Templates:
 
@@ -224,7 +224,7 @@ image::devhub/st_component_clusterid.png[st_component_clusterid, 800]
 rhdhub-{user_name}
 ----
 
-image::devhub/st_component_namespace.png[st_component_namespace, 600]  
+image::devhub/st_component_namespace.png[st_component_namespace, 800]  
 
 *Note*: Each lab participant is already assigned a unique namespace to be used for all the applications. Each application will have a shared identification based on your user name. 
 
@@ -265,7 +265,7 @@ image::devhub/st_component_componentid_quarkus.png[st_component_componentid_quar
 
 *Sample data*
 
-image::devhub/st_component_review_quarkus.png[st_component_review_quarkus, 800]  
+image::devhub/st_component_review_quarkus.png[]  
 
 * Click on *Create*.
 
@@ -275,22 +275,22 @@ image::devhub/st_component_review_quarkus.png[st_component_review_quarkus, 800]
 
 * With all your activities in green, click *Open Component in catalog*. 
 
-image::devhub/task_activity.png[task_activity, 900]
+image::devhub/task_activity.png[]
 
 * RHDH will open a new tab with the component information. 
 
 ** Take some time to review the information in the screen:
 
-image::devhub/inventory_overview.png[inventory_overview, 900] 
+image::devhub/inventory_overview.png[] 
 
 * Click on *VIEW SOURCE* to access the new source code repository created.
 
-image::devhub/inventory_source.png[inventory_source, 800] 
+image::devhub/inventory_source.png[] 
 
 * Go back to your inventory component on the Red Hat Developer Hub: https://developer-hub-backstage-globex-devhub.{openshift_subdomain}/catalog/default/component/inventory-app-{user_name}[Red Hat Developer Hub UI^].
 * Click on *CI* tab to review your pipeline information. The pipeline will be triggered in a few seconds. After a few minutes, you will see the pipeline finished as *Succeeded*.
 
-image::devhub/inventory_pipeline.png[inventory_pipeline, 900] 
+image::devhub/inventory_pipeline.png[] 
 
 * Click on *TOPOLOGY* to review your deployment status. The deployment will be in *blue* immediately after the pipeline succeeds.
 
@@ -298,7 +298,7 @@ image::devhub/inventory_pipeline.png[inventory_pipeline, 900]
 
 At your right the application details is available. 
 
-image::devhub/inventory_deployment.png[inventory_deployment, 900] 
+image::devhub/inventory_deployment.png[] 
 
 *Note*: We will continue exploring this view in the next section.
 
@@ -310,7 +310,7 @@ image::devhub/inventory_deployment.png[inventory_deployment, 900]
 
 * Select the *Spring Boot Backend Application* Template:
 
-image::devhub/software_templates_spring.png[software_templates_spring, 800]  
+image::devhub/software_templates_spring.png[software_templates_spring, 600]  
 
 Follow the next steps to create a component based on the pre-defined Software Templates:
 
@@ -326,7 +326,7 @@ Follow the next steps to create a component based on the pre-defined Software Te
 gitlab-gitlab.{openshift_subdomain}
 ----
 
-image::devhub/st_gitlab_info.png[st_gitlab_info, 700]  
+image::devhub/st_gitlab_info.png[st_gitlab_info, 800]  
 
 * *Repo Group*: is the GitLab organization already configured. Red Hat Developer Hub will use this input data to upload the source repository and manifests.
 
@@ -356,7 +356,7 @@ image::devhub/st_component_clusterid.png[st_component_clusterid, 800]
 rhdhub-{user_name}
 ----
 
-image::devhub/st_component_namespace.png[st_component_namespace, 600]  
+image::devhub/st_component_namespace.png[st_component_namespace, 800]  
 
 *Note*: Each lab participant is already assigned a unique namespace to be used for all the applications. Each application will have a shared identification based on your user name. 
 
@@ -397,7 +397,7 @@ image::devhub/st_component_componentid_spring.png[st_component_componentid_sprin
 
 *Sample data*
 
-image::devhub/st_component_review_spring.png[st_component_review_spring, 800]  
+image::devhub/st_component_review_spring.png[]  
 
 * Click on *Create*.
 
@@ -407,13 +407,13 @@ image::devhub/st_component_review_spring.png[st_component_review_spring, 800]
 
 * With all your activities in green, click *Open Component in catalog*. 
 
-image::devhub/task_activity.png[task_activity, 900]   
+image::devhub/task_activity.png[]   
 
 * RHDH will open a new tab with the component information. 
 
 ** Take some time to review the information in the screen:
 
-image::devhub/catalog_overview.png[catalog_overview, 900] 
+image::devhub/catalog_overview.png[] 
 
 * In the *Overview* tab, click on *Pipelines* to review the Pipelines details in OpenShift. 
 
@@ -429,13 +429,13 @@ image::devhub/pipelines_openshift.png[pipelines_openshift, 700]
 
 * Click on *Deployment* in the *Overview* tab to review your deployment status in OpenShift.
 
-image::devhub/overview_deployment_click.png[overview_deployment_click, 700] 
+image::devhub/overview_deployment_click.png[] 
 
 The deployment will be in *blue* immediately after the Pipeline succeeds.
 
 *Note*: RHDH gives the flexibility if developers have access, to review the same information in OpenShift. 
 
-image::devhub/catalog_deployment.png[catalog_deployment, 700] 
+image::devhub/catalog_deployment.png[] 
 
 *Note*: We will continue exploring this view in the next module.
 
@@ -460,7 +460,7 @@ This lab aims to explore further modernization by using new software templates. 
 
 * Select the *Java Gateway Application* Template:
 
-image::devhub/software_templates_gateway.png[software_templates_gateway, 800]  
+image::devhub/software_templates_gateway.png[software_templates_gateway, 600]  
 
 Follow the next steps to create a component based on the pre-defined Software Templates:
 
@@ -476,7 +476,7 @@ Follow the next steps to create a component based on the pre-defined Software Te
 gitlab-gitlab.{openshift_subdomain}
 ----
 
-image::devhub/st_gitlab_info.png[st_gitlab_info, 700]  
+image::devhub/st_gitlab_info.png[st_gitlab_info, 800]  
 
 * *Repo Group*: is the GitLab organization already configured. Red Hat Developer Hub will use this input data to upload the source repository and manifests.
 
@@ -494,7 +494,7 @@ image::devhub/st_gitlab_info.png[st_gitlab_info, 700]
 .{openshift_subdomain}
 ----
 
-image::devhub/st_component_clusterid.png[st_component_clusterid, 700]  
+image::devhub/st_component_clusterid.png[st_component_clusterid, 800]  
 
 * *Namespace*:  is the OpenShift namespace. Red Hat Developer Hub will use this input data to build and deploy the application in that namespace.
 
@@ -506,7 +506,7 @@ image::devhub/st_component_clusterid.png[st_component_clusterid, 700]
 rhdhub-{user_name}
 ----
 
-image::devhub/st_component_namespace.png[st_component_namespace, 600]  
+image::devhub/st_component_namespace.png[st_component_namespace, 800]  
 
 *Note*: Each lab participant is already assigned a unique namespace to be used for all the applications. Each application will have a shared identification based on your user name. 
 
@@ -547,7 +547,7 @@ image::devhub/st_component_componentid_gateway.png[st_component_componentid_gate
 
 *Sample data*
 
-image::devhub/st_component_review_gateway.png[st_component_review_gateway, 800]  
+image::devhub/st_component_review_gateway.png[]  
 
 * Click on *Create*.
 
@@ -557,13 +557,13 @@ image::devhub/st_component_review_gateway.png[st_component_review_gateway, 800]
 
 * With all your activities in green, click *Open Component in catalog*. 
 
-image::devhub/task_activity.png[task_activity, 900]  
+image::devhub/task_activity.png[]  
 
 * RHDH will open a new tab with the component information. 
 
 ** Take some time to review the information in the screen:
 
-image::devhub/gateway_overview.png[gateway_overview, 900]  
+image::devhub/gateway_overview.png[]  
 
 * Click on *CI* to review your pipeline information.
 The pipeline will be triggered in a few seconds. After a few minutes, you will see the pipeline finished as *Succeeded*.
@@ -584,11 +584,11 @@ You might find the pods still not ready. Wait a few seconds to see everything in
 
 *Note*: *1 pod with errors* indicates that a pod has failed as it shows on the *Error Reporting* section. The issue was resolved and now all the pods are in green.
 
-image::devhub/gateway_yourclusters.png[gateway_yourclusters, 900] 
+image::devhub/gateway_yourclusters.png[] 
 
 ** Expand the pods information:
 
-image::devhub/gateway_kubernetes_clusters_ok.png[gateway_kubernetes_clusters_ok, 900] 
+image::devhub/gateway_kubernetes_clusters_ok.png[] 
 
 With everything in green, you are ready to move to the next session.
 
@@ -618,7 +618,7 @@ Follow the next steps to create a component based on the pre-defined Software Te
 gitlab-gitlab.{openshift_subdomain}
 ----
 
-image::devhub/st_gitlab_info.png[st_gitlab_info, 700]  
+image::devhub/st_gitlab_info.png[st_gitlab_info, 800]  
 
 * *Repo Group*: is the GitLab organization already configured. Red Hat Developer Hub will use this input data to upload the source repository and manifests.
 
@@ -636,7 +636,7 @@ image::devhub/st_gitlab_info.png[st_gitlab_info, 700]
 .{openshift_subdomain}
 ----
 
-image::devhub/st_component_clusterid.png[st_component_clusterid, 700]  
+image::devhub/st_component_clusterid.png[st_component_clusterid, 800]  
 
 * *Namespace*:  is the OpenShift namespace. Red Hat Developer Hub will use this input data to build and deploy the application in that namespace.
 
@@ -648,7 +648,7 @@ image::devhub/st_component_clusterid.png[st_component_clusterid, 700]
 rhdhub-{user_name}
 ----
 
-image::devhub/st_component_namespace.png[st_component_namespace, 600]  
+image::devhub/st_component_namespace.png[st_component_namespace, 800]  
 
 *Note*: Each lab participant is already assigned a unique namespace to be used for all the applications. Each application will have a shared identification based on your user name. 
 
@@ -689,7 +689,7 @@ image::devhub/st_component_componentid_frontend.png[st_component_componentid_fro
 
 *Sample data*
 
-image::devhub/st_component_review_frontend.png[st_component_review_frontend, 900]  
+image::devhub/st_component_review_frontend.png[]  
 
 * Click on *Create*.
 
