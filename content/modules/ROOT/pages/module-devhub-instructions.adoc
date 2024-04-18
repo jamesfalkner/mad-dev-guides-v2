@@ -221,7 +221,7 @@ image::devhub/st_component_clusterid.png[st_component_clusterid, 800]
 [.console-input]
 [source,bash,subs="attributes"]
 ----
-rhdhub-{user_name}
+globex-devhub-{user_name}
 ----
 
 image::devhub/st_component_namespace.png[st_component_namespace, 800]  
@@ -353,7 +353,7 @@ image::devhub/st_component_clusterid.png[st_component_clusterid, 800]
 [.console-input]
 [source,bash,subs="attributes"]
 ----
-rhdhub-{user_name}
+globex-devhub-{user_name}
 ----
 
 image::devhub/st_component_namespace.png[st_component_namespace, 800]  
@@ -503,7 +503,7 @@ image::devhub/st_component_clusterid.png[st_component_clusterid, 800]
 [.console-input]
 [source,bash,subs="attributes"]
 ----
-rhdhub-{user_name}
+globex-devhub-{user_name}
 ----
 
 image::devhub/st_component_namespace.png[st_component_namespace, 800]  
@@ -645,7 +645,7 @@ image::devhub/st_component_clusterid.png[st_component_clusterid, 800]
 [.console-input]
 [source,bash,subs="attributes"]
 ----
-rhdhub-{user_name}
+globex-devhub-{user_name}
 ----
 
 image::devhub/st_component_namespace.png[st_component_namespace, 800]  
