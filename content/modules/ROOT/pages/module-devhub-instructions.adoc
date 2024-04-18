@@ -423,7 +423,7 @@ image::devhub/overview_pipelines_click.png[overview_pipelines_click, 700]
 
 Wait until the Pipeline is green. The Pipeline will take a few minutes to complete.
 
-image::devhub/pipelines_openshift.png[pipelines_openshift, 700] 
+image::devhub/pipelines_openshift.png[] 
 
 * Go back to your catalog component on the Red Hat Developer Hub: https://developer-hub-backstage-globex-devhub.{openshift_subdomain}/catalog/default/component/catalog-app-{user_name}[Red Hat Developer Hub UI^].
 
