@@ -81,7 +81,7 @@ image::deploy-helm/quarkus_helm_formview.png[]
 
 Select the `YAML view` button to view the Helm chart configuration in YAML format.
 
-image::deploy-helm/quarkus_helm_yamlview.png[]
+image::deploy-helm/quarkus_helm_yamlview.png[quarkus_helm_yamlview, 900]
 
 === 1.3. Customize the build and deploy configurations
 
