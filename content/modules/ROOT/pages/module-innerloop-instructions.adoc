@@ -112,7 +112,7 @@ image::innerloop/coolstore-arch-inventory-quarkus.png[CoolStore Architecture,400
 
 === 2.1. What is Quarkus?
 
-image::innerloop/quarkus-logo.png[Quarkus, 500]
+image::innerloop/quarkus-logo.png[Quarkus, 600]
 
 https://quarkus.io/[Quarkus^] is a Kubernetes Native Java stack tailored for GraalVM & OpenJDK HotSpot, crafted from the best of breed Java libraries and standards.
 
