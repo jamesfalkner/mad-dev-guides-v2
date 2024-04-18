@@ -131,7 +131,7 @@ love and use wired on a https://quarkus.io/vision/standards[standard backbone^].
 
 The **inventory-quarkus** project has the following structure which shows the components of the Quarkus project laid out in different subdirectories according to Maven best practices:
 
-image::innerloop/inventory-quarkus-project.png[Inventory Project,500]
+image::innerloop/inventory-quarkus-project.png[Inventory Project,600]
 
 The **'/projects/workshop/labs/inventory-quarkus'** folder contents:
 
