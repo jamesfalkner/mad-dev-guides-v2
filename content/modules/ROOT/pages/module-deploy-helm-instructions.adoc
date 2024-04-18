@@ -115,7 +115,7 @@ deploy:
   serviceType: ClusterIP
 ----
 
-image::deploy-helm/edit_quarkus_helm_yamlview.png[]
+image::deploy-helm/edit_quarkus_helm_yamlview.png[edit_quarkus_helm_yamlview, 900]
 
 Click on `Create` to deploy the Quarkus application using the Helm chart configuration.
 
