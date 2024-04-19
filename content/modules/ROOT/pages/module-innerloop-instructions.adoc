@@ -513,7 +513,6 @@ Then you should be able to test your service by clicking on `Test it`. You shoul
 Well done! You are ready to move on to the next lab, but before you go, you probably should close those Inventory Service output browser tabs from the beginning of this chapter.
 
 == 3. Create Catalog Service with Spring Boot
-:navtitle: Create Catalog Service with Spring Boot
 
 In this lab we will build a second microservice for our application
 using Spring Boot. During this lab, you will create a REST API for 
