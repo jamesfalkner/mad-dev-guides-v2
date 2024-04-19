@@ -209,30 +209,13 @@ If we focus on the dependencies section, you can see the following extensions:
     </dependency>
 ----
 
-.Quarkus Extensions
-[%header,cols=2*]
-|===
-|Name 
-|Description
+* https://quarkus.io/guides/rest[Quarkus REST^] is a new Jakarta REST (formerly known as JAX-RS) implementation written from the ground up to work on our common Vert.x layer and is thus fully reactive.
+* https://quarkus.io/guides/rest-json-guide[JSON REST Services^] allows you to develop REST services to consume and produce JSON payloads.
+* https://quarkus.io/guides/hibernate-orm-panache[Hibernate ORM with Panache^] is the de facto JPA implementation and offers you the full breath of an Object Relational Mapper. With Panache you will get additional convenience features. 
+* https://quarkus.io/guides/datasource-guide#h2[Datasources (H2)^] allows you to use datasources is the main way of obtaining connections to a database.
+* https://quarkus.io/guides/deploying-to-openshift[OpenShift^] understands how to deploy an application to OpenShift
 
-|https://quarkus.io/guides/resteasy-reactive[REST Services with RESTEasy Reactive^]
-|It allows you to develop non-blocking, reactive REST Services
-
-|https://quarkus.io/guides/rest-json-guide[JSON REST Services^]
-|It allows you to develop REST services to consume and produce JSON payloads
-
-|https://quarkus.io/guides/hibernate-orm-panache[Hibernate ORM with Panache^]
-|Hibernate is the de facto JPA implementation and offers you the full breath of an Object Relational Mapper. With Panache you will get additional convenience features. 
-
-|https://quarkus.io/guides/datasource-guide#h2[Datasources (H2)^]
-|Using datasources is the main way of obtaining connections to a database.
-
-|https://quarkus.io/guides/deploying-to-openshift[OpenShift^]
-|Understands how to deploy an application to OpenShift
-
-|===
-
-`*Examine 'src/main/java/com/redhat/cloudnative/InventoryResource.java' file*`:
+Examine `src/main/java/com/redhat/cloudnative/InventoryResource.java` file:
 
 [source,java]
 ----
@@ -254,88 +237,67 @@ public class InventoryResource {
 }
 ----
 
-It's a very simple REST endpoint, returning "hello" to requests on "/hello".
+It's a very simple REST endpoint, returning `hello` to requests on `/hello`.
 
 [TIP]
 ====
-With Quarkus, there is no need to create an Application class. It is supported, but not required. In addition, 
-only one instance of the resource is created and not one per request. You can configure this using the different *Scoped* annotations 
-(ApplicationScoped, RequestScoped, etc). In addition, Quarkus is able to mix and match Reactive and Imperative programming, so you won't have to worry about the reactive aspect of the REST service.
+With Quarkus, there is no need to create an Application class. It is supported, but not required. In addition, only one instance of the resource is created and not one per request. You can configure this using the different *Scoped* annotations  (ApplicationScoped, RequestScoped, etc). In addition, Quarkus is able to mix and match Reactive and Imperative programming, so you won't have to worry about the reactive aspect of the REST service.
 ====
 
-[#enable_development_mode]
 === 2.3. Enable the Development Mode
 
-*quarkus:dev* runs Quarkus in development mode. This enables hot deployment with background compilation, 
-which means that when you modify your Java files and/or your resource files and refresh your browser, these changes will 
+*quarkus:dev* runs Quarkus in development mode. This enables hot deployment with background compilation, which means that when you modify your Java files and/or your resource files and refresh your browser, these changes will 
 automatically take effect. This works for resource files like the configuration property file as well. Refreshing the browser 
 triggers a scan of the workspace, and if any changes are detected, the affected Java files are recompiled and the application is redeployed; 
 your request is then serviced by the redeployed application. If there are any issues with compilation or deployment an error page will let you know.
 
-First, in your {CHE_URL}[Workspace^, role='params-link'],
+Open a new terminal in your VSCode workspace.
 
-[tabs, subs="attributes+,+macros"]
-====
+image::innerloop/ds-terminal-view.png[Che - RunTask, 600]
 
-IDE Task::
-+
--- 
-`*Click on 'Terminal' -> 'Run Task...' ->  'devfile: Inventory - Compile (Dev Mode)'*`
+Start the Quarkus  dev mode by running the following Maven commands in the terminal:
 
-image::innerloop/che-runtask.png[Che - RunTask, 600]
---
-
-CLI::
-+
---
-`*Execute the following commands in the terminal window*`
-
-[source,shell,subs="{markup-in-source}",role=copypaste]
+[.console-input]
+[source,bash,subs="+attributes,macros+"]
 ----
-cd //projects/coolstore-devx/inventory-quarkus
-mvn compile quarkus:dev -Ddebug=false
+mvn -f $PROJECT_SOURCE/inventory-quarkus quarkus:dev -Dquarkus.analytics.disabled=true
 ----
 
-NOTE: To open a terminal window, `*click on 'Terminal' -> 'New Terminal'*`
+When pop-ups appear, click on `yes` to listen 8080 port. Then, click on `x` not to redirect to the *5005* port.
 
---
-====
+image::innerloop/che-open-8080-link.png[Che - Open Link, 600]
 
-When pop-ups appear, *confirm you want to expose the 8080 port* by `*clicking on 'Open in New Tab'*`.
+You then have to click on `Open in New Tab > Open` to access the frontend page.
 
-image::innerloop/che-open-8080-link.png[Che - Open Link, 500]
-
-You then have to confirm the access to external web sites:
-
-image::innerloop/vscode-external-website.png[Che - Open Link, 500]
+image::innerloop/vscode-external-website.png[Che - Open Link, 600]
 
 Your browser will be directed to *your Inventory Service running inside your Workspace*.
 
-image::innerloop/inventory-quarkus.png[Inventory Quarkus,500]
+image::innerloop/inventory-quarkus.png[Inventory Quarkus,600]
 
 [NOTE]
 ====
 If you see the following result in the browser window, please `*click on the browser Refresh icon`*,
 
-image::innerloop/che-preview-na.png[Che - Preview Not Available, 500]
+image::innerloop/che-preview-na.png[Che - Preview Not Available, 600]
 ====
 
 [NOTE]
 ====
 Please *don't close* that Inventory output browser tab, you will need it for the next few steps of this lab.
 
-If by accident you close that browser tab then you should be able to reopen it from your browser history.
-It will likely be called *Inventory Service*
+If by accident you close that browser tab then you should be able to reopen it from your browser history. It will likely be called *Inventory Service*
 ====
 
 Now let's write some code and create an Entity to interact with the Database and a RESTful endpoint to create the Inventory service
 
 [#create_entity]
-== Create an Entity
+=== 2.4. Create an Entity
 
-`*Create the 'src/main/java/com/redhat/cloudnative/Inventory.java' file`* as follows:
+Open the `src/main/java/com/redhat/cloudnative/Inventory.java` file and copy the following code.
 
-[source,java,role=copypaste]
+[.console-input]
+[source,java,subs="+attributes,macros+"]
 ----
 package com.redhat.cloudnative;
 
@@ -346,22 +308,26 @@ import jakarta.persistence.Table;
 @Entity // <1> 
 @Table(name = "INVENTORY") // <2> 
 public class Inventory extends PanacheEntity { // <3>
-    public int quantity; // <4>
-}
+    public String itemId; // <4>
+    public int quantity; 
 ----
 <1> *@Entity* marks the class as a JPA entity
 <2> *@Table* customizes the table creation process by defining a table name and database constraint
 <3> *PanacheEntity* is a very useful super class that, among others, autogenerates an id field
-<4> *public int quantity* defines the name of a field. https://quarkus.io/guides/hibernate-orm-panache#how-and-why-we-simplify-hibernate-orm-mappings[Panache will rewrite the access to private] and generate getters and setters during runtime, allowing you to eliminate a lot of boilerplate code.
+<4> *public String itemId* defines the name of a field. https://quarkus.io/guides/hibernate-orm-panache#how-and-why-we-simplify-hibernate-orm-mappings[Panache will rewrite the access to private] and generate getters and setters during runtime, allowing you to eliminate a lot of boilerplate code.
+
+
+
 
 [NOTE]
 ====
 You don't need to press a save button! VS Code automatically saves the changes made to the files.
 ====
 
-`*Update the 'src/main/resources/application.properties' file*` to match with the following content:
+Update the `src/main/resources/application.properties` file to match with the following content:
 
-[source,bash,role=copypaste]
+[.console-input]
+[source,bash,subs="+attributes,macros+"]
 ----
 quarkus.datasource.db-kind=h2
 quarkus.datasource.jdbc.url=jdbc:h2:mem:inventory;DB_CLOSE_ON_EXIT=FALSE;DB_CLOSE_DELAY=-1
@@ -372,11 +338,13 @@ quarkus.hibernate-orm.log.sql=true
 quarkus.hibernate-orm.sql-load-script=import.sql
 quarkus.http.host=0.0.0.0
 
-%prod.quarkus.package.type=uber-jar#<1> 
+%prod.quarkus.package.type=uber-jarr#<1> 
 
 # these value are recommended for a quarkus openshift plugin build<2>
 %prod.quarkus.openshift.route.expose=true
-%prod.quarkus.openshift.deployment-kind=Deployment
+%prod.quarkus.kubernetes.deploy=true
+%prod.quarkus.kubernetes.deploy.target=openshift
+%prod.quarkus.kubernetes-client.trust-certs=true
 %prod.quarkus.openshift.labels.app=coolstore
 %prod.quarkus.openshift.ports."http".host-port=8080
 %prod.quarkus.openshift.labels.component=inventory
@@ -388,8 +356,9 @@ quarkus.container-image.name=inventory-coolstore
 quarkus.container-image.registry=image-registry.openshift-image-registry.svc:5000
 quarkus.openshift.route.tls.termination=edge
 quarkus.openshift.route.tls.insecure-edge-termination-policy=Redirect
-
 ----
+
+
 <1> An *uber-jar* contains all the dependencies required packaged in the *jar* to enable running the 
 application with *java -jar*. By default, in Quarkus, the generation of the uber-jar is disabled. With the
 *%prod* prefix, this option is only activated when building the jar intended for deployments.
@@ -399,14 +368,14 @@ and then deploy this application to OpenShift - but more of that later
 `*Update the 'src/main/resources/import.sql' file`* as follows:
 [source,sql,role=copypaste]
 ----
-INSERT INTO INVENTORY(itemId, quantity) VALUES (100000, 0);
-INSERT INTO INVENTORY(itemId, quantity) VALUES (329299, 35);
-INSERT INTO INVENTORY(itemId, quantity) VALUES (329199, 12);
-INSERT INTO INVENTORY(itemId, quantity) VALUES (165613, 45);
-INSERT INTO INVENTORY(itemId, quantity) VALUES (165614, 87);
-INSERT INTO INVENTORY(itemId, quantity) VALUES (165954, 43);
-INSERT INTO INVENTORY(itemId, quantity) VALUES (444434, 32);
-INSERT INTO INVENTORY(itemId, quantity) VALUES (444435, 53);
+INSERT INTO INVENTORY VALUES (1, '100000', 0);
+INSERT INTO INVENTORY VALUES (2, '329299', 35);
+INSERT INTO INVENTORY VALUES (3, '329199', 12);
+INSERT INTO INVENTORY VALUES (4, '165613', 45);
+INSERT INTO INVENTORY VALUES (5, '165614', 87);
+INSERT INTO INVENTORY VALUES (6, '165954', 43);
+INSERT INTO INVENTORY VALUES (7, '444434', 32);
+INSERT INTO INVENTORY VALUES (8, '444435', 53);
 ----
 
 [#create_restful_service]
