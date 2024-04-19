@@ -23,7 +23,7 @@
 
 == 1. Deploy Globex Coolstore app using Helm
 
-Let's first deploy the fully function (but unsecured) application. We'll use a Helm chart to deploy it to your namespace (`globex-keycloak-{user_name}`). Open the https://{console_url}/topology/ns/globex-keycloak-{user_name}?view=graph[OpenShift web console^]. If this is the first time you are logging in, select the `globex-keycloak-{user_name}` namespace from the list of namespaces, and the _Developer_ view on the drop-down on the left. You will see the Keycloak operator already installed:
+Let's first deploy the fully function (but unsecured) application. We'll use a Helm chart to deploy it to your namespace (`globex-keycloak-{user_name}`). Open the {openshift_cluster_console}/topology/ns/globex-keycloak-{user_name}?view=graph[OpenShift web console^]. If this is the first time you are logging in, select the `globex-keycloak-{user_name}` namespace from the list of namespaces, and the _Developer_ view on the drop-down on the left. You will see the Keycloak operator already installed:
 
 image::keycloak/start.png[]
 
@@ -130,7 +130,7 @@ You can install Keycloak in many ways, including just downloading and extracting
 
 === 2.1 Deploy Keycloak Database
 
-Keycloak needs a database to store its data. We'll use Postgres. Back on the https://{console_url}/topology/ns/globex-keycloak-{user_name}?view=graph[OpenShift web console^], click the Add icon once again, type `postgres ephemeral` into the search box, locate the `Postgres (Ephemeral)` template, click on it, and click *Instantiate Template*:
+Keycloak needs a database to store its data. We'll use Postgres. Back on the {openshift_cluster_console}/topology/ns/globex-keycloak-{user_name}?view=graph[OpenShift web console^], click the Add icon once again, type `postgres ephemeral` into the search box, locate the `Postgres (Ephemeral)` template, click on it, and click *Instantiate Template*:
 
 image::keycloak/postgres-create.png[]
 
@@ -171,13 +171,21 @@ Now, switch to the new project that was created for you:
 oc project globex-keycloak-{user_name}
 ----
 
-Keycloak needs a certificate pair to use for TLS communication. We will use OpenSSL to generate the key pair. Run this command to create it and then create an OpenShift _Secret_ that holds the resulting key pair:
+Let's also make the postgresql database icon show its proper logo:
 
 [.console-input]
 [source,bash,subs="+attributes,macros+"]
 ----
-openssl req -subj '/CN={openshift_subdomain}/O=Test Keycloak./C=US' -newkey rsa:2048 -nodes -keyout key.pem -x509 -days 365 -out certificate.pem && \
-oc -n globex-keycloak-{user_name} create secret tls keycloak-cert-secret --cert certificate.pem --key key.pem
+oc -n globex-keycloak-{user_name} label dc keycloak-postgresql "app.openshift.io/runtime=postgresql"
+----
+
+Keycloak needs a certificate pair to use for TLS communication. We will use OpenSSL to generate the key pair, and put the public key in the application so that we can refer to it at runtime. Run this command to create it and then create an OpenShift _Secret_ that holds the resulting key pair:
+
+[.console-input]
+[source,bash,subs="+attributes,macros+"]
+----
+openssl req -subj '/CN={openshift_subdomain}/O=Test Keycloak/C=US' -newkey rsa:2048 -nodes -keyout key.pem -x509 -days 365 -out $PROJECT_SOURCE/inventory/src/main/resources/certificate.pem && \
+oc -n globex-keycloak-{user_name} create secret tls keycloak-cert-secret --cert $PROJECT_SOURCE/inventory/src/main/resources/certificate.pem --key key.pem
 ----
 This secret will be used in the next step.
 
@@ -231,7 +239,7 @@ image::keycloak/keycloak-adminsecret.png[]
 
 `admin` is pretty easy to remember, but you'll probably want to copy the password to your clipboard (using the copy-to-clipboard icon at the far right, or CTRL-C (CMD-C on a Mac)) to use in a moment.
 
-Back on the https://{console_url}/topology/ns/globex-keycloak-{user_name}?view=graph[OpenShift web console^] topology page, click the small "open" icon at the upper right of the Keycloak deployment:
+Back on the {openshift_cluster_console}/topology/ns/globex-keycloak-{user_name}?view=graph[OpenShift web console^] topology page, click the small "open" icon at the upper right of the Keycloak deployment:
 
 image::keycloak/keycloak-openicon.png[]
 
@@ -242,7 +250,7 @@ image::keycloak/admin-intro.png[]
 Click *Administration Console* to log in with the following:
 
 * *Username or email*: `admin`
-* *Password*: The password you retrieved from the https://{console_url}/k8s/ns/globex-keycloak-{user_name}/secrets/keycloak-initial-admin[secret^] earlier.
+* *Password*: The password you retrieved from the {openshift_cluster_console}/k8s/ns/globex-keycloak-{user_name}/secrets/keycloak-initial-admin[secret^] earlier.
 
 image::keycloak/admin-pw.png[]
 
@@ -278,7 +286,7 @@ image::keycloak/realm-job.png[]
 
 === 3.2 Explore Realm
 
-Go back to the https://keycloak-globex-keycloak-{user_name}.{openshift_subdomain}/[Keycloak administration console] and login as `admin` user (using the password from the https://{console_url}/k8s/ns/globex-keycloak-{user_name}/secrets/keycloak-initial-admin[Secret^] as before). You should now see a new realm in the Realm dropdown. Select the `globex` realm by clicking on it.
+Go back to the https://keycloak-globex-keycloak-{user_name}.{openshift_subdomain}/[Keycloak administration console] and login as `admin` user (using the password from the {openshift_cluster_console}/k8s/ns/globex-keycloak-{user_name}/secrets/keycloak-initial-admin[Secret^] as before). You should now see a new realm in the Realm dropdown. Select the `globex` realm by clicking on it.
 
 Within the new realm, click on `Users` to see the pre-created users `admin`, `alice`, and `jdoe`:
 
@@ -333,11 +341,14 @@ Next, we'll add the necessary configurations to our application to enable it to 
 
 [source,properties,role="copypaste",subs="attributes"]
 ----
-mp.jwt.verify.publickey.location=https://keycloak-globex-keycloak-{user_name}.{openshift_subdomain}/realms/globex/protocol/openid-connect/certs<1>
-mp.jwt.verify.issuer=https://keycloak-globex-keycloak-{user_name}.{openshift_subdomain}/realms/globex<2>
+mp.jwt.verify.publickey.location=https://keycloak-globex-keycloak-{user_name}.{openshift_subdomain}/realms/globex/protocol/openid-connect/certs // <1>
+mp.jwt.verify.issuer=https://keycloak-globex-keycloak-{user_name}.{openshift_subdomain}/realms/globex // <2>
+smallrye.jwt.client.tls.certificate.path=certificate.pem // <3>
+
 ----
 <1> Sets public key location for JWT authentication. Keycloak exports this for you at the URL.
 <2> Issuer URL. This must match the incoming JWT `iss` _claims_ or else authentication fails.
+<3> Since we are using self-signed certificates, we manually supply the self-signed public key certificate used to for TLS certificate validation
 
 === 4.1 Add endpoints
 
@@ -425,15 +436,17 @@ First, add the following properties to your `inventory/src/main/resources/applic
 %prod.quarkus.kubernetes.deploy=true
 %prod.quarkus.kubernetes.deployment-target=openshift
 %prod.quarkus.openshift.route.expose=true
-quarkus.openshift.ports."http".host-port=8080
+%prod.quarkus.openshift.ports."http".host-port=8080
 ----
 
-Let's re-build and re-deploy the application on top of the old (unsecured) inventory service. Run this command, which will cause the OpenShift plugin to re-deploy:
+Let's re-build and re-deploy the application to replace the older (unsecured) inventory service. Run this command, which will delete the old deployment and cause the OpenShift plugin to re-deploy our new secured inventory service (and add a visual connector to its postgresql database):
 
 [source,sh,role="copypaste",subs="attributes"]
 ----
 oc project globex-keycloak-{user_name} && \
-mvn clean package -DskipTests
+oc delete deployment inventory && \
+mvn -f $PROJECT_SOURCE/inventory clean package -DskipTests && \
+oc annotate deployment inventory "app.openshift.io/connects-to=postgresql-inventory"
 ----
 
 You should see `BUILD SUCCESS`. The new application will begin deploying. Wait for it to complete (dark blue circle for the `inventory` service on the OpenShift web console).
@@ -450,7 +463,7 @@ Try to access the endpoint as an anonymous unauthenticated user:
 
 [source,sh,role="copypaste",subs="attributes"]
 ----
-curl -i http://$(oc get route inventory -o=go-template --template={% raw %}'{{ .spec.host }}'{% endraw %})/secured/me
+curl -i http://$(oc -n globex-keycloak-{user_name} get route inventory -o=go-template --template='{{ .spec.host }}')/secured/me
 ----
 
 It should fail with:
@@ -472,7 +485,7 @@ Get a token for user `alice` with this command:
 [source,sh,role="copypaste",subs="attributes"]
 ----
 export ALICE_TOKEN=$(\
-    curl -s -X POST https://keycloak-globex-keycloak-{user_name}.{openshift_subdomain}/realms/globex/protocol/openid-connect/token \
+    curl -ks -X POST https://keycloak-globex-keycloak-{user_name}.{openshift_subdomain}/realms/globex/protocol/openid-connect/token \
     --user backend-service:secret \
     -H 'content-type: application/x-www-form-urlencoded' \
     -d 'username=alice&password=alice&grant_type=password' | jq --raw-output '.access_token' \
@@ -484,7 +497,7 @@ Try out the JWT-secured API as Alice:
 
 [source,sh,role="copypaste",subs="attributes"]
 ----
-curl -i http://$(oc get route inventory -o=go-template --template={% raw %}'{{ .spec.host }}'{% endraw %})/secured/me \
+curl -i http://$(oc -n globex-keycloak-{user_name} get route inventory -o=go-template --template='{{ .spec.host }}')/secured/me \
   -H "Authorization: Bearer $ALICE_TOKEN"
 ----
 
@@ -505,7 +518,7 @@ Now try to access the `/me/admin` endpoint as `alice`:
 
 [source,sh,role="copypaste",subs="attributes"]
 ----
-curl -i http://$(oc get route inventory -o=go-template --template={% raw %}'{{ .spec.host }}'{% endraw %})/secured/me/admin \
+curl -i http://$(-n globex-keycloak-{user_name} get route inventory -o=go-template --template='{{ .spec.host }}')/secured/me/admin \
   -H "Authorization: Bearer $ALICE_TOKEN"
 ----
 
@@ -535,7 +548,7 @@ Obtain an Admin token:
 [source,sh,role="copypaste",subs="attributes"]
 ----
 export ADMIN_TOKEN=$(\
-    curl -s -X POST https://keycloak-globex-keycloak-{user_name}.{openshift_subdomain}/realms/globex/protocol/openid-connect/token \
+    curl -ks -X POST https://keycloak-globex-keycloak-{user_name}.{openshift_subdomain}/realms/globex/protocol/openid-connect/token \
     --user backend-service:secret \
     -H 'content-type: application/x-www-form-urlencoded' \
     -d 'username=admin&password=admin&grant_type=password' | jq --raw-output '.access_token' \
@@ -546,7 +559,7 @@ And try again with your new token:
 
 [source,sh,role="copypaste",subs="attributes"]
 ----
-curl -i http://$(oc get route inventory -o=go-template --template={% raw %}'{{ .spec.host }}'{% endraw %})/secured/me/admin \
+curl -i http://$(oc -n globex-keycloak-{user_name} get route inventory -o=go-template --template='{{ .spec.host }}')/secured/me/admin \
   -H "Authorization: Bearer $ADMIN_TOKEN"
 ----
 
@@ -708,7 +721,7 @@ Refresh the admin token (it may have expired):
 [source,sh,role="copypaste",subs="attributes"]
 ----
 export ADMIN_TOKEN=$(\
-    curl -s -X POST https://keycloak-globex-keycloak-{user_name}.{openshift_subdomain}/realms/globex/protocol/openid-connect/token \
+    curl -ks -X POST https://keycloak-globex-keycloak-{user_name}.{openshift_subdomain}/realms/globex/protocol/openid-connect/token \
     --user backend-service:secret \
     -H 'content-type: application/x-www-form-urlencoded' \
     -d 'username=admin&password=admin&grant_type=password' | jq --raw-output '.access_token' \
@@ -720,7 +733,7 @@ And then try to access with it:
 [source,sh,role="copypaste",subs="attributes"]
 ----
 curl -i -X GET \
-  http://$(oc get route inventory -o=go-template --template={% raw %}'{{ .spec.host }}'{% endraw %})/secured/confidential \
+  http://$(oc -n globex-keycloak-{user_name} get route inventory -o=go-template --template='{{ .spec.host }}')/secured/confidential \
   -H "Authorization: Bearer $ADMIN_TOKEN"
 ----
 
@@ -740,7 +753,7 @@ To access the confidential endpoint, you should obtain an access token for user 
 [source,sh,role="copypaste",subs="attributes"]
 ----
 export JDOE_TOKEN=$(\
-    curl -s -X POST https://keycloak-globex-keycloak-{user_name}.{openshift_subdomain}/realms/globex/protocol/openid-connect/token \
+    curl -ks -X POST https://keycloak-globex-keycloak-{user_name}.{openshift_subdomain}/realms/globex/protocol/openid-connect/token \
     --user backend-service:secret \
     -H 'content-type: application/x-www-form-urlencoded' \
     -d 'username=jdoe&password=jdoe&grant_type=password' | jq --raw-output '.access_token' \
@@ -752,7 +765,7 @@ And access the confidential endpoint with your new token:
 [source,sh,role="copypaste",subs="attributes"]
 ----
 curl -i -X GET \
-  http://$(oc get route inventory -o=go-template --template={% raw %}'{{ .spec.host }}'{% endraw %})/secured/confidential \
+  http://$(oc -n globex-keycloak-{user_name} get route inventory -o=go-template --template='{{ .spec.host }}')/secured/confidential \
   -H "Authorization: Bearer $JDOE_TOKEN"
 ----
 
