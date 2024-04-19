@@ -339,7 +339,8 @@ This will add the necessary entries in your `pom.xml` to bring in JWT and OpenSh
 
 Next, we'll add the necessary configurations to our application to enable it to locate and authenticate with our Keycloak instance. Open `inventory/src/main/resources/application.properties` which contains application configuration values. Add the following values to the end of the file:
 
-[source,properties,role="copypaste",subs="attributes"]
+[.console-input]
+[source,properties,role="copypaste",subs="+attributes"]
 ----
 mp.jwt.verify.publickey.location=https://keycloak-globex-keycloak-{user_name}.{openshift_subdomain}/realms/globex/protocol/openid-connect/certs // <1>
 mp.jwt.verify.issuer=https://keycloak-globex-keycloak-{user_name}.{openshift_subdomain}/realms/globex // <2>
@@ -352,11 +353,10 @@ smallrye.jwt.client.tls.certificate.path=certificate.pem // <3>
 
 === 4.1 Add endpoints
 
-== Create protected endpoints
-
 We'll create 2 protected endpoints. Create a new class file `SecuredResource.java` in the `com.redhat.coolstore.inventory.controller` package (in the `inventory/src/main/java/com/redhat/coolstore/inventory/controller` directory) with the following code:
 
-[source,java,role="copypaste",subs="attributes"]
+[.console-input]
+[source,java,role=copypaste]
 ----
 package com.redhat.coolstore.inventory.controller;
 
@@ -426,18 +426,24 @@ public class SecuredResource {
 <4> The `/me` and `/me/admin` endpoints demonstrate how to access the security context for Quarkus apps secured with JWT. Here we are using a `@RolesAllowed` annotation to make sure that only users granted a specific role can access the endpoint.
 <5> Use of injected JWT Claim to print the all the claims
 
-=== 4.1 Redeploy to OpenShift
+=== 4.2 Redeploy to OpenShift
 
 First, add the following properties to your `inventory/src/main/resources/application.properties` file to configure the OpenShift extension:
 
-[source,properties,role="copypaste",subs="attributes"]
+[.console-input]
+[source,properties,role=copypaste,subs="+attributes"]
 ----
-%prod.quarkus.kubernetes-client.trust-certs=true
-%prod.quarkus.kubernetes.deploy=true
-%prod.quarkus.kubernetes.deployment-target=openshift
-%prod.quarkus.openshift.route.expose=true
-%prod.quarkus.openshift.ports."http".host-port=8080
+%prod.quarkus.kubernetes-client.trust-certs=true <1>
+%prod.quarkus.kubernetes.deploy=true <2>
+%prod.quarkus.kubernetes.deployment-target=openshift <3>
+%prod.quarkus.openshift.route.expose=true <4>
+%prod.quarkus.openshift.ports."http".host-port=8080 <5>
 ----
+<1> Due to use of self-signed certificates, which Quarkus apps do not trust by default
+<2> Instruct the extension to build _and_ deploy.
+<3> Instruct the extension to use OpenShift-specific capabilities when needed
+<4> Instruct the extension to create a _Route_ so that we can test access the secured inventory service from outside of the cluster.
+<5> By default, Quarkus listens on port _80_, but we are using _8080_ by convention for all of our services in this application.
 
 Let's re-build and re-deploy the application to replace the older (unsecured) inventory service. Run this command, which will delete the old deployment and cause the OpenShift plugin to re-deploy our new secured inventory service (and add a visual connector to its postgresql database):
 
@@ -446,7 +452,7 @@ Let's re-build and re-deploy the application to replace the older (unsecured) in
 oc project globex-keycloak-{user_name} && \
 oc delete deployment inventory && \
 mvn -f $PROJECT_SOURCE/inventory clean package -DskipTests && \
-oc annotate deployment inventory "app.openshift.io/connects-to=postgresql-inventory"
+oc annotate deployment inventory "app.openshift.io/connects-to=postgresql-inventory" --overwrite
 ----
 
 You should see `BUILD SUCCESS`. The new application will begin deploying. Wait for it to complete (dark blue circle for the `inventory` service on the OpenShift web console).
@@ -478,7 +484,7 @@ Set-Cookie: 2a1b392100b8b2cb3705c68f4ecbaf66=1b3560b80b9fad566e105aff1f31f880; p
 
 Let's try with an authenticated user next.
 
-=== Test Alice
+=== 5.1 Test Alice
 
 Get a token for user `alice` with this command:
 
@@ -541,7 +547,7 @@ Alice is not an admin. Let's try with admin!
 Access Tokens have a defined lifespan that's typically short (e.g. 5 minutes), so if you wait too long, the token will expire and you'll get denied access. In this case, just re-fetch a new token using the same `curl` command used the first time. Full-fledged applications can take advantage of things like https://oauth.net/2/grant-types/refresh-token/[_Refresh Tokens_^] to do this automatically to ensure a good user experience even for slow users.
 ====
 
-=== Test Admin
+=== 5.2 Test Admin
 
 Obtain an Admin token:
 
@@ -585,7 +591,7 @@ Claim Name: [preferred_username] Claim Value: [admin]
 
 Success! We dump all of the claims from the JWT token for inspection.
 
-=== Using Keycloak fine-grained Authentication
+== 6. Using Keycloak fine-grained Authentication
 
 Frequently, resource servers only perform authorization decisions based on role-based access control (RBAC), where the roles granted to the user trying to access protected resources are checked against the roles mapped to these same resources. While roles are very useful and used by applications, they also have a few limitations:
 
@@ -595,7 +601,7 @@ Frequently, resource servers only perform authorization decisions based on role-
 
 Keycloak's _Authorization Services_ provides fine-grained authorization policies that decouples the authorization policy from your code, so when your policies change, your code doesn't have to. In this exercise we'll use Keycloak's Authorization Services to protect our Quarkus APIs.
 
-== Enable Quarkus Keycloak and OpenID Connect Extensions
+=== 6.1 Enable Quarkus Keycloak and OpenID Connect Extensions
 
 First, you'll need to enable the Keycloak extension by running this command in a Terminal:
 
@@ -612,8 +618,6 @@ You should see:
 [INFO] [SUCCESS] ✅  Extension io.quarkus:quarkus-keycloak-authorization has been installed
 ----
 
-== Disable MicroProfile JWT Extension
-
 Since we will use Keycloak authentication rather than JWT, we'll need to disable the JWT extension. To remove the extension, run this command in a Terminal:
 
 [source,sh,role="copypaste",subs="attributes"]
@@ -628,40 +632,42 @@ You should see:
 [INFO] [SUCCESS] ✅  Extension io.quarkus:quarkus-smallrye-jwt has been uninstalled
 ----
 
-=== Configuring Keycloak
+=== 6.2 Configuring Keycloak Extension
 
 Next, add these to your `application.properties` for Keycloak:
 
-[source,none,role="copypaste",subs="attributes"]
+[source,properties,role="copypaste",subs="+attributes"]
 ----
 # OIDC config
-quarkus.oidc.auth-server-url=https://keycloak-globex-keycloak-{user_name}.{openshift_subdomain}/realms/globex
-quarkus.oidc.client-id=backend-service
-quarkus.oidc.credentials.secret=secret
-quarkus.http.cors=true
+quarkus.oidc.auth-server-url=https://keycloak-globex-keycloak-{user_name}.{openshift_subdomain}/realms/globex // <1>
+quarkus.oidc.client-id=backend-service // <2>
+quarkus.oidc.credentials.secret=secret // <3>
+quarkus.http.cors=true // <4>
 
 # Enable Policy Enforcement
-quarkus.keycloak.policy-enforcer.enable=true
-quarkus.keycloak.policy-enforcer.paths.ready.name=Readiness
+quarkus.keycloak.policy-enforcer.enable=true // <5>
+quarkus.keycloak.policy-enforcer.paths.ready.name=Readiness // <6>
 quarkus.keycloak.policy-enforcer.paths.ready.path=/q/health/ready
 quarkus.keycloak.policy-enforcer.paths.ready.enforcement-mode=DISABLED
 quarkus.keycloak.policy-enforcer.paths.live.name=Liveness
 quarkus.keycloak.policy-enforcer.paths.live.path=/q/health/live
 quarkus.keycloak.policy-enforcer.paths.live.enforcement-mode=DISABLED
 ----
+<1> The address of our OIDC server (Keycloak) including the realm name
+<2> Defines which client defined in the realm this application represents
+<3> The secrete password (we are using Basic Auth, but there are other, https://quarkus.io/guides/security-oidc-configuration-properties-reference[more secure auth mechanisms])
+<4> Enforces and applies Cross-origin resource sharing (CORS) headers
+<5> Turns on the policy enforcer. It's off by default as it does require configuration (which we've done!)
+<6> We explicitly disable authorization checks for the `/health/*` endpoints so that the container platform can access them. To support secured health checks, https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/[different health check mechanisms] like TCP or `exec` methods can be used.
 
 This configures the extension with the necessary configuration ( https://www.keycloak.org/docs/latest/securing_apps/index.html#_java_adapter_config[read more^] about what these do).
 
-[NOTE]
-====
-We explicitly disable authorization checks for the `/health/*` endpoints so that the container platform can access them. To support secured health checks, https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/[different health check mechanisms] like TCP or `exec` methods can be used.
-====
-
-=== Create Keycloak endpoints
+=== 6.3 Create Keycloak endpoints
 
 Create a new class file called `AuthorizedResource.java` in the `com.redhat.coolstore.inventory.controller` package (in the `inventory/src/main/java/com/redhat/coolstore/inventory/controller` directory) with the following code:
 
-[source,java,role=copypaste,subs="attributes"]
+[.console-input]
+[source,java,role=copypaste]
 ----
 package com.redhat.coolstore.inventory.controller;
 
@@ -693,7 +699,7 @@ public class AuthorizedResource {
 <2> The `SecurityIdentity` is a generic object produced by the Keycloak extension that you can use to obtain information about the security principals and attributes embedded in the request.
 <3> The path defined here aligns with the definition in the Keycloak server for protecting the `/secured/confidential` endpoint. In this case, only user `jdoe` is authorized.
 
-=== Rebuild and redeploy app
+=== 6.4 Rebuild and redeploy app
 
 Let's re-build and re-deploy the application once again. Run this command, which will cause the OpenShift plugin to re-deploy:
 
@@ -705,7 +711,7 @@ mvn clean package -DskipTests
 
 You should see `BUILD SUCCESS`. The new application will begin deploying. Wait for it to complete (dark blue circle for the `inventory` service on the OpenShift web console).
 
-=== Test confidential
+=== 6.5 Test confidential
 
 The `/secured/confidential` endpoint is protected with a policy defined in the Keycloak Server. The policy only grants access to the resource if the user is granted with a `confidential` role. The difference here is that the application is delegating the access decision to Keycloak, so no explicit source code instrumentation is required.
 
@@ -783,7 +789,7 @@ confidential access for: jdoe with attributes:{configuration-metadata=io.quarkus
 
 Success! Even though our code did not explicitly protect the `/secured/confidential` endpoint, we can protect arbitrary URLs in Quarkus apps when using Keycloak.
 
-=== Congratulations!
+== Congratulations!
 
 This exercise demonstrated how your applications can use Keycloak to protect APIs in your applications. Here we used bearer tokens to authenticate users, `@RolesAllowed` to specify in the app how to restrict access, and Keycloak's fine-grained permissions to product APIs from Keycloak itself.
 
