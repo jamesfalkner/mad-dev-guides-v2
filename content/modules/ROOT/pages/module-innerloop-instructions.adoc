@@ -1097,11 +1097,11 @@ Your browser will be redirected to *your Web Service running on OpenShift. You s
 
 image::innerloop/coolstore-web.png[]
 
-Congratulations! You are now ready to move on to the next lab.
+Congratulations! You have successfully deployed the Web UI on OpenShift.
 
 == Summary
 
-You have completed the [Inner Loop](https://github.com/rh-mad-workshop/mad-dev-guides-v2/blob/main/mad-dev-guides-v2/content/modules/ROOT/pages/module-innerloop.adoc) module.
+In this module, you have learned how to develop ployglot microservices with Java (Quarkus and Spring Boot), Nodejs, and .Net. Then, you have practiced how to build, test, and deploy those applications to OpenShift.
 
 Please close all but the Workshop Deployer browser tab to avoid proliferation of browser tabs which can make working on other modules difficult. 
 
