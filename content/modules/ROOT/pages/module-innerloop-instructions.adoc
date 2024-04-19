@@ -224,7 +224,7 @@ image::innerloop/vscode-external-website.png[Che - Open Link, 600]
 
 Your browser will be directed to *your Inventory Service running inside your Workspace*.
 
-image::innerloop/inventory-quarkus.png[Inventory Quarkus,600]
+image::innerloop/inventory-quarkus.png[Inventory Quarkus,800]
 
 [NOTE]
 ====
@@ -233,7 +233,7 @@ Please *don't close* that Inventory output browser tab, you will need it for the
 If by accident you close that browser tab then you should be able to reopen it from your browser history. It will likely be called *Inventory Service*
 ====
 
-Now let's write some code and create an Entity to interact with the Database and a RESTful endpoint to create the Inventory service
+Now let's write some code and create an Entity to interact with the Database and a REST endpoint to create the Inventory service
 
 === 2.4. Create an Entity
 
@@ -280,26 +280,6 @@ quarkus.hibernate-orm.database.generation=drop-and-create
 quarkus.hibernate-orm.log.sql=true
 quarkus.hibernate-orm.sql-load-script=import.sql
 quarkus.http.host=0.0.0.0
-
-%prod.quarkus.package.type=uber-jar#<1> 
-
-# these value are recommended for a quarkus openshift plugin build<2>
-%prod.quarkus.openshift.route.expose=true
-%prod.quarkus.kubernetes.deploy=true
-%prod.quarkus.kubernetes.deploy.target=openshift
-%prod.quarkus.kubernetes-client.trust-certs=true
-%prod.quarkus.openshift.labels.app=coolstore
-%prod.quarkus.openshift.ports."http".host-port=8080
-%prod.quarkus.openshift.labels.component=inventory
-%prod.quarkus.openshift.part-of=coolstore
-%prod.quarkus.openshift.name=inventory-coolstore
-%prod.quarkus.openshift.add-version-to-label-selectors=false
-%prod.quarkus.openshift.labels."app.kubernetes.io/instance"=inventory
-quarkus.container-image.name=inventory-coolstore
-quarkus.container-image.registry=image-registry.openshift-image-registry.svc:5000
-quarkus.openshift.route.tls.termination=edge
-quarkus.openshift.route.tls.insecure-edge-termination-policy=Redirect
-test-{user_name}-test-{user_password}-daniel-test<3>
 ----
 
 <1> An *uber-jar* contains all the dependencies required packaged in the *jar* to enable running the 
@@ -323,7 +303,7 @@ INSERT INTO INVENTORY VALUES (7, '444434', 32);
 INSERT INTO INVENTORY VALUES (8, '444435', 53);
 ----
 
-=== 2.4. Create a RESTful Service
+=== 2.4. Create a REST Service
 
 Quarkus uses JAX-RS standard for building REST services. 
 
@@ -359,7 +339,7 @@ The above REST service defines an endpoint that is accessible via *HTTP GET* at 
 
 === 2.5. Test the REST Service
 
-Go back to the Inventory output browser and click on 'Test it'*`. You should have the following output.
+Go back to the Inventory output browser and click on `Test it`. You should have the following output.
 
 [.console-output]
 [source,json]
@@ -389,8 +369,10 @@ we saw earlier.
 In this section you will locally build a `.jar` file, then *create* the OpenShift build and deployment components and *push* the _.jar_ file to OpenShift. The OpenShift https://docs.openshift.com/container-platform/4.12/cicd/builds/understanding-image-builds.html[Source-to-Image (S2I)^] builder 
 will then package the _.jar_ file into a container and run it.
 
-[.console-output]
-[source,java]
+*Append* the folowing information to the `src/main/resources/application.properties` file.
+
+[.console-input]
+[source,java,subs="+attributes,macros+"]
 ----
 # these value are recommended for a quarkus openshift plugin build
 %prod.quarkus.openshift.route.expose=true<1>
@@ -406,7 +388,7 @@ will then package the _.jar_ file into a container and run it.
 %prod.quarkus.openshift.labels."app.kubernetes.io/instance"=inventory
 quarkus.container-image.name=inventory-coolstore
 quarkus.container-image.registry=image-registry.openshift-image-registry.svc:5000
-quarkus.openshift.route.tls.termination=edgee<3>
+quarkus.openshift.route.tls.termination=edge<3>
 quarkus.openshift.route.tls.insecure-edge-termination-policy=Redirect
 ----
 <1> Exposes an external route to access the application
@@ -422,13 +404,12 @@ You can now *build* and *deploy* your application code/binary to OpenShift. By w
 * Push this container image to the OpenShift registry
 * Deploying the application to OpenShift
 
-Run the following commands in the terminal.
+Run the following https://quarkus.io/guides/cli-tooling[Quarkus CLI^] in the terminal.
 
 [.console-input]
 [source,bash,subs="+attributes,macros+"]
 ----
-oc project globex-innerloop-{user_name} &&
-mvn -f $PROJECT_SOURCE/inventory-quarkus clean package -DskipTests
+oc project globex-innerloop-{user_name} && quarkus build --no-tests 
 ----
 
 The output should end with `BUILD SUCCESS`. Make sure it’s actually done rolling out.
@@ -449,8 +430,12 @@ deployment "inventory-coolstore" successfully rolled out
 
 === 2.7. Test your Service
 
-In the {openshift_cluster_console}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role=params-link], from the *Developer view*,
-click on the 'Open URL' icon of the Inventory Service.
+In the {openshift_cluster_console}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role=params-link], from the *Developer view*, click on the `Open URL` icon of the Inventory Service.
+
+[TIP]
+====
+You can log in to the OpenShift web console with your credntials (`{user_name}` / `{user_password}`).
+====
 
 image::innerloop/openshift-inventory-topology.png[]
 
@@ -478,24 +463,17 @@ In this lab we will build a second microservice for our application
 using Spring Boot. During this lab, you will create a REST API for 
 the Catalog service in order to provide a list of products for the CoolStore online shop.
 
-image::innerloop/coolstore-arch-catalog-spring-boot.png[CoolStore Architecture,400]
+image::innerloop/coolstore-arch-catalog-spring-boot.png[CoolStore Architecture, 400]
 
-[#what_is_spring_boot]
 === 3.1. What is Spring Boot?
 
-[sidebar]
---
-image::innerloop/spring-boot-logo.png[Spring Boot, 400]
+image::innerloop/spring-boot-logo.png[Spring Boot, 600]
 
-Spring Boot is an opinionated framework that makes it easy to create stand-alone Spring based 
-applications with embedded web containers. Spring Boot also allows producing a war 
-file that can be deployed on stand-alone web containers.
+Spring Boot is an opinionated framework that makes it easy to create stand-alone Spring based applications with embedded web containers. Spring Boot also allows producing a war file that can be deployed on stand-alone web containers.
 
 The opinionated approach means many choices about Spring platform and third-party libraries 
 are already made by Spring Boot so that you can get started with minimum effort and configuration.
---
 
-[#spring_boot_maven_project]
 === 3.2. Spring Boot Maven Project 
 
 The *catalog-spring-boot* project has the following structure which shows the components of 
@@ -503,26 +481,20 @@ the Spring Boot project laid out in different subdirectories according to Maven 
 
 For the duration of this lab you will be working in the *catalog-spring-boot* directories shown below:
 
-image::innerloop/springboot-catalog-project.png[Catalog Project,400]
+image::innerloop/springboot-catalog-project.png[Catalog Project,600]
 
-This is a minimal Spring Boot project with support for RESTful services and Spring Data with JPA for connecting
-to a database. This project currently contains no code other than the main class, **CatalogApplication**
-which is there to bootstrap the Spring Boot application.
+This is a minimal Spring Boot project with support for REST services and Spring Data with JPA for connecting to a database. This project currently contains no code other than the main class, **CatalogApplication** which is there to bootstrap the Spring Boot application.
 
-The database is configured using the Spring application configuration file which is located at 
-*src/main/resources/application.properties*. Examine this file to see the database connection details 
-and note that an in-memory H2 database is used in this lab for local development and will be replaced
+The database is configured using the Spring application configuration file which is located at *src/main/resources/application.properties*. Examine this file to see the database connection details and note that an in-memory H2 database is used in this lab for local development and will be replaced
 with a PostgreSQL database in the following labs. More on that later.
 
-Let's create a domain model, data repository, and a  
-RESTful endpoint to create the Catalog service:
+Let's create a domain model, data repository, and a REST endpoint to create the Catalog service:
 
-image::innerloop/springboot-catalog-arch.png[Catalog RESTful Service,640]
+image::innerloop/springboot-catalog-arch.png[Catalog REST Service,800]
 
-[#create_domain_model]
 === 3.3. Create the Domain Model
 
-In your {CHE_URL}[Workspace^, role='params-link'], `*Add the following code to the 'src/main/java/com/redhat/cloudnative/catalog/Product.java' file`* 
+Add the following code to the `src/main/java/com/redhat/cloudnative/catalog/Product.java` file. 
 
 [source,java,role=copypaste]
 ----
@@ -542,44 +514,33 @@ public class Product implements Serializable {
 
   @Id // <3> 
   private String id;
-  
   private String name;
-  
   private String description;
-  
   private double price;
 
-  public Product() {
-  }
+  public Product() {}
   
   public String getId() {
     return id;
   }
-
   public void setId(String id) {
     this.id = id;
   }
-
   public String getName() {
     return name;
   }
-
   public void setName(String name) {
     this.name = name;
   }
-
   public String getDescription() {
     return description;
   }
-
   public void setDescription(String description) {
     this.description = description;
   }
-
   public double getPrice() {
     return price;
   }
-
   public void setPrice(double price) {
     this.price = price;
   }
@@ -594,14 +555,12 @@ public class Product implements Serializable {
 <2> *@Table* customizes the table creation process by defining a table name and database constraint
 <3> *@Id* marks the primary key for the table
 
-[#create_data_repository]
 === 3.4. Create a Data Repository
 
 Create a new Java interface named *ProductRepository* in *com.redhat.cloudnative.catalog* package 
 and extend https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/repository/CrudRepository.html[CrudRepository^] interface in order to indicate to Spring that you want to expose a complete set of methods to manipulate the entity.
 
-In your {CHE_URL}[Workspace^, role='params-link'], 
-`*Add the following code to the 'src/main/java/com/redhat/cloudnative/catalog/ProductRepository.java' file`*.
+Add the following code to the `src/main/java/com/redhat/cloudnative/catalog/ProductRepository.java` file.
 
 [source,java,role=copypaste]
 ----
@@ -609,22 +568,18 @@ package com.redhat.cloudnative.catalog;
 
 import org.springframework.data.repository.CrudRepository;
 
-public interface ProductRepository extends CrudRepository<Product, String> { // <1> 
-}
+public interface ProductRepository extends CrudRepository<Product, String> {} // <1>
 ----
-<1> https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/repository/CrudRepository.html[CrudRepository^] interface 
-in order to indicate to Spring that you want to expose a complete set of methods to manipulate the entity
 
-That's it! Now that you have a domain model and a repository to retrieve the domain model, 
-let's create a RESTful service that returns the list of products.
+<1> https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/repository/CrudRepository.html[CrudRepository^] interface in order to indicate to Spring that you want to expose a complete set of methods to manipulate the entity
 
-[#create_restful_service]
-=== 3.5. Create a RESTful Service
+That's it! Now that you have a domain model and a repository to retrieve the domain model, let's create a REST service that returns the list of products.
 
-Spring Boot uses Spring Web MVC as the default RESTful stack in Spring applications. 
+=== 3.5. Create a REST Service
 
-In your {CHE_URL}[Workspace^, role='params-link'], 
-`*Add the following code to the 'src/main/java/com/redhat/cloudnative/catalog/CatalogController.java' file`*.
+Spring Boot uses Spring Web MVC as the default REST stack in Spring applications. 
+
+Add the following code to the `src/main/java/com/redhat/cloudnative/catalog/CatalogController.java` file.
 
 [source,java,role=copypaste]
 ----
@@ -657,163 +612,83 @@ public class CatalogController {
     }
 }
 ----
+
 <1> *@RequestMapping* indicates the above REST service defines an endpoint that is accessible via *HTTP GET* at */api/catalog*
 <2> Spring Boot automatically provides an implementation for *ProductRepository* at runtime and injects it into the 
 controller using the 
 https://docs.spring.io/spring-boot/docs/current/reference/html/using-boot-spring-beans-and-dependency-injection.html[*@Autowired*^] annotation.
 <3> the *repository* attribute on the controller class is used to retrieve the list of products from the databases. 
 
-Now, let's build and package the updated *Catalog Service* using Maven.
-In your {CHE_URL}[Workspace^, role='params-link'],
-
-[tabs, subs="attributes+,+macros"]
-====
-
-IDE Task::
-+
--- 
-`*Click on 'Terminal' -> 'Run Task...' ->  'devfile: Catalog - Build'*`
-
-image::innerloop/che-runtask.png[Che - RunTask, 600]
---
-
-CLI::
-+
---
-`*Execute the following commands in the terminal window*`
+Now, let's build and package the updated *Catalog Service* using the following commands.
 
 [source,shell,subs="{markup-in-source}",role=copypaste]
 ----
-cd //projects/coolstore-devx/catalog-spring-boot
+cd $PROJECT_SOURCE/catalog-spring-boot &&
 mvn clean package -DskipTests
 ----
 
-NOTE: To open a terminal window, `*click on 'Terminal' -> 'New Terminal'*`
---
-====
-
-Once done, you can conviently run your service using *Spring Boot maven plugin* and test the endpoint. 
-
-[tabs, subs="attributes+,+macros"]
-====
-
-IDE Task::
-+
--- 
-`*Click on 'Terminal' -> 'Run Task...' ->  'devfile: Catalog - Run'*`
-
-image::innerloop/che-runtask.png[Che - RunTask, 600]
---
-
-CLI::
-+
---
-`*Execute the following commands in the terminal window*`
+Once done, you can conviently run your service using Spring Boot maven plugin and test the endpoint.
 
 [source,shell,subs="{markup-in-source}",role=copypaste]
 ----
-cd //projects/coolstore-devx/catalog-spring-boot
 mvn spring-boot:run
 ----
 
-NOTE: To open a terminal window, `*click on 'Terminal' -> 'New Terminal'*`
---
-====
+When pop-ups appear, click on `yes` to listen 8080 port. Then, click on `Open in New Tab > Open` to access the frontend page. Then, your browser will be directed to *your Catalog Service running inside your Workspace*.
 
+image::innerloop/catalog-service.png[Catalog Service,800]
 
-When pop-ups appear, *confirm you want to expose the 8080 port* by `*clicking on 'Open in New Tab'*`.
+Then click on `Test it`. You should have similar output to this array of json:
 
-image::innerloop/che-open-9000-link.png[Che - Open Link, 500]
-
-Your browser will be directed to *your Catalog Service running inside your Workspace*.
-
-image::innerloop/catalog-service.png[Catalog Service,500]
-
-[NOTE]
-====
-
-image::innerloop/che-preview-na.png[Che - Preview Not Available, 500]
-====
-
-Then `*click on 'Test it'*`. You should have similar output to this array of json:
-
+[.console-output]
 [source,json]
 ----
-[{"id":"329299","name":"Red Fedora","desc":"Official Red Hat Fedora","price":34.99},...]
+
+  {
+    "id": "100000",
+    "name": "Red Fedora",
+    "description": "Official Red Hat Fedora",
+    "price": 34.99
+  },
+  {
+    "id": "329299",
+    "name": "Quarkus T-shirt",
+    "description": "This updated unisex essential fits like a well-loved favorite, featuring a crew neck, short sleeves and designed with superior combed and ring- spun cotton.",
+    "price": 10.0
+  },
+....
 ----
 
-The REST API returned a JSON object representing the product list. Congratulations!
+Well done! The REST API returned a JSON object representing the product list. 
 
-[#stop_service]
-=== 3.6. Stop the Service
+*Stop* the Service by pressing `Ctrl+c` in the terminal window.
 
-In your {CHE_URL}[Workspace^, role='params-link'], stop the service as follows:
+=== 3.6. Deploy on OpenShift
 
-[tabs, subs="attributes+,+macros"]
-====
-
-IDE Task::
-+
--- 
-`*Enter Ctrl+c in the existing '>_ Catalog - Run' terminal window*`
---
-
-CLI::
-+
---
-`*Enter Ctrl+c in the existing terminal window*`
---
-====
-
-[#deploy_on_openshift]
-=== 3.7. Deploy on OpenShift
-
-It's time to deploy your service on OpenShift. We are going to use Eclipse https://www.eclipse.org/jkube/docs/openshift-maven-plugin/[JKube] to define the
-build and deployment process on OpenShift, but ultimately we will end up using OpenShift source-to-image (S2I)
-to package up the .jar file into a container and run it.
+It's time to deploy your service on OpenShift. We are going to use Eclipse https://www.eclipse.org/jkube/docs/openshift-maven-plugin/[JKube] to define the build and deployment process on OpenShift, but ultimately we will end up using OpenShift source-to-image (S2I) to package up the _.jar_ file into a container and run it.
 
 The JKube configuration for the Catalog application is present in the *pom.xml* file. Feel free to explore the different configuration values in your source code.
 
+[.console-output]
 [source,xml]
 ----
-              <plugin>
-                <groupId>org.eclipse.jkube</groupId>
-                <artifactId>openshift-maven-plugin</artifactId>
-                <version>1.16.1</version>
-                (..)
-            </plugin>
+<plugin>
+    <groupId>org.eclipse.jkube</groupId>
+    <artifactId>openshift-maven-plugin</artifactId>
+    <version>1.16.1</version>
+    (..)
+</plugin>
 ----
 
-Let's `*Deploy this new Component the OpenShift cluster*`
+Let's Deploy the catalog service to the OpenShift cluster. Run the following command from the terminal window.
 
-[tabs, subs="attributes+,+macros"]
-====
-
-IDE Task::
-+
--- 
-`*Click on 'Terminal' -> 'Run Task...' ->  'devfile: Catalog - Deploy Component'*`
-
-image::innerloop/che-runtask.png[Che - RunTask, 600]
---
-
-CLI::
-+
---
-`*Execute the following commands in the terminal window*`
-
-[source,shell,subs="{markup-in-source}",role=copypaste]
+[.console-input]
+[source,bash,subs="+attributes,macros+"]
 ----
-cd //projects/coolstore-devx/catalog-spring-boot
 mvn package -DskipTests oc:build oc:resource oc:apply
 ----
 
-NOTE: To open a terminal window, `*click on 'Terminal' -> 'New Terminal'*`
---
-
-====
-
- You'll see that the build phase comprises of a few actions:
+You'll see that the build phase comprises of a few actions:
 
 * Package the application
 * Push the jar file to OpenShift
@@ -822,26 +697,37 @@ NOTE: To open a terminal window, `*click on 'Terminal' -> 'New Terminal'*`
 * Push this container image to the OpenShift registry
 * Deploying the application to OpenShift
 
-Once this completes, your application should be up and running. OpenShift runs the different components of 
-the application in one or more pods (the unit of deployment in Kubernetes/Openshift which consists of one or more containers). 
+Once this completes, your application should be up and running. OpenShift runs the different components of the application in one or more pods (the unit of deployment in Kubernetes/Openshift which consists of one or more containers). 
 
-[#test_your_service]
-=== 3.8. Test your Service
+=== 3.7. Test the Catalog Service
 
-In the {openshift_cluster_console}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
-`*click on the 'Open URL' icon of the Catalog Service*`
+Go back to the {openshift_cluster_console}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link']. Then, click on the `Open URL` icon of the Catalog Service.
 
-image::innerloop/openshift-catalog-topology.png[OpenShift - Catalog Topology, 700]
+image::innerloop/openshift-catalog-topology.png[]
 
 Your browser will be redirected to *your Catalog Service running on OpenShift*.
 
-image::innerloop/catalog-service.png[Catalog Service,500]
+image::innerloop/catalog-service.png[Catalog Service,800]
 
-Then `*click on 'Test it'*`. You should have many lines of output similar to this array of json:
+Then click on `Test it`. You should have many lines of output similar to this array of json:
 
+[.console-output]
 [source,json]
 ----
-[{"id":"329299","name":"Red Fedora","desc":"Official Red Hat Fedora","price":34.99},...]
+
+  {
+    "id": "100000",
+    "name": "Red Fedora",
+    "description": "Official Red Hat Fedora",
+    "price": 34.99
+  },
+  {
+    "id": "329299",
+    "name": "Quarkus T-shirt",
+    "description": "This updated unisex essential fits like a well-loved favorite, featuring a crew neck, short sleeves and designed with superior combed and ring- spun cotton.",
+    "price": 10.0
+  },
+....
 ----
 
 Well done! You are ready to move on to the next lab.
@@ -883,7 +769,7 @@ image::innerloop/dotnet-gateway-project.png[Gateway Project,340]
 
 This is a minimal .NET project with support for asynchronous REST services. 
 
-`*Examine 'Startup.cs' class*` in the *//projects/coolstore-devx/gateway-dotnet/* directory.
+`*Examine 'Startup.cs' class*` in the *$PROJECT_SOURCE/gateway-dotnet/* directory.
 
 See how the basic web server is started with minimal services, health checks and a basic REST controller is deployed.
 
@@ -937,7 +823,7 @@ public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 
 ----
 
-`*Examine 'ProductsController.cs' class*` in the *//projects/coolstore-devx/gateway-dotnet/Controllers* directory.
+`*Examine 'ProductsController.cs' class*` in the *$PROJECT_SOURCE/gateway-dotnet/Controllers* directory.
 
 [source,java]
 ----
@@ -1036,7 +922,7 @@ CLI::
 
 [source,shell,subs="{markup-in-source}",role=copypaste]
 ----
-cd //projects/coolstore-devx/gateway-dotnet
+cd $PROJECT_SOURCE/gateway-dotnet
 
 oc new-build dotnet:6.0 --name gateway-coolstore  \
   --labels=component=gateway \
@@ -1058,7 +944,7 @@ Once this completes, your application should be up and running. OpenShift runs t
 === 4.4. Test your Service
 
 In the {openshift_cluster_console}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
-`*click on the 'Open URL' icon of the Gateway Service*`
+click on the `Open URL` icon of the Gateway Service*`
 
 image::innerloop/openshift-gateway-topology.png[OpenShift - Gateway Topology, 700]
 
@@ -1066,7 +952,7 @@ Your browser will be redirected to *your Gateway Service running on OpenShift*.
 
 image::innerloop/gateway-service.png[Gateway Service,500]
 
-Then `*click on 'Test it'*`. You should have an array of json output like this but with many more products.
+Then click on `Test it`. You should have an array of json output like this but with many more products.
 
 Look in the json to see how the *Gateway service* has combined the *product* information together with the *inventory* (quantity) information: 
 
@@ -1091,7 +977,7 @@ You might be wondering how the Gateway service knows how to contact the *Catalog
 These values can be injected as environment variables at runtime for example if running the component locally in the IDE, 
 but by default we have hardcoded the name of the OpenShift *Services* and then use OpenShift local DNS to resolve these names as 
 the application starts. You can see the code that consumes those variables below. This is from *ProductsController.cs class* in the 
-*//projects/coolstore-devx/gateway-dotnet/* directory.
+*$PROJECT_SOURCE/gateway-dotnet/* directory.
 
 [source,java]
 ----
@@ -1236,7 +1122,7 @@ the web application pod will not be ready until the blue ring goes dark blue.
 === 5.3 Test your Service
 
 In the {openshift_cluster_console}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
-`*click on the 'Open URL' icon of the Web Service*`
+click on the `Open URL` icon of the Web Service*`
 
 image::innerloop/openshift-web-topology.png[OpenShift - Web Topology, 700]
 
@@ -1401,8 +1287,8 @@ https://quarkus.io/guides/health-guide[SmallRye Health^] is a Quarkus extension 
 It allows applications to provide information about their state to external viewers which is typically useful 
 in cloud environments where automated processes must be able to determine whether the application should be discarded or restarted.
 
-Let's add the needed dependencies to *//projects/coolstore-devx/inventory-quarkus/pom.xml*. 
-In your {CHE_URL}[Workspace^, role='params-link'], `*edit the '//projects/coolstore-devx/inventory-quarkus/pom.xml' file*`:
+Let's add the needed dependencies to *$PROJECT_SOURCE/inventory-quarkus/pom.xml*. 
+In your {CHE_URL}[Workspace^, role='params-link'], `*edit the '$PROJECT_SOURCE/inventory-quarkus/pom.xml' file*`:
 
 [source,xml,subs="{markup-in-source}",role=copypaste]
 ----
@@ -1432,7 +1318,7 @@ CLI::
 
 [source,shell,subs="{markup-in-source}",role=copypaste]
 ----
-cd //projects/coolstore-devx/inventory-quarkus
+cd $PROJECT_SOURCE/inventory-quarkus
 mvn package -Dquarkus.container-image.build=true -DskipTests -Dquarkus.container-image.group=$(oc project -q) -Dquarkus.kubernetes-client.trust-certs=true
 ----
 
@@ -1816,9 +1702,9 @@ which you have already packaged within the Inventory Maven project.
 
 In Quarkus, Driver is a build time property and cannot be overridden. So as you are going to change the database
 technology, you need to change the 'quarkus.datasource.driver' parameter 
-in *//projects/coolstore-devx/inventory-quarkus/src/main/resources/application.properties* and rebuild the application.
+in *$PROJECT_SOURCE/inventory-quarkus/src/main/resources/application.properties* and rebuild the application.
 
-In your {CHE_URL}[Workspace^, role='params-link'], `*edit the '//projects/coolstore-devx/inventory-quarkus/pom.xml' file and add the
+In your {CHE_URL}[Workspace^, role='params-link'], `*edit the '$PROJECT_SOURCE/inventory-quarkus/pom.xml' file and add the
 'JDBC Driver - MariaDB' dependency*`
 
 [source,xml,subs="{markup-in-source}",role=copypaste]
@@ -1836,7 +1722,7 @@ In your {CHE_URL}[Workspace^, role='params-link'], `*edit the '//projects/coolst
 <2> Extension which allows developers to connect to MariaDB databases using the JDBC driver
 
 Then `*add the '%prod.quarkus.datasource.driver' parameter in 
- the '//projects/coolstore-devx/inventory-quarkus/src/main/resources/application.properties' file*` as follows
+ the '$PROJECT_SOURCE/inventory-quarkus/src/main/resources/application.properties' file*` as follows
 
 [source,properties,subs="{markup-in-source}",role=copypaste]
 ----
@@ -2038,7 +1924,7 @@ test that the Coolstore application still works. Just like you did a couple of c
 display in the web console.
 
 In the {openshift_cluster_console}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
-`*click on the 'Open URL' icon of the Web Service*`
+click on the `Open URL` icon of the Web Service*`
 
 image::innerloop/openshift-web-topology.png[OpenShift - Web Topology, 700]
 
