@@ -404,7 +404,11 @@ Go back to the Inventory output browser and click on 'Test it'*`. You should hav
 [.console-output]
 [source,json]
 ----
-{"itemId":"329299","quantity":35}
+{
+  "id": 329299,
+  "itemId": "35",
+  "quantity": 2
+}
 ----
 
 The REST API returned a JSON object representing the inventory count for this product. Congratulations!
@@ -488,17 +492,22 @@ deployment "inventory-coolstore" successfully rolled out
 In the {console_url}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role=params-link], from the *Developer view*,
 click on the 'Open URL' icon of the Inventory Service.
 
-image::innerloop/openshift-inventory-topology.png[OpenShift - Inventory Topology, 700]
+image::innerloop/openshift-inventory-topology.png[]
 
 Your browser will be redirected to *your Inventory Service running on OpenShift*.
 
-image::innerloop/inventory-quarkus.png[Inventory Quarkus,500]
+image::innerloop/inventory-quarkus.png[Inventory Quarkus,800]
 
-Then `*click on 'Test it'*`. You should have the following output:
+Then you should be able to test your service by clicking on `Test it`. You should see the following output on the page.
 
+[.console-output]
 [source,json]
 ----
-{"itemId":"329299","quantity":35}
+{
+  "id": 329299,
+  "itemId": "35",
+  "quantity": 2
+}
 ----
 
 Well done! You are ready to move on to the next lab, but before you go, you probably should close those Inventory Service output browser tabs from the beginning of this chapter.
