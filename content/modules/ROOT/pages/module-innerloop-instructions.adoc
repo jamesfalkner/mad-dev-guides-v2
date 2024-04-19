@@ -582,6 +582,7 @@ Spring Boot uses Spring Web MVC as the default REST stack in Spring applications
 
 Add the following code to the `src/main/java/com/redhat/cloudnative/catalog/CatalogController.java` file.
 
+[.console-input]
 [source,java,role=copypaste]
 ----
 package com.redhat.cloudnative.catalog;
@@ -702,7 +703,7 @@ Once this completes, your application should be up and running. OpenShift runs t
 
 === 3.7. Test the Catalog Service
 
-Go back to the {openshift_cluster_console}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link']. Then, click on the `Open URL` icon of the Catalog Service.
+Go back to the `Topology` view and click on the `Open URL` icon of the Catalog Service.
 
 image::innerloop/openshift-catalog-topology.png[]
 
@@ -741,7 +742,7 @@ image::innerloop/coolstore-arch-gateway-dotnet.png[CoolStore Architecture,400]
 
 === 4.1. What is .NET?
 
-image::innerloop/240px-NET_Core_Logo.png[.NET, 600]
+image::innerloop/240px-NET_Core_Logo.png[.NET, 400]
 
 https://docs.microsoft.com/en-us/dotnet/core/introduction/[.NET (Core)^] is a 
 is a free, open-source development platform for building many kinds of apps, from web, serverless, mobile, desktop and console apps.
@@ -761,10 +762,11 @@ image::innerloop/dotnet-gateway-project.png[Gateway Project,340]
 
 This is a minimal .NET project with support for asynchronous REST services. 
 
-`*Examine 'Startup.cs' class*` in the *$PROJECT_SOURCE/gateway-dotnet/* directory.
+Examine `Startup.cs` file in the *gateway-dotnet* directory.
 
 See how the basic web server is started with minimal services, health checks and a basic REST controller is deployed.
 
+[.console-output]
 [source,java]
 ----
 // This method gets called by the runtime. Use this method to add services to the container.
@@ -815,8 +817,9 @@ public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 
 ----
 
-`*Examine 'ProductsController.cs' class*` in the *$PROJECT_SOURCE/gateway-dotnet/Controllers* directory.
+Examine `ProductsController.cs` file in the *gateway-dotnet/Controllers* directory.
 
+[.console-output]
 [source,java]
 ----
 [ApiController]
@@ -867,6 +870,7 @@ public class ProductsController : ControllerBase
 
 }
 ----
+
 <1> Not unlike the Quarkus and Spring boot apps previously built, the ProductsController has a single defined REST entrypoint for GET */api/products*
 <2> In this case the Get() service first requests a list of products from the Catalog microservice
 <3> It then steps through each in turn to discover the amount of product in stock. It does this by calling the Inventory service for each product.
@@ -874,14 +878,13 @@ public class ProductsController : ControllerBase
 
 The location or binding to the existing Catalog and Inventory REST services is determined at runtime.
 
-=== 4.3. Deploy on OpenShift
+=== 4.3. Deploy the Gateway service to OpenShift
 
 It's time to build and deploy your service on OpenShift. 
 
-As you did previously for the Inventory and Catalog services in the earlier chapters, you need to `*build a new Component and then Deploy it in to the OpenShift cluster*`
+As you did previously for the Inventory and Catalog services in the earlier chapters, you need to *build a new Component and then Deploy it in to the OpenShift cluster*.
 
-We are still going to use OpenShift S2I, but this time we will invoke it using the OpenShift CLI (oc commands). 
-We will also get S2I to compile the application, create the .NET artefact .dll and then create a container.
+We are still going to use OpenShift S2I, but this time we will invoke it using the OpenShift CLI (oc commands). We will also get S2I to compile the application, create the .NET artefact .dll and then create a container.
 
 There are two ways to get OpenShift S2I to build from source:
 
@@ -896,27 +899,14 @@ We will go through 4 steps to get the Gateway service running:
 * Create a new application (a deployment) in OpenShift for the application with `oc new-app`
 * Expose the application using a Route (so that we can easily test it) with `oc expose`
 
-[tabs, subs="attributes+,+macros"]
-====
+xecute the following commands in the terminal.
 
-IDE Task::
-+
--- 
-`*Click on 'Terminal' -> 'Run Task...' -> 'devfile: Gateway - Build and Deploy Component'*`
-
-image::innerloop/che-runtask.png[Che - RunTask, 600]
---
-
-CLI::
-+
---
-`*Execute the following commands in the terminal window*`
-
-[source,shell,subs="{markup-in-source}",role=copypaste]
+[.console-input]
+[source,bash,subs="+attributes,macros+"]
 ----
 cd $PROJECT_SOURCE/gateway-dotnet
 
-oc new-build dotnet:6.0 --name gateway-coolstore  \
+oc new-build dotnet:7.0 --name gateway-coolstore  \
   --labels=component=gateway \
   --env DOTNET_STARTUP_PROJECT=app.csproj --binary=true
 
@@ -927,27 +917,23 @@ oc new-app gateway-coolstore:latest --name gateway-coolstore  --labels=app=cools
 oc create route edge gateway-coolstore --service=gateway-coolstore
 ----
 
-NOTE: To open a terminal window, `*click on 'Terminal' -> 'New Terminal'*`
---
-====
-
 Once this completes, your application should be up and running. OpenShift runs the different components of the application in one or more pods which are the unit of runtime deployment and consists of the running containers for the project. 
 
-=== 4.4. Test your Service
+=== 4.4. Test the Gateway Service
 
-In the {openshift_cluster_console}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
-click on the `Open URL` icon of the Gateway Service*`
+Go back to the `Topology` view and click on the `Open URL` icon of the *Gateway* Service.
 
-image::innerloop/openshift-gateway-topology.png[OpenShift - Gateway Topology, 700]
+image::innerloop/openshift-gateway-topology.png[]
 
 Your browser will be redirected to *your Gateway Service running on OpenShift*.
 
-image::innerloop/gateway-service.png[Gateway Service,500]
+image::innerloop/gateway-service.png[Gateway Service,800]
 
 Then click on `Test it`. You should have an array of json output like this but with many more products.
 
 Look in the json to see how the *Gateway service* has combined the *product* information together with the *inventory* (quantity) information: 
 
+[.console-output]
 [source,json]
 ----
 [ {
@@ -959,18 +945,17 @@ Look in the json to see how the *Gateway service* has combined the *product* inf
     "quantity" : 35
   }
 },
-...
+....
 ]
 ----
 
 === 4.5. Service discovery
 
-You might be wondering how the Gateway service knows how to contact the *Catalog* and *Inventory* services. 
-These values can be injected as environment variables at runtime for example if running the component locally in the IDE, 
-but by default we have hardcoded the name of the OpenShift *Services* and then use OpenShift local DNS to resolve these names as 
+You might be wondering how the Gateway service knows how to contact the *Catalog* and *Inventory* services. These values can be injected as environment variables at runtime for example if running the component locally in the IDE, but by default we have hardcoded the name of the OpenShift *Services* and then use OpenShift local DNS to resolve these names as 
 the application starts. You can see the code that consumes those variables below. This is from *ProductsController.cs class* in the 
-*$PROJECT_SOURCE/gateway-dotnet/* directory.
+*/gateway-dotnet/* directory.
 
+[.console-output]
 [source,java]
 ----
 public static void Config()
@@ -1003,85 +988,74 @@ public static void Config()
     }
 }
 ----
-You can try this simple name service discovery for yourself in the Gateway service pod by `*selecting the Gateway
-service and then the running Pod.*`
 
-image::innerloop/openshift-gateway-pod.png[Gateway Service,500]
+You can try this simple name service discovery for yourself in the Gateway service pod by *selecting the Gateway service and then the running Pod*.
+
+image::innerloop/openshift-gateway-pod.png[Gateway Service,800]
 
 You can test the connectivity by `*selecting the Pod Terminal*` and by `*executing these shell commands in the terminal window:*`
 
-image::innerloop/openshift-gateway-pod-terminal.png[Gateway Service,500]
+image::innerloop/openshift-gateway-pod-terminal.png[Gateway Service,800]
 
-[source,shell,subs="{markup-in-source}",role=copypaste]
+[.console-input]
+[source,bash,subs="+attributes,macros+"]
 ----
 curl -w "\n" http://inventory-coolstore:8080/api/inventory/329299
 ----
-[source,shell,subs="{markup-in-source}",role=copypaste]
+
+The outpout should look similar to:
+
+[.console-output]
+[source,sh]
 ----
-curl -w "\n" http://catalog-coolstore:8080/api/catalog
+{"id":329299,"itemId":"35","quantity":2}
 ----
 
 Well done! You are ready to move on to the next lab.
 
 == 5. Deploy Web UI with with Node.js and AngularJS
-:navtitle: Deploy Web UI with with Node.js and AngularJS
 
 In this lab you will deploy the Node.js and Angular-based web frontend for the CoolStore online shop which uses the API Gateway services you deployed 
 in previous labs. 
 
 image::innerloop/coolstore-arch-webui-nodejs.png[API Gateway Pattern,400]
 
-[#what_is_nodejs]
 === 5.1. What is Node.js?
 
-[sidebar]
---
 image::innerloop/nodejs-logo.png[Node.js, 400]
 
-https://nodejs.org/[Node.js^] is an open source, cross-platform runtime environment for developing server-side 
-applications using JavaScript. https://nodejs.org/[Node.js^] has an event-driven architecture capable of 
-non-blocking I/O. These design choices aim to optimize throughput and scalability in 
-Web applications with many input/output operations, as well as for real-time web applications.
+https://nodejs.org/[Node.js^] is an open source, cross-platform runtime environment for developing server-side applications using JavaScript. https://nodejs.org/[Node.js^] has an event-driven architecture capable of 
+non-blocking I/O. These design choices aim to optimize throughput and scalability in Web applications with many input/output operations, as well as for real-time web applications.
 
-https://nodejs.org/[Node.js^] non-blocking architecture allows applications to process large number of 
-requests (tens of thousands) using a single thread which makes it desirable choice for building 
-scalable web applications.
---
-
-[#deploy_on_openshift]
 === 5.2. Deploy on OpenShift
 
-The Web UI is built using Node.js for server-side JavaScript and AngularJS for client-side 
-JavaScript. Let's deploy it on OpenShift using the certified Node.js container image available 
-in OpenShift. 
+The Web UI is built using Node.js for server-side JavaScript and AngularJS for client-side JavaScript. Let's deploy it on OpenShift using the certified Node.js container image available in OpenShift. 
 
-In this lab, you will use OpenShift https://docs.openshift.com/container-platform/latest/cicd/builds/understanding-image-builds.html[Source-to-Image (S2I)^] again.
-OpenShift will obtain the application code directly from the source repository and then build and deploy a 
+In this lab, you will use OpenShift https://docs.openshift.com/container-platform/latest/cicd/builds/understanding-image-builds.html[Source-to-Image (S2I)^] again. OpenShift will obtain the application code directly from the source repository and then build and deploy a 
 container image of it.
 
 For a change, rather than using the CLI option you will start this process from the web console.
 
-In the {openshift_cluster_console}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
-`*click on '+Add' and select 'Import from Git'*`
+Click on `+Add` in the Topology view and select `Import from Git`.
 
-image::innerloop/openshift-add-from-git.png[OpenShift - Add from Git, 700]
+image::innerloop/openshift-add-from-git.png[OpenShift - Add from Git]
 
 Then, enter the following information:
 
-.Web UI Project
+.Import from Git
 [%header,cols=2*]
 |===
 |Parameter 
 |Value
 
 |Git Repo URL
-|*{WORKSHOP_GIT_REPO}*
+|*https://github.com/rh-mad-workshop/coolstore-devx.git*
 
 |Git Reference (see *advanced Git options*)
-|*{WORKSHOP_GIT_REF}*
+|*main*
 
 |Context Dir
-|*/labs/web-nodejs*
+|*web-nodejs*
 
 |Builder Image
 |*Node.js*
@@ -1100,830 +1074,34 @@ Then, enter the following information:
 
 |===
 
+image::innerloop/git-import-1.png[git-import, 800]
+image::innerloop/git-import-2.png[git-import, 800]
+image::innerloop/git-import-3.png[git-import, 800]
+
 From the advanced Routing options `*select the Secure Route option*` and set TLS termination to "Edge", so this creates an *HTTPS* route. 
-like below:-
 
-image::innerloop/openshift-add-https-route.png[OpenShift - Add route, 600]
+image::innerloop/openshift-add-https-route.png[OpenShift - Add route, 800]
 
-`*Click on 'Create' button*` 
+Click on `Create` to create the application. 
 
 Now wait a few minutes for the application to built by OpenShift and deployed to your project. In the toplogy view, 
 the web application pod will not be ready until the blue ring goes dark blue.
 
-[#test_your_service]
-=== 5.3 Test your Service
+=== 5.3 Test the Web Service
 
-In the {openshift_cluster_console}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
-click on the `Open URL` icon of the Web Service*`
+In the OpenShift web topology view, click on the `Open URL` icon of the Web Service.
 
-image::innerloop/openshift-web-topology.png[OpenShift - Web Topology, 700]
+image::innerloop/openshift-web-topology.png[]
 
-Your browser will be redirected to *your Web Service running on OpenShift*.
-You should be able to see the CoolStore application with all products and their inventory status.
+Your browser will be redirected to *your Web Service running on OpenShift. You should be able to see the CoolStore application with all products and their inventory status.
 
-image::innerloop/coolstore-web.png[CoolStore Shop,840]
+image::innerloop/coolstore-web.png[]
 
-Well done! You are ready to move on to the next lab.
+Congratulations! You are now ready to move on to the next lab.
 
-== 6. Monitor Application Health
-:navtitle: Monitor Application Health
+== Summary
 
-In this lab we will learn how to monitor application health using OpenShift 
-health probes and how you can see container resource consumption using metrics.
-
-[sidebar]
-.OpenShift Health Probes
---
-
-When building microservices, monitoring becomes of extreme importance to make sure all services 
-are running at all times, and when they don't there are automatic actions triggered to rectify 
-the issues. 
-
-OpenShift, using Kubernetes health probes, offers a solution for monitoring application 
-health and trying to automatically heal faulty containers through restarting them to fix issues such as
-a deadlock in the application which can be resolved by restarting the container. Restarting a container 
-in such a state can help to make the application more available despite bugs.
-
-Furthermore, there are of course a category of issues that can't be resolved by restarting the container. 
-In those scenarios, OpenShift would remove the faulty container from the built-in load-balancer and send traffic 
-only to the healthy containers that remain.
-
-There are three types of health probes available in OpenShift: https://docs.openshift.com/container-platform/latest/applications/application-health.html#application-health-about_application-health[startup, readiness and liveness probes^]. 
-
-* *Startup probes* determine if the container in which it is scheduled is started
-* *Readiness probes* determine if the container in which it is scheduled is ready to service requests
-* *Liveness probes* determine if the container in which it is scheduled is still running
-
-Health probes also provide crucial benefits when automating deployments with practices like rolling updates in 
-order to remove downtime during deployments. A readiness health probe would signal to OpenShift when to switch traffic from the old version of the container to the new version so that the users don't get affected during deployments.
-
-There are https://docs.openshift.com/container-platform/latest/applications/application-health.html#application-health-about_types_application-health[three ways to define a health probe^] for a container:
-
-* *HTTP Checks:* healthiness of the container is determined based on the response code of an HTTP 
-endpoint. Anything between 200 and 399 is considered success. A HTTP check is ideal for applications 
-that return HTTP status codes when completely initialized.
-
-* *Container Execution Checks:* a specified command is executed inside the container and the healthiness is 
-determined based on the return value (0 is success). 
-
-* *TCP Socket Checks:* a socket is opened on a specified port to the container and it's considered healthy 
-only if the check can establish a connection. TCP socket check is ideal for applications that do not 
-start listening until initialization is complete.
---
-
-[#understanding_liveness]
-=== 6.1. Understanding Liveness Probes
-
-*What happens if you DON'T setup Liveness checks?*
-
-By default Pods are designed to be resilient, if a pod dies it will get restarted. Let's see
-this happening.
-
-In the {openshift_cluster_console}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
-`*click on 'Topology' -> '(D) inventory-coolstore' -> 'Resources' -> 'P inventory-coolstore-x-xxxxx'*`
-
-image::innerloop/openshift-inventory-pod.png[OpenShift Inventory Pod, 700]
-
-In the {openshift_cluster_console}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], `*click on 'Actions' -> 'Delete Pod' -> 'Delete'*`
-
-image::innerloop/openshift-inventory-delete-pod.png[OpenShift Inventory Delete Pod, 700]
-
-A new instance (pod) will be redeployed very quickly. Once deleted `*try to access your http://inventory-coolstore-my-project{USER_ID}.{APPS_HOSTNAME_SUFFIX}[Inventory Service^, role='params-link']*`.
-
-However, imagine the _Inventory Service_ is stuck in a state (Stopped listening, Deadlock, etc)
-where it cannot perform as it should. In this case, the pod will not immeditaely die, it will be in a zombie state.
-
-To make your application more robust and reliable, a *Liveness check*  will be used to check 
-if the container itself has become unresponsive. If the liveness probe fails due to a condition such as a deadlock, 
-the container could automatically restart (based on its restart policy).
-
-[#understanding_readiness]
-=== 6.2. Understanding Readiness Probes
-
-*What happens if you DON'T setup Readiness checks?*
-
-Let's imagine you have traffic coming into the _Inventory Service_. We can do that with simple script.
-
-In your {CHE_URL}[Workspace^, role='params-link'],
-
-[tabs, subs="attributes+,+macros"]
-====
-
-IDE Task::
-+
--- 
-`*Click on 'Terminal' -> 'Run Task...' ->  'devfile: Inventory - Generate Traffic'*`
-
-image::innerloop/che-runtask.png[Che - RunTask, 600]
---
-
-CLI::
-+
---
-`*Execute the following commands in the terminal window*`
-
-[source,shell,subs="{markup-in-source}",role=copypaste]
-----
-for i in {1..60}
-do 
-    if [ $(curl -s -w "%{http_code}" -o /dev/null http://inventory-coolstore.my-project{USER_ID}.svc:8080/api/inventory/329299) == "200" ]
-    then 
-        MSG="\033[0;32mThe request to Inventory Service has succeeded\033[0m"
-    else 
-        MSG="\033[0;31mERROR - The request to Inventory Service has failed\033[0m" 
-    fi
-    
-    echo -e $MSG
-    sleep 1s
-done
-----
-
-NOTE: To open a terminal window, `*click on 'Terminal' -> 'New Terminal'*`
---
-====
-
-You should have the following output:
-
-image::innerloop/che-inventory-traffic.png[Che - Catalog Traffic OK, 500]
-
-Now let's scale out your _Inventory Service_ to 2 instances. 
-
-In the {openshift_cluster_console}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
-`*click on 'Topology' -> '(D) inventory-coolstore' -> 'Details' then click once on the up arrows 
-on the right side of the pod blue circle*`.
-
-image::innerloop/openshift-scale-out-inventory.png[OpenShift Scale Out Catalog, 700]
-
-You should see the 2 instances (pods) running. 
-Now, `*switch back to your {CHE_URL}[Workspace^, role='params-link'] and check the output of the 'Inventory Generate Traffic' task*`.
-
-image::innerloop/che-inventory-traffic-ko.png[Che - Catalog Traffic KO, 500]
-
-*Why do some requests failed? Because as soon as the container is created, the traffic is sent to this new instance even if the application is not ready.* 
-(The _Inventory Service_ takes a few seconds to start up). 
-
-In order to prevent this behaviour, a *Readiness check* is needed. It determines if the container is ready to service requests. 
-If the readiness probe fails, the endpoints controller ensures the container has its IP address removed from the endpoints of all services. 
-A readiness probe can be used to signal to the endpoints controller that even though a container is running, it should not receive any traffic from a proxy.
-
-First, scale down your _Inventory Service_ to 1 instance. In the {openshift_cluster_console}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
-`*click on 'Topology' -> '(D) inventory-coolstore' -> 'Details' then click once on the down arrows 
-on the right side of the pod blue circle*`.
-
-Now lets go fix some of these problems.
-
-[#configuring_liveness]
-== Configuring Liveness Probes
-
-https://quarkus.io/guides/health-guide[SmallRye Health^] is a Quarkus extension which utilizes the MicroProfile Health specification.
-It allows applications to provide information about their state to external viewers which is typically useful 
-in cloud environments where automated processes must be able to determine whether the application should be discarded or restarted.
-
-Let's add the needed dependencies to *$PROJECT_SOURCE/inventory-quarkus/pom.xml*. 
-In your {CHE_URL}[Workspace^, role='params-link'], `*edit the '$PROJECT_SOURCE/inventory-quarkus/pom.xml' file*`:
-
-[source,xml,subs="{markup-in-source}",role=copypaste]
-----
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-smallrye-health</artifactId>
-    </dependency>
-----
-
-Then, `*build and push the updated Inventory Service to the OpenShift cluster*`.
-
-[tabs, subs="attributes+,+macros"]
-====
-
-IDE Task::
-+
--- 
-`*Click on 'Terminal' -> 'Run Task...' ->  'devfile: Inventory - Push Component'*`
-
-image::innerloop/che-runtask.png[Che - RunTask, 600]
---
-
-CLI::
-+
---
-`*Execute the following commands in the terminal window*`
-
-[source,shell,subs="{markup-in-source}",role=copypaste]
-----
-cd $PROJECT_SOURCE/inventory-quarkus
-mvn package -Dquarkus.container-image.build=true -DskipTests -Dquarkus.container-image.group=$(oc project -q) -Dquarkus.kubernetes-client.trust-certs=true
-----
-
-NOTE: To open a terminal window, `*click on 'Terminal' -> 'New Terminal'*`
---
-====
-
-Wait till the build is complete then, `*Delete the Inventory Pod*` to make it start again with the new code.
-
-[source,shell,subs="{markup-in-source}",role=copypaste]
-----
-oc delete pod -l component=inventory -n my-project{USER_ID}
-----
-
-It will take a few seconds to restart, then verify that the health endpoint works for the *Inventory Service* using `*curl*`
-
-In your {CHE_URL}[Workspace^, role='params-link'], 
-`*execute the following commands in the terminal window*` - it may take a few attempts while the pod restarts.
-
-[source,shell,subs="{markup-in-source}",role=copypaste]
-----
-curl -w "\n" http://inventory-coolstore.my-project{USER_ID}.svc:8080/q/health
-----
-
-NOTE: To open a terminal window, `*click on 'Terminal' -> 'New Terminal'*`
-
-You should have the following output:
-
-[source,json,subs="{markup-in-source}"]
-----
-{
-    "status": "UP",
-    "checks": [
-        {
-            "name": "Database connection(s) health check",
-            "status": "UP"
-        }
-    ]
-}
-----
-
-In the {openshift_cluster_console}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
-`*click on 'Topology' -> '(D) inventory-coolstore' -> 'Add Health Checks'*`.
-
-image::innerloop/openshift-inventory-add-health-check.png[Che - Inventory Add Health Check, 700]
-
-Then `*click on 'Add Liveness Probe'*`
-
-image::innerloop/openshift-inventory-add-liveness-probe.png[Che - Inventory Add Liveness Probe, 500]
-
-`*Enter the following information:*`
-
-.Liveness Probe
-[%header,cols=2*]
-|===
-|Parameter 
-|Value
-
-|Type
-|HTTP GET
-
-|Use HTTPS
-|_Checked_
-
-|HTTP Headers
-|_Empty_
-
-|Path
-|/q/health/live
-
-|Port
-|8080
-
-|Failure Threshold
-|3
-
-|Success Threshold
-|1
-
-|Initial Delay
-|10
-
-|Period
-|10
-
-|Timeout
-|1
-
-|===
-
-Finally `*click on the check icon*`. But don't click *Add* yet, we have more probes to configure.
-
-[#configuring_readiness]
-=== 6.3.  Configuring Inventory Readiness Probes
-
-Now repeat the same task for the *Inventory* service, but this time set the *Readiness* probes:
-
-.Readiness Probe
-[%header,cols=2*]
-|===
-|Parameter
-|Value
-
-|Type
-|HTTP GET
-
-|Use HTTPS
-|_Checked_
-
-|HTTP Headers
-|_Empty_
-
-|Path
-|/q/health/ready
-
-|Port
-|8080
-
-|Failure Threshold
-|3
-
-|Success Threshold
-|1
-
-|Initial Delay
-|0
-
-|Period
-|5
-
-|Timeout
-|1
-
-|===
-
-Finally `*click on the check icon and the 'Add' button*`. OpenShift automates deployments using 
-https://docs.openshift.com/container-platform/4.12/welcome/index.html[deployment triggers^] 
-that react to changes to the container image or configuration. 
-Therefore, as soon as you define the probe, OpenShift automatically redeploys the pod using the new configuration including the liveness probe.
-
-[NOTE]
-You can also configure probes directly in your Quarkus application.properties, or even create custom health check classes. You can read more about it in the https://quarkus.io/guides/smallrye-healt[Quarkus Smallrye Health documentation]
-
-[#testing_Readiness]
-== Testing Inventory Readiness Probes
-
-Now let's test it as you did previously.
-`*Generate traffic to Inventory Service*` and then, in the {openshift_cluster_console}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], 
-`*scale out the Inventory Service to 2 instances (pods)*`
-
-In your {CHE_URL}[Workspace^, role='params-link'], `*check the output of the 'Inventory Generate Traffic' task*`.
-
-You should not see any errors, this means that you can now *scale out your _Inventory Service_ with no downtime.*
-
-image::innerloop/che-inventory-traffic.png[Che - Catalog Traffic OK, 500]
-
-Now scale down your _Inventory Service_ back to 1 instance. 
-
-== Catalog Services Probes
-
-http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready[Spring Boot Actuator^] is a 
-sub-project of Spring Boot which adds health and management HTTP endpoints to the application. Enabling Spring Boot 
-Actuator is done via adding *org.springframework.boot:spring-boot-starter-actuator* dependency to the Maven project 
-dependencies which is already done for the *Catalog Service*.
-
-Verify that the health endpoint works for the *Catalog Service* using `*curl*`.
-
-In your {CHE_URL}[Workspace^, role='params-link'], in the *terminal* window, 
-`*execute the following commands*`:
-
-[source,shell,subs="{markup-in-source}",role=copypaste]
-----
-curl -w "\n" http://catalog-coolstore.my-project{USER_ID}.svc:8080/actuator/health
-----
-
-You should have the following output:
-
-[source,json,subs="{markup-in-source}"]
-----
-{"status":"UP"}
-----
-
-Liveness and Readiness health checks values have already been set for this service as part of the build and deploying 
-using Eclipse JKube in combination with the Spring Boot actuator. 
-
-You can check this in the {openshift_cluster_console}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
-`*click on 'Topology' -> '(D) catalog-coolstore' -> 'Actions' -> 'Edit Health Checks'*`.
-
-image::innerloop/openshift-catalog-edit-health.png[Che - Catalog Add Health Check, 700]
-
-[#understanding_startup]
-=== 6.4.  Understanding Startup Probes
-
-*Startup probes* are similar to liveness probes but only executed at startup.
-When a startup probe is configured, the other probes are disabled until it suceeds.
-
-Sometimes, some (legacy) applications might need extra times for their first initialization. 
-In such cases, setting a longer liveness internal might compromise the main benefit of this probe ie providing 
-the fast response to stuck states.
-
-*Startup probes* are useful to cover this worse case startup time.
-
-[#monitoring_application_metrics]
-=== 6.5. Monitoring Applications Metrics
-
-Metrics are another important aspect of monitoring applications which is required in order to 
-gain visibility into how the application behaves and particularly in identifying issues.
-
-OpenShift provides container metrics out-of-the-box and displays how much memory, cpu and network 
-each container has been consuming over time. 
-
-In the {openshift_cluster_console}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
-`*click on 'Observe' then select your 'my-project{USER_ID}' project*`.
-
-In the project overview, you can see the different *Resource Usage* sections. 
-`*click on one graph to get more details*`.
-
-image::innerloop/openshift-monitoring.png[OpenShift Monitoring,740]
-
-From the *Developer view*, `*click on 'Topology' -> any Deployment (D) and click on the associated Pod (P)*`
-
-In the pod overview, you can see a more detailed view of the pod consumption.
-The graphs can be found under the Metrics heading, or Details in earlier versions of the OpenShift console.
-
-image::innerloop/openshift-pod-details.png[OpenShift Pod Details,740]
-
-Well done! You are ready to move on to the next lab.
-
-== 7. Externalize Application Configuration
-:navtitle: Externalize Application Configuration
-
-In this lab you will learn how to manage application configuration and how to provide environment 
-specific configuration to the services.
-
-[sidebar]
-.ConfigMaps
---
-Applications require configuration in order to tweak the application behavior 
-or adapt it to a certain environment without the need to write code and repackage 
-the application for every change. 
-
-The most common way to provide configurations to applications is using environment 
-variables and external configuration files such as properties, JSON or YAML files, 
-configuration files and command line arguments.
-
-Kubernetes, and by extension OpenShift, provides a mechanism called https://docs.openshift.com/container-platform/latest/welcome/index.html[*ConfigMaps*^] 
-in order to externalize configurations from the applications deployed within containers and provide them to the containers as files and environment variables. OpenShift also offers a way to provide sensitive configuration data such as certificates, credentials, etc. to the application containers in the form of Secrets.
-
-This allows developers to build the container image for their application only once, 
-and reuse that image to deploy the application across various environments with 
-different configurations that are provided to the application at runtime.
---
-
-[#create_databases]
-=== 7.1.  Create Databases for Inventory and Catalog
-
-So far Catalog and Inventory services have been using an in-memory H2 database. Although H2 
-is a convenient database to run locally on your laptop, it's not really appropriate for production or 
-even integration tests. Since it's strongly recommended to use the same technology stack (operating 
-system, JVM, middleware, database, etc.) that is used in production across all environments, you 
-should modify Inventory and Catalog services to use eg. PostgreSQL or MariaDB instead of the H2 in-memory database.
-
-Let's create a MariaDB database for the *Inventory Service* using the MariaDB template that is provided out-of-the-box:
-
-[TIP]
-====
-https://docs.openshift.com/container-platform/latest/openshift_images/using-templates.html[OpenShift Templates^] use YAML/JSON to compose 
-multiple containers and their configurations as a list of objects to be created and deployed at once, 
-making it simple to re-create complex deployments by just deploying a single template. Templates can 
-be parameterized to get input for fields like service names and generate values for fields like passwords.
-====
-
-In the {openshift_cluster_console}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], `*click on '+Add' and select 'Database'*`
-
-image::innerloop/openshift-add-database.png[OpenShift - Add database, 700]
-
-`*Select 'MariaDB (Ephemeral)' and click on 'Instantiate Template'*`
-
-Then, enter the following information:
-
-.Inventory Database
-[%header,cols=2*]
-|===
-|Parameter 
-|Value
-
-|Namespace*
-|my-project{USER_ID}
-
-|Memory Limit*
-|512Mi
-
-|Namespace
-|openshift
-
-|Database Service Name*
-|inventory-mariadb
-
-|MariaDB Connection Username
-|inventory
-
-|MariaDB Connection Password
-|inventory
-
-|MariaDB root Password
-|inventoryadmin
-
-|MariaDB Database Name*
-|inventorydb
-
-|Version of MariaDB Image*
-|10.3-el8
-
-|===
-
-`*Click on 'Create' button*`, shortly a Maria database pod should be created:-
-
-image::innerloop/openshift-inventory-mariadb-topology.png[OpenShift - Inventory MariaDB, 700]
-
-`*Now click again on '+Add' and select 'Database', select 'PostgreSQL (Ephemeral)' and click on 'Instantiate Template'*` 
-to create the Catalog Database as follows:
-
-Then, enter the following information:
-
-.Catalog Database
-[%header,cols=2*]
-|===
-|Parameter 
-|Value
-
-|Namespace*
-|my-project{USER_ID}
-
-|Memory Limit*
-|512Mi
-
-|Namespace
-|openshift
-
-|Database Service Name*
-|catalog-postgresql
-
-|PostgreSQL Connection Username
-|catalog
-
-|PostgreSQL Connection Password
-|catalog
-
-|PostgreSQL Database Name*
-|catalogdb
-
-|Version of PostgreSQL Image*
-|10-el8
-
-|===
-
-`*Click on 'Create' button*`, shortly a Postgresql dtabase pod should be created:-
-
-image::innerloop/openshift-catalog-postgresql-topology.png[OpenShift - Catalog PostgreSQL, 700]
-
-Now you can move on to configure the Inventory and Catalog service to use these databases.
-
-=== 7.2. Give permissions to discover Kubernetes objects
-
-By default, due to security reasons, *containers are not allowed to snoop around OpenShift clusters and discover objects*. Security comes first and discovery is a privilege that needs to be granted to containers in each project. 
-
-Since you do want our applications to discover the config maps inside the *my-project{USER_ID}* project, you need `*to grant permission to the Service Account to access the OpenShift REST API*` and find the config maps. You can do so with the following command:
-
-[source,shell,subs="{markup-in-source}",role=copypaste]
-----
-oc policy add-role-to-user view -n my-project{USER_ID} -z default
-----
-
-[#externalize_quarkus_configuration]
-=== 7.3. Externalize Quarkus (Inventory) Configuration
-
-Quarkus supports multiple mechanisms for externalizing configurations such as environment variables, 
-Maven properties, command-line arguments and more. The recommended approach for the long-term for externalizing 
-configuration is however using an https://quarkus.io/guides/application-configuration-guide#overriding-properties-at-runtime[application.properties^] 
-which you have already packaged within the Inventory Maven project.
-
-In Quarkus, Driver is a build time property and cannot be overridden. So as you are going to change the database
-technology, you need to change the 'quarkus.datasource.driver' parameter 
-in *$PROJECT_SOURCE/inventory-quarkus/src/main/resources/application.properties* and rebuild the application.
-
-In your {CHE_URL}[Workspace^, role='params-link'], `*edit the '$PROJECT_SOURCE/inventory-quarkus/pom.xml' file and add the
-'JDBC Driver - MariaDB' dependency*`
-
-[source,xml,subs="{markup-in-source}",role=copypaste]
-----
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-kubernetes-config</artifactId> #<1>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-jdbc-mariadb</artifactId> #<2>
-    </dependency>
-----
-<1> Extension which allows developers to use Kubernetes ConfigMaps and Secrets as a configuration source, without having to mount them into the Pod running the Quarkus application or make any other modifications to their Kubernetes Deployment.
-<2> Extension which allows developers to connect to MariaDB databases using the JDBC driver
-
-Then `*add the '%prod.quarkus.datasource.driver' parameter in 
- the '$PROJECT_SOURCE/inventory-quarkus/src/main/resources/application.properties' file*` as follows
-
-[source,properties,subs="{markup-in-source}",role=copypaste]
-----
-%prod.quarkus.datasource.db-kind=mariadb#<1>
-%prod.quarkus.kubernetes-config.enabled=true#<2>
-%prod.quarkus.kubernetes-config.config-maps=inventory#<3>
-----
-<1> The kind of database we will connect to
-<2> If set to true, the application will attempt to look up the configuration from the API server
-<3> ConfigMaps to look for in the namespace that the Kubernetes Client has been configured for
-
-NOTE: With the *%prod* prefix, this option is only activated when building the jar intended for deployments.
-
-[WARNING]
-====
-Leave the *'quarkus.datasource.jdbc.url'*, *'quarkus.datasource.username'* and *'quarkus.datasource.password'*
-parameters unchanged. They will be overridden later.
-====
-
-Now, let's create the Quarkus configuration content using the database credentials.
-
-In the {openshift_cluster_console}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
-`*click on 'Config Maps' then click on the 'Create Config Map' button*`.
-
-image::innerloop/openshift-create-configmap.png[Che - OpenShift Create Config Map, 900]
-
-Then switch to `*YAML view*` and  `*replace the content*` with the following input:
-
-[source,yaml,subs="{markup-in-source}",role=copypaste]
-----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: inventory
-  namespace: my-project{USER_ID}
-  labels:
-    app: coolstore
-    app.kubernetes.io/instance: inventory
-data:
-  application.properties: |-
-    quarkus.datasource.jdbc.url=jdbc:mariadb://inventory-mariadb.my-project{USER_ID}.svc:3306/inventorydb
-    quarkus.datasource.username=inventory
-    quarkus.datasource.password=inventory
-----
-
-`*Click on the 'Create' button*`.
-
-Once the source code is updated and the ConfigMap is created, as before, build and `*Push the updated Inventory Service to the OpenShift cluster*`.
-
-Wait till the build is complete then, `*Delete the Inventory Pod*` to make it start again and look for the config maps:
-
-[source,shell,subs="{markup-in-source}",role=copypaste]
-----
-oc delete pod -l component=inventory -n my-project{USER_ID}
-----
-
-You have now created a config map that holds the configuration content for Inventory and can be updated 
-at anytime for example when promoting the container image between environments without needing to 
-modify the Inventory container image itself. 
-
-[#externalize_spring_boot_configuration]
-=== 7.4. Externalize Spring Boot (Catalog) Configuration
-
-You should be quite familiar with config maps by now. Spring Boot application configuration is provided 
-via a properties file called *application.properties* and can be 
-https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html[overriden and overlayed via multiple mechanisms^]. 
-
-[NOTE]
-====
-Check out the default Spring Boot configuration in Catalog Maven project *catalog-spring-boot/src/main/resources/application.properties*.
-====
-
-In this lab, you will configure the *Catalog Service* which is based on Spring Boot to override the default 
-configuration using an alternative *application.properties* backed by a config map.
-
-Let's create the Spring Boot configuration content using the database credentials and create the Config Map.
-
-In the {openshift_cluster_console}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
-`*click on 'Config Maps' then click on the 'Create Config Map' button*`.
-
-image::innerloop/openshift-create-configmap.png[Che - OpenShift Create Config Map, 900]
-
-Then switch to `*YAML view*` and `*replace the content*` with the following input:
-
-[source,yaml,subs="{markup-in-source}",role=copypaste]
-----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: catalog
-  namespace: my-project{USER_ID}
-  labels:
-    app: coolstore
-    app.kubernetes.io/instance: catalog
-data:
-  application.properties: |-
-    spring.datasource.url=jdbc:postgresql://catalog-postgresql.my-project%USER_ID%.svc:5432/catalogdb
-    spring.datasource.username=catalog
-    spring.datasource.password=catalog
-    spring.datasource.driver-class-name=org.postgresql.Driver
-    spring.jpa.hibernate.ddl-auto=create
-    spring.jpa.properties.hibernate.jdbc.lob.non_contextual_creation=true
-----
-
-The https://github.com/spring-cloud-incubator/spring-cloud-kubernetes[Spring Cloud Kubernetes^] plug-in implements 
-the integration between Kubernetes and Spring Boot and is already added as a dependency to the Catalog Maven 
-project. Using this dependency, Spring Boot would search for a config map (by default with the same name as 
-the application) to use as the source of application configurations during application bootstrapping and 
-if enabled, triggers hot reloading of beans or Spring context when changes are detected on the config map.
-
-`*Delete the Catalog Pod*` to make it start again and look for the config maps:
-
-[source,shell,subs="{markup-in-source}",role=copypaste]
-----
-oc delete pod -l component=catalog -n my-project{USER_ID}
-----
-
-When the Catalog container is *ready* (wait at least 30 seconds), verify that the PostgreSQL database is being 
-used. Check the Catalog pod logs repeatedly:
-
-[source,shell,subs="{markup-in-source}",role=copypaste]
-----
-oc logs deployment/catalog-coolstore -n my-project{USER_ID} | grep hibernate.dialect
-----
-
-You should have the following output:
-
-[source,shell,subs="{markup-in-source}"]
-----
-2017-08-10 21:07:51.670  INFO 1 --- [           main] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.PostgreSQL95Dialect
-----
-
-[#explore_secrets]
-=== 7.5. Explore Sensitive Configuration Data
-
-[sidebar]
-.Secrets
---
-*ConfigMaps* are a superb mechanism for externalizing application configuration while keeping 
-containers independent of in which environment or on what container platform they are running. 
-Nevertheless, due to their clear-text nature, they are not suitable for sensitive data like 
-database credentials, SSH certificates, etc. In the current lab, we used config maps for database 
-credentials to simplify the steps; however, for production environments, you should opt for a more 
-secure way to handle sensitive data.
-
-Fortunately, OpenShift already provides a secure mechanism for handling sensitive data which is 
-called *Secrets*. Secret objects act and are used 
-similarly to config maps however with the difference that they are encrypted as they travel over the wire and also at rest when kept on a persistent disk. Like config maps, secrets can be injected into 
-containers as environment variables or files on the filesystem using a temporary file-storage 
-facility (tmpfs).
---
-
-You won't create any secrets in this lab; however, you have already created two secrets when you created 
-the PostgreSQL and MariaDB databases. The Database template by default stores 
-the database credentials in a secret in the project in which it's being created:
-
-[source,shell,subs="{markup-in-source}",role=copypaste]
-----
-oc describe secret catalog-postgresql
-----
-
-You should have the following output:
-
-[source,shell,subs="{markup-in-source}"]
-----
-Name:            catalog-postgresql
-Namespace:       coolstore
-Labels:          app=catalog
-                 template=postgresql-persistent-template
-Annotations:     openshift.io/generated-by=OpenShiftNewApp
-                 template.openshift.io/expose-database_name={.data['database-name']}
-                 template.openshift.io/expose-password={.data['database-password']}
-                 template.openshift.io/expose-username={.data['database-user']}
-
-Type:     Opaque
-
-Data
-====
-database-name:        9 bytes
-database-password:    7 bytes
-database-user:        7 bytes
-----
-
-This secret has three encrypted properties defined as *database-name*, *database-user* and *database-password* which hold 
-the PostgreSQL database name, username and password values. These values are injected in the PostgreSQL container as 
-environment variables and used to initialize the database.
-
-In the {openshift_cluster_console}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
-`*click on 'DC catalog-postgresql' -> 'DC catalog-postgresql' -> 'Environment'*`. Notice the values 
-from the secret are defined as env vars on the deployment:
-
-image::innerloop/config-psql-secret.png[Secrets as Env Vars,900]
-
-[#test_your_service]
-=== 7.6. Test your Service (again)
-
-Having made all those changes with adding databases and the application configuration you should now 
-test that the Coolstore application still works. Just like you did a couple of chapters ago you need to use the toplogy 
-display in the web console.
-
-In the {openshift_cluster_console}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
-click on the `Open URL` icon of the Web Service*`
-
-image::innerloop/openshift-web-topology.png[OpenShift - Web Topology, 700]
-
-Your browser will be redirected to *your Web Service running on OpenShift*.
-You should be able to see the CoolStore application with all products and their inventory status.
-
-image::innerloop/coolstore-web.png[CoolStore Shop,840]
+You have completed the [Inner Loop](https://github.com/rh-mad-workshop/mad-dev-guides-v2/blob/main/mad-dev-guides-v2/content/modules/ROOT/pages/module-innerloop.adoc) module.
 
 Please close all but the Workshop Deployer browser tab to avoid proliferation of browser tabs which can make working on other modules difficult. 
 
