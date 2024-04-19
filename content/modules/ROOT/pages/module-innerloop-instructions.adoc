@@ -299,7 +299,7 @@ quarkus.container-image.name=inventory-coolstore
 quarkus.container-image.registry=image-registry.openshift-image-registry.svc:5000
 quarkus.openshift.route.tls.termination=edge
 quarkus.openshift.route.tls.insecure-edge-termination-policy=Redirect
-test-{user_name} <100>
+test-{user_name}-test-{user_password}-daniel-test<3>
 ----
 
 <1> An *uber-jar* contains all the dependencies required packaged in the *jar* to enable running the 
