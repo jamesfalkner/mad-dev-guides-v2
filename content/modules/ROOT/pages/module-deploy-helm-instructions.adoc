@@ -39,7 +39,7 @@ Helm charts offer several key benefits that streamline application deployment an
 
 In this step, you will deploy a new Java application using Helm. The application is a simple to-do list manager built with https://quarkus.io/[Quarkus^], a Kubernetes-native Java framework. You will use Helm to streamline the deployment process and create a running instance of the application on OpenShift.
 
-Access your working project in the OpenShift web console by clicking on the following link: link:{console_url}/topology/ns/globex-deploy-helm-{user_name}?view=graph[OpenShift web console].
+Access your working project in the OpenShift web console by clicking on the following link: link:{openshift_cluster_console}/topology/ns/globex-deploy-helm-{user_name}?view=graph[OpenShift web console].
 
 image::deploy-helm/kc_login.png[kc_login, 600]
 

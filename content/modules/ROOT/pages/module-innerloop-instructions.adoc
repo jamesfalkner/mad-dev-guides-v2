@@ -489,7 +489,7 @@ deployment "inventory-coolstore" successfully rolled out
 
 === 2.7. Test your Service
 
-In the {console_url}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role=params-link], from the *Developer view*,
+In the {openshift_cluster_console}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role=params-link], from the *Developer view*,
 click on the 'Open URL' icon of the Inventory Service.
 
 image::innerloop/openshift-inventory-topology.png[]
@@ -868,7 +868,7 @@ the application in one or more pods (the unit of deployment in Kubernetes/Opensh
 [#test_your_service]
 === 3.8. Test your Service
 
-In the {console_url}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
+In the {openshift_cluster_console}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
 `*click on the 'Open URL' icon of the Catalog Service*`
 
 image::innerloop/openshift-catalog-topology.png[OpenShift - Catalog Topology, 700]
@@ -1097,7 +1097,7 @@ Once this completes, your application should be up and running. OpenShift runs t
 
 === 4.4. Test your Service
 
-In the {console_url}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
+In the {openshift_cluster_console}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
 `*click on the 'Open URL' icon of the Gateway Service*`
 
 image::innerloop/openshift-gateway-topology.png[OpenShift - Gateway Topology, 700]
@@ -1223,7 +1223,7 @@ container image of it.
 
 For a change, rather than using the CLI option you will start this process from the web console.
 
-In the {console_url}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
+In the {openshift_cluster_console}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
 `*click on '+Add' and select 'Import from Git'*`
 
 image::innerloop/openshift-add-from-git.png[OpenShift - Add from Git, 700]
@@ -1275,7 +1275,7 @@ the web application pod will not be ready until the blue ring goes dark blue.
 [#test_your_service]
 === 5.3 Test your Service
 
-In the {console_url}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
+In the {openshift_cluster_console}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
 `*click on the 'Open URL' icon of the Web Service*`
 
 image::innerloop/openshift-web-topology.png[OpenShift - Web Topology, 700]
@@ -1341,12 +1341,12 @@ start listening until initialization is complete.
 By default Pods are designed to be resilient, if a pod dies it will get restarted. Let's see
 this happening.
 
-In the {console_url}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
+In the {openshift_cluster_console}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
 `*click on 'Topology' -> '(D) inventory-coolstore' -> 'Resources' -> 'P inventory-coolstore-x-xxxxx'*`
 
 image::innerloop/openshift-inventory-pod.png[OpenShift Inventory Pod, 700]
 
-In the {console_url}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], `*click on 'Actions' -> 'Delete Pod' -> 'Delete'*`
+In the {openshift_cluster_console}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], `*click on 'Actions' -> 'Delete Pod' -> 'Delete'*`
 
 image::innerloop/openshift-inventory-delete-pod.png[OpenShift Inventory Delete Pod, 700]
 
@@ -1410,7 +1410,7 @@ image::innerloop/che-inventory-traffic.png[Che - Catalog Traffic OK, 500]
 
 Now let's scale out your _Inventory Service_ to 2 instances. 
 
-In the {console_url}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
+In the {openshift_cluster_console}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
 `*click on 'Topology' -> '(D) inventory-coolstore' -> 'Details' then click once on the up arrows 
 on the right side of the pod blue circle*`.
 
@@ -1428,7 +1428,7 @@ In order to prevent this behaviour, a *Readiness check* is needed. It determines
 If the readiness probe fails, the endpoints controller ensures the container has its IP address removed from the endpoints of all services. 
 A readiness probe can be used to signal to the endpoints controller that even though a container is running, it should not receive any traffic from a proxy.
 
-First, scale down your _Inventory Service_ to 1 instance. In the {console_url}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
+First, scale down your _Inventory Service_ to 1 instance. In the {openshift_cluster_console}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
 `*click on 'Topology' -> '(D) inventory-coolstore' -> 'Details' then click once on the down arrows 
 on the right side of the pod blue circle*`.
 
@@ -1514,7 +1514,7 @@ You should have the following output:
 }
 ----
 
-In the {console_url}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
+In the {openshift_cluster_console}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
 `*click on 'Topology' -> '(D) inventory-coolstore' -> 'Add Health Checks'*`.
 
 image::innerloop/openshift-inventory-add-health-check.png[Che - Inventory Add Health Check, 700]
@@ -1620,7 +1620,7 @@ You can also configure probes directly in your Quarkus application.properties, o
 == Testing Inventory Readiness Probes
 
 Now let's test it as you did previously.
-`*Generate traffic to Inventory Service*` and then, in the {console_url}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], 
+`*Generate traffic to Inventory Service*` and then, in the {openshift_cluster_console}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], 
 `*scale out the Inventory Service to 2 instances (pods)*`
 
 In your {CHE_URL}[Workspace^, role='params-link'], `*check the output of the 'Inventory Generate Traffic' task*`.
@@ -1658,7 +1658,7 @@ You should have the following output:
 Liveness and Readiness health checks values have already been set for this service as part of the build and deploying 
 using Eclipse JKube in combination with the Spring Boot actuator. 
 
-You can check this in the {console_url}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
+You can check this in the {openshift_cluster_console}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
 `*click on 'Topology' -> '(D) catalog-coolstore' -> 'Actions' -> 'Edit Health Checks'*`.
 
 image::innerloop/openshift-catalog-edit-health.png[Che - Catalog Add Health Check, 700]
@@ -1684,7 +1684,7 @@ gain visibility into how the application behaves and particularly in identifying
 OpenShift provides container metrics out-of-the-box and displays how much memory, cpu and network 
 each container has been consuming over time. 
 
-In the {console_url}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
+In the {openshift_cluster_console}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
 `*click on 'Observe' then select your 'my-project{USER_ID}' project*`.
 
 In the project overview, you can see the different *Resource Usage* sections. 
@@ -1745,7 +1745,7 @@ making it simple to re-create complex deployments by just deploying a single tem
 be parameterized to get input for fields like service names and generate values for fields like passwords.
 ====
 
-In the {console_url}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], `*click on '+Add' and select 'Database'*`
+In the {openshift_cluster_console}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], `*click on '+Add' and select 'Database'*`
 
 image::innerloop/openshift-add-database.png[OpenShift - Add database, 700]
 
@@ -1898,7 +1898,7 @@ parameters unchanged. They will be overridden later.
 
 Now, let's create the Quarkus configuration content using the database credentials.
 
-In the {console_url}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
+In the {openshift_cluster_console}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
 `*click on 'Config Maps' then click on the 'Create Config Map' button*`.
 
 image::innerloop/openshift-create-configmap.png[Che - OpenShift Create Config Map, 900]
@@ -1954,7 +1954,7 @@ configuration using an alternative *application.properties* backed by a config m
 
 Let's create the Spring Boot configuration content using the database credentials and create the Config Map.
 
-In the {console_url}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
+In the {openshift_cluster_console}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
 `*click on 'Config Maps' then click on the 'Create Config Map' button*`.
 
 image::innerloop/openshift-create-configmap.png[Che - OpenShift Create Config Map, 900]
@@ -2064,7 +2064,7 @@ This secret has three encrypted properties defined as *database-name*, *database
 the PostgreSQL database name, username and password values. These values are injected in the PostgreSQL container as 
 environment variables and used to initialize the database.
 
-In the {console_url}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
+In the {openshift_cluster_console}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
 `*click on 'DC catalog-postgresql' -> 'DC catalog-postgresql' -> 'Environment'*`. Notice the values 
 from the secret are defined as env vars on the deployment:
 
@@ -2077,7 +2077,7 @@ Having made all those changes with adding databases and the application configur
 test that the Coolstore application still works. Just like you did a couple of chapters ago you need to use the toplogy 
 display in the web console.
 
-In the {console_url}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
+In the {openshift_cluster_console}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
 `*click on the 'Open URL' icon of the Web Service*`
 
 image::innerloop/openshift-web-topology.png[OpenShift - Web Topology, 700]
