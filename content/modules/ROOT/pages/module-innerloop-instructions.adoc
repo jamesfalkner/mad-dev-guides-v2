@@ -133,16 +133,7 @@ The *inventory-quarkus* project has the following structure which shows the comp
 
 image::innerloop/inventory-quarkus-project.png[Inventory Project,600]
 
-The */projects/coolstore-devx/inventory-quarkus* folder contents:
-
-* the Maven structure
-* a com.redhat.cloudnative.InventoryResource resource exposed on /hello
-* an associated unit test
-* a landing page that is accessible on http://localhost:8080 after starting the application
-* example Dockerfile files for both native and jvm modes in src/main/docker
-* the application configuration file
-
-Look at the `pom.xml`. You will find the import of the Quarkus BOM, allowing you to omit the version on the different Quarkus dependencies. In addition, you can see the *quarkus-maven-plugin* responsible for the packaging 
+When you explore the `pom.xml`, You will find the import of the Quarkus BOM, allowing you to omit the version on the different Quarkus dependencies. In addition, you can see the *quarkus-maven-plugin* responsible for the packaging 
 of the application and also providing the *dev mode* feature.
 
 [.console-output]
@@ -182,7 +173,7 @@ of the application and also providing the *dev mode* feature.
 </build>
 ----
 
-If we focus on the dependencies section, you can see the following extensions:
+You can also see the following extensions in the `pom.xml`.
 
 [.console-output]
 [source,xml]
@@ -277,13 +268,6 @@ image::innerloop/inventory-quarkus.png[Inventory Quarkus,600]
 
 [NOTE]
 ====
-If you see the following result in the browser window, please `*click on the browser Refresh icon`*,
-
-image::innerloop/che-preview-na.png[Che - Preview Not Available, 600]
-====
-
-[NOTE]
-====
 Please *don't close* that Inventory output browser tab, you will need it for the next few steps of this lab.
 
 If by accident you close that browser tab then you should be able to reopen it from your browser history. It will likely be called *Inventory Service*
@@ -308,16 +292,16 @@ import jakarta.persistence.Table;
 @Entity // <1> 
 @Table(name = "INVENTORY") // <2> 
 public class Inventory extends PanacheEntity { // <3>
+
     public String itemId; // <4>
     public int quantity; 
+
+}
 ----
 <1> *@Entity* marks the class as a JPA entity
 <2> *@Table* customizes the table creation process by defining a table name and database constraint
 <3> *PanacheEntity* is a very useful super class that, among others, autogenerates an id field
 <4> *public String itemId* defines the name of a field. https://quarkus.io/guides/hibernate-orm-panache#how-and-why-we-simplify-hibernate-orm-mappings[Panache will rewrite the access to private] and generate getters and setters during runtime, allowing you to eliminate a lot of boilerplate code.
-
-
-
 
 [NOTE]
 ====
@@ -327,7 +311,7 @@ You don't need to press a save button! VS Code automatically saves the changes m
 Update the `src/main/resources/application.properties` file to match with the following content:
 
 [.console-input]
-[source,bash,subs="+attributes,macros+"]
+[source,java,subs="+attributes,macros+"]
 ----
 quarkus.datasource.db-kind=h2
 quarkus.datasource.jdbc.url=jdbc:h2:mem:inventory;DB_CLOSE_ON_EXIT=FALSE;DB_CLOSE_DELAY=-1
@@ -338,7 +322,7 @@ quarkus.hibernate-orm.log.sql=true
 quarkus.hibernate-orm.sql-load-script=import.sql
 quarkus.http.host=0.0.0.0
 
-%prod.quarkus.package.type=uber-jarr#<1> 
+%prod.quarkus.package.type=uber-jar#<1> 
 
 # these value are recommended for a quarkus openshift plugin build<2>
 %prod.quarkus.openshift.route.expose=true
@@ -358,15 +342,16 @@ quarkus.openshift.route.tls.termination=edge
 quarkus.openshift.route.tls.insecure-edge-termination-policy=Redirect
 ----
 
-
 <1> An *uber-jar* contains all the dependencies required packaged in the *jar* to enable running the 
 application with *java -jar*. By default, in Quarkus, the generation of the uber-jar is disabled. With the
 *%prod* prefix, this option is only activated when building the jar intended for deployments.
 <2> Additional configuration to allow the quarkus-maven-plugin to build 
 and then deploy this application to OpenShift - but more of that later
 
-`*Update the 'src/main/resources/import.sql' file`* as follows:
-[source,sql,role=copypaste]
+Update the `src/main/resources/import.sql` file as follows:
+
+[.console-input]
+[source,sql,subs="+attributes,macros+"]
 ----
 INSERT INTO INVENTORY VALUES (1, '100000', 0);
 INSERT INTO INVENTORY VALUES (2, '329299', 35);
@@ -378,14 +363,14 @@ INSERT INTO INVENTORY VALUES (7, '444434', 32);
 INSERT INTO INVENTORY VALUES (8, '444435', 53);
 ----
 
-[#create_restful_service]
 === 2.4. Create a RESTful Service
 
 Quarkus uses JAX-RS standard for building REST services. 
 
-`*Modify the 'src/main/java/com/redhat/cloudnative/InventoryResource.java' file*` to match with:
+Modify the `src/main/java/com/redhat/cloudnative/InventoryResource.java` file to match with:
 
-[source,java,role=copypaste]
+[.console-input]
+[source,java,subs="+attributes,macros+"]
 ----
 package com.redhat.cloudnative;
 
@@ -410,15 +395,13 @@ public class InventoryResource {
 }
 ----
 
-The above REST service defines an endpoint that is accessible via *HTTP GET* at 
-for example */api/inventory/329299* with 
-the last path param being the product id with which we can check the inventory status.
+The above REST service defines an endpoint that is accessible via *HTTP GET* at for example */api/inventory/329299* with the last path param being the product id with which we can check the inventory status.
 
+=== 2.5. Test the REST Service
 
-`*Refresh your browser*` (for the *Inventory Service* tab just opened) and you should see the new content *without rebuilding your JAR file*
+Go back to the Inventory output browser and click on 'Test it'*`. You should have the following output.
 
-`*Refresh your Inventory output browser and click on 'Test it'*`. You should have the following output:
-
+[.console-output]
 [source,json]
 ----
 {"itemId":"329299","quantity":35}
@@ -427,46 +410,31 @@ the last path param being the product id with which we can check the inventory s
 The REST API returned a JSON object representing the inventory count for this product. Congratulations!
 
 [NOTE]
+====
 You may have noticed that there are test classes in the project (test/java/com/redhat/cloudnative/InventoryResourceTest.java). Since we changed our code these tests are now broken. Feel free to fix them if you want an extra challenge (or you can ignore the broken tests if you just want to move on). TIP: you can enable live testing while in dev mode by pressing the letter 'r'.
-
-[#stop_dev_mode]
-=== 2.5. Stop Dev Mode
-
-In your {CHE_URL}[Workspace^, role='params-link'], stop the service as follows:
-
-[tabs, subs="attributes+,+macros"]
 ====
 
-IDE Task::
-+
--- 
-`*Enter Ctrl+c in the existing '>_ Inventory Compile (Dev Mode)' terminal window*`
---
+Enter `Ctrl+c` in the existing terminal window to stop the Quarkus Dev Mode.
 
-CLI::
-+
---
-`*Enter Ctrl+c in the existing terminal window*`
---
-====
-
-[#deploy_on_openshift]
 === 2.6. Deploy on OpenShift
 
 Using the Quarkus-maven-plugin, the Quarkus https://quarkus.io/guides/deploying-to-openshift[OpenShift Extension] and Source to Image (S2I)
 it's time to deploy your service on OpenShift using all that information in the *src/main/resources/application.properties* file
 we saw earlier.
 
-In this section you will locally build a .jar file, then *create* the OpenShift build and deployment components
-and *push* the .jar to OpenShift. The OpenShift https://docs.openshift.com/container-platform/4.12/cicd/builds/understanding-image-builds.html[Source-to-Image (S2I)^] builder 
-will then package the .jar file into a container and run it.
+In this section you will locally build a `.jar` file, then *create* the OpenShift build and deployment components and *push* the _.jar_ file to OpenShift. The OpenShift https://docs.openshift.com/container-platform/4.12/cicd/builds/understanding-image-builds.html[Source-to-Image (S2I)^] builder 
+will then package the _.jar_ file into a container and run it.
 
-[source,java,subs="{markup-in-source}"]
+[.console-output]
+[source,java]
 ----
 # these value are recommended for a quarkus openshift plugin build
 %prod.quarkus.openshift.route.expose=true<1>
-%prod.quarkus.openshift.deployment-kind=Deployment<2>
+%prod.quarkus.kubernetes.deploy=true
+%prod.quarkus.kubernetes.deploy.target=openshift<2>
+%prod.quarkus.kubernetes-client.trust-certs=true
 %prod.quarkus.openshift.labels.app=coolstore
+%prod.quarkus.openshift.ports."http".host-port=8080
 %prod.quarkus.openshift.labels.component=inventory
 %prod.quarkus.openshift.part-of=coolstore
 %prod.quarkus.openshift.name=inventory-coolstore
@@ -474,20 +442,14 @@ will then package the .jar file into a container and run it.
 %prod.quarkus.openshift.labels."app.kubernetes.io/instance"=inventory
 quarkus.container-image.name=inventory-coolstore
 quarkus.container-image.registry=image-registry.openshift-image-registry.svc:5000
-quarkus.openshift.route.tls.termination=edge<3>
+quarkus.openshift.route.tls.termination=edgee<3>
 quarkus.openshift.route.tls.insecure-edge-termination-policy=Redirect
 ----
 <1> Exposes an external route to access the application
-<2> Deploy the application as a standard Kubernetes Deployment
+<2> Deploy the application to OpenShift
 <3> Tells Openshift to create a secure (HTTPS) route
 
-
-NOTE: To open a terminal window, `*click on 'Terminal' -> 'New Terminal'*`
---
-====
-
-We can now *build* and *deploy* your application code/binary to OpenShift. By watching the 
-log output you should see this activity:
+You can now *build* and *deploy* your application code/binary to OpenShift. By watching the log output you should see this activity:
 
 * Build the jar file
 * Push the jar file to OpenShift
@@ -496,103 +458,35 @@ log output you should see this activity:
 * Push this container image to the OpenShift registry
 * Deploying the application to OpenShift
 
-[tabs, subs="attributes+,+macros"]
-====
+Run the following commands in the terminal.
 
-IDE Task::
-+
--- 
-`*Click on 'Terminal' -> 'Run Task...' ->  'devfile: Inventory - Deploy Component'*`
-
-image::innerloop/che-runtask.png[Che - RunTask, 600]
---
-
-CLI::
-+
---
-`*Execute the following commands in the terminal window*`
-
-[source,shell,subs="{markup-in-source}",role=copypaste]
+[.console-input]
+[source,bash,subs="+attributes,macros+"]
 ----
-cd //projects/coolstore-devx/inventory-quarkus
-mvn install -Dquarkus.kubernetes.deploy=true -DskipTests -Dquarkus.container-image.group=$(oc project -q) -Dquarkus.kubernetes-client.trust-certs=true
+oc project globex-innerloop-{user_name} &&
+mvn -f $PROJECT_SOURCE/inventory-quarkus clean package -DskipTests
 ----
 
-NOTE: To open a terminal window, `*click on 'Terminal' -> 'New Terminal'*`
---
-====
+The output should end with `BUILD SUCCESS`. Make sure it’s actually done rolling out.
 
-The output should look a little bit like this:
-
-[source,shell,subs="{markup-in-source}"]
+[.console-input]
+[source,bash,subs="+attributes,macros+"]
 ----
-[INFO] [io.quarkus...] STEP 3/9: ENV OPENSHIFT_BUILD_NAME="inventory-coolstore-1"     OPENSHIFT_BUILD_NAMESPACE="my-project2"
-[INFO] [io.quarkus....] STEP 4/9: USER root
-[INFO] [io.quarkus....] STEP 5/9: COPY upload/src /tmp/src
-[INFO] [io.quarkus....] STEP 6/9: RUN chown -R 185:0 /tmp/src
-[INFO] [io.quarkus....] STEP 7/9: USER 185
-[INFO] [io.quarkus....] STEP 8/9: RUN /usr/local/s2i/assemble
-[INFO] [io.quarkus....] INFO S2I source build with plain binaries detected
-[INFO] [io.quarkus....] INFO Copying binaries from /tmp/src to /deployments ...
-[INFO] [io.quarkus....] inventory-quarkus-1.0.0-SNAPSHOT-runner.jar
-[INFO] [io.quarkus....] INFO Cleaning up source directory (/tmp/src)
-[INFO] [io.quarkus....] STEP 9/9: CMD /usr/local/s2i/run
-[INFO] [io.quarkus....] COMMIT temp.builder.openshift.io/my-project2/inventory-coolstore-1:2c2db764
-[INFO] [io.quarkus....] Getting image source signatures
-[INFO] [io.quarkus....] Copying blob sha256:34e7a2afb94b75550a0e9b8685ba4edb5472647c08cbc61fa571a4f6d53dc107
-[INFO] [io.quarkus....] Copying blob sha256:7374092de81bae754b7b497cce97eac8bea3f66b6419a74c7e317c3ebb89fc6f
-[INFO] [io.quarkus....] Copying blob sha256:e8e3263c81c9ab945feeb803074259cac5da121ef39cfa0f7b56dd4e92573d25
-[INFO] [io.quarkus....] Copying config sha256:ab940dedfdce810409aec0c2cdd38d337d5e8d610ff5f64211cb3805b07674d4
-[INFO] [io.quarkus....] Writing manifest to image destination
-[INFO] [io.quarkus....] Storing signatures
-[INFO] [io.quarkus....] --> ab940dedfdc
-[INFO] [io.quarkus....] Successfully tagged temp.builder.openshift.io/my-project2/inventory-coolstore-1:2c2db764
-[INFO] [io.quarkus....] ab940dedfdce810409aec0c2cdd38d337d5e8d610ff5f64211cb3805b07674d4
-[INFO] [io.quarkus....] 
-[INFO] [io.quarkus....] Pushing image image-registry.openshift-image-registry.svc:5000/my-project2/inventory-coolstore:1.0.0-SNAPSHOT ...
-[INFO] [io.quarkus....] Getting image source signatures
-[INFO] [io.quarkus....] Copying blob sha256:e8e3263c81c9ab945feeb803074259cac5da121ef39cfa0f7b56dd4e92573d25
-[INFO] [io.quarkus....] Copying blob sha256:3840fdda5b0af7d845fe3540f5ca8b094b19617bcd7837701270a6cefc68811f
-[INFO] [io.quarkus....] Copying blob sha256:ced05cc33f5c3ba56c84452cadaa23602c29aa67649488da2bfc7664bb2f830e
-[INFO] [io.quarkus....] Copying config sha256:ab940dedfdce810409aec0c2cdd38d337d5e8d610ff5f64211cb3805b07674d4
-[INFO] [io.quarkus....] Writing manifest to image destination
-[INFO] [io.quarkus....] Storing signatures
-[INFO] [io.quarkus....] Successfully pushed image-registry.openshift-image-registry.svc:5000/my-project2/inventory-coolstore@sha256:be5b8ccdf161f4166ea0d040fcc78e1a09f8f20b16eb1b0d12ce288cd70c0643
-[INFO] [io.quarkus....] Push successful
-[INFO] [io.quarkus....] Deploying to openshift server: https://172.30.0.1:443/ in namespace: my-project2.
-[INFO] [io.quarkus....] Applied: ImageStream inventory-coolstore.
-[INFO] [io.quarkus....] Applied: Deployment inventory-coolstore.
-[INFO] [io.quarkus....] Applied: ImageStream openjdk-11-rhel7.
-[INFO] [io.quarkus....] Applied: Service inventory-coolstore.
-[INFO] [io.quarkus....] Applied: Route inventory-coolstore.
-[INFO] [io.quarkus....] Applied: BuildConfig inventory-coolstore.
-[INFO] [io.quarkus....] The deployed application can be accessed at: http://inventory-coolstore-my-project2.apps.cluster-qpgl9.qpgl9.sandbox2688.opentlc.com
-[INFO] [io.quarkus.deployment.QuarkusAugmentor] Quarkus augmentation completed in 170564ms
+oc rollout status -w deployment/inventory-coolstore
+----
 
-....
+The output should look like this.
 
-[INFO] No primary artifact to install, installing attached artifacts instead.
-[INFO] Installing //projects/coolstore-devx/inventory-quarkus/pom.xml to /home/developer/.m2/repository/com/redhat/cloudnative/inventory-quarkus/1.0.0-SNAPSHOT/inventory-quarkus-1.0.0-SNAPSHOT.pom
-[INFO] Installing //projects/coolstore-devx/inventory-quarkus/target/inventory-quarkus-1.0.0-SNAPSHOT-runner.jar to /home/developer/.m2/repository/com/redhat/cloudnative/inventory-quarkus/1.0.0-SNAPSHOT/inventory-quarkus-1.0.0-SNAPSHOT-runner.jar
-[INFO] ------------------------------------------------------------------------
-[INFO] BUILD SUCCESS
-[INFO] ------------------------------------------------------------------------
-[INFO] Total time:  03:01 min
-[INFO] Finished at: 2023-05-11T15:19:06Z
-[INFO] ------------------------------------------------------------------------
-====
---
+[.console-output]
+[source,bash]
+----
+deployment "inventory-coolstore" successfully rolled out
+----
 
-Once this completes, your application should be up and running. 
-
-OpenShift runs the different components of the application 
-in one or more pods. A pod is the unit of runtime deployment and consists of the running containers for the project.
-
-[#test_your_service]
 === 2.7. Test your Service
 
-In the {OPENSHIFT_CONSOLE_URL}[OpenShift web console^, role=params-link], from the *Developer view*,
-`*click on the 'Open URL' icon of the Inventory Service*`
+In the {console_url}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role=params-link], from the *Developer view*,
+click on the 'Open URL' icon of the Inventory Service.
 
 image::innerloop/openshift-inventory-topology.png[OpenShift - Inventory Topology, 700]
 
@@ -966,7 +860,7 @@ the application in one or more pods (the unit of deployment in Kubernetes/Opensh
 [#test_your_service]
 === 3.8. Test your Service
 
-In the {OPENSHIFT_CONSOLE_URL}[OpenShift web console^, role='params-link'], from the *Developer view*,
+In the {console_url}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
 `*click on the 'Open URL' icon of the Catalog Service*`
 
 image::innerloop/openshift-catalog-topology.png[OpenShift - Catalog Topology, 700]
@@ -1195,7 +1089,7 @@ Once this completes, your application should be up and running. OpenShift runs t
 
 === 4.4. Test your Service
 
-In the {OPENSHIFT_CONSOLE_URL}[OpenShift web console^, role='params-link'], from the *Developer view*,
+In the {console_url}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
 `*click on the 'Open URL' icon of the Gateway Service*`
 
 image::innerloop/openshift-gateway-topology.png[OpenShift - Gateway Topology, 700]
@@ -1321,7 +1215,7 @@ container image of it.
 
 For a change, rather than using the CLI option you will start this process from the web console.
 
-In the {OPENSHIFT_CONSOLE_URL}[OpenShift web console^, role='params-link'], from the *Developer view*,
+In the {console_url}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
 `*click on '+Add' and select 'Import from Git'*`
 
 image::innerloop/openshift-add-from-git.png[OpenShift - Add from Git, 700]
@@ -1373,7 +1267,7 @@ the web application pod will not be ready until the blue ring goes dark blue.
 [#test_your_service]
 === 5.3 Test your Service
 
-In the {OPENSHIFT_CONSOLE_URL}[OpenShift web console^, role='params-link'], from the *Developer view*,
+In the {console_url}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
 `*click on the 'Open URL' icon of the Web Service*`
 
 image::innerloop/openshift-web-topology.png[OpenShift - Web Topology, 700]
@@ -1439,12 +1333,12 @@ start listening until initialization is complete.
 By default Pods are designed to be resilient, if a pod dies it will get restarted. Let's see
 this happening.
 
-In the {OPENSHIFT_CONSOLE_URL}[OpenShift web console^, role='params-link'], from the *Developer view*,
+In the {console_url}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
 `*click on 'Topology' -> '(D) inventory-coolstore' -> 'Resources' -> 'P inventory-coolstore-x-xxxxx'*`
 
 image::innerloop/openshift-inventory-pod.png[OpenShift Inventory Pod, 700]
 
-In the {OPENSHIFT_CONSOLE_URL}[OpenShift web console^, role='params-link'], `*click on 'Actions' -> 'Delete Pod' -> 'Delete'*`
+In the {console_url}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], `*click on 'Actions' -> 'Delete Pod' -> 'Delete'*`
 
 image::innerloop/openshift-inventory-delete-pod.png[OpenShift Inventory Delete Pod, 700]
 
@@ -1508,7 +1402,7 @@ image::innerloop/che-inventory-traffic.png[Che - Catalog Traffic OK, 500]
 
 Now let's scale out your _Inventory Service_ to 2 instances. 
 
-In the {OPENSHIFT_CONSOLE_URL}[OpenShift web console^, role='params-link'], from the *Developer view*,
+In the {console_url}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
 `*click on 'Topology' -> '(D) inventory-coolstore' -> 'Details' then click once on the up arrows 
 on the right side of the pod blue circle*`.
 
@@ -1526,7 +1420,7 @@ In order to prevent this behaviour, a *Readiness check* is needed. It determines
 If the readiness probe fails, the endpoints controller ensures the container has its IP address removed from the endpoints of all services. 
 A readiness probe can be used to signal to the endpoints controller that even though a container is running, it should not receive any traffic from a proxy.
 
-First, scale down your _Inventory Service_ to 1 instance. In the {OPENSHIFT_CONSOLE_URL}[OpenShift web console^, role='params-link'], from the *Developer view*,
+First, scale down your _Inventory Service_ to 1 instance. In the {console_url}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
 `*click on 'Topology' -> '(D) inventory-coolstore' -> 'Details' then click once on the down arrows 
 on the right side of the pod blue circle*`.
 
@@ -1612,7 +1506,7 @@ You should have the following output:
 }
 ----
 
-In the {OPENSHIFT_CONSOLE_URL}[OpenShift web console^, role='params-link'], from the *Developer view*,
+In the {console_url}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
 `*click on 'Topology' -> '(D) inventory-coolstore' -> 'Add Health Checks'*`.
 
 image::innerloop/openshift-inventory-add-health-check.png[Che - Inventory Add Health Check, 700]
@@ -1718,7 +1612,7 @@ You can also configure probes directly in your Quarkus application.properties, o
 == Testing Inventory Readiness Probes
 
 Now let's test it as you did previously.
-`*Generate traffic to Inventory Service*` and then, in the {OPENSHIFT_CONSOLE_URL}[OpenShift web console^, role='params-link'], 
+`*Generate traffic to Inventory Service*` and then, in the {console_url}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], 
 `*scale out the Inventory Service to 2 instances (pods)*`
 
 In your {CHE_URL}[Workspace^, role='params-link'], `*check the output of the 'Inventory Generate Traffic' task*`.
@@ -1756,7 +1650,7 @@ You should have the following output:
 Liveness and Readiness health checks values have already been set for this service as part of the build and deploying 
 using Eclipse JKube in combination with the Spring Boot actuator. 
 
-You can check this in the {OPENSHIFT_CONSOLE_URL}[OpenShift web console^, role='params-link'], from the *Developer view*,
+You can check this in the {console_url}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
 `*click on 'Topology' -> '(D) catalog-coolstore' -> 'Actions' -> 'Edit Health Checks'*`.
 
 image::innerloop/openshift-catalog-edit-health.png[Che - Catalog Add Health Check, 700]
@@ -1782,7 +1676,7 @@ gain visibility into how the application behaves and particularly in identifying
 OpenShift provides container metrics out-of-the-box and displays how much memory, cpu and network 
 each container has been consuming over time. 
 
-In the {OPENSHIFT_CONSOLE_URL}[OpenShift web console^, role='params-link'], from the *Developer view*,
+In the {console_url}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
 `*click on 'Observe' then select your 'my-project{USER_ID}' project*`.
 
 In the project overview, you can see the different *Resource Usage* sections. 
@@ -1843,7 +1737,7 @@ making it simple to re-create complex deployments by just deploying a single tem
 be parameterized to get input for fields like service names and generate values for fields like passwords.
 ====
 
-In the {OPENSHIFT_CONSOLE_URL}[OpenShift web console^, role='params-link'], `*click on '+Add' and select 'Database'*`
+In the {console_url}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], `*click on '+Add' and select 'Database'*`
 
 image::innerloop/openshift-add-database.png[OpenShift - Add database, 700]
 
@@ -1996,7 +1890,7 @@ parameters unchanged. They will be overridden later.
 
 Now, let's create the Quarkus configuration content using the database credentials.
 
-In the {OPENSHIFT_CONSOLE_URL}[OpenShift web console^, role='params-link'], from the *Developer view*,
+In the {console_url}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
 `*click on 'Config Maps' then click on the 'Create Config Map' button*`.
 
 image::innerloop/openshift-create-configmap.png[Che - OpenShift Create Config Map, 900]
@@ -2052,7 +1946,7 @@ configuration using an alternative *application.properties* backed by a config m
 
 Let's create the Spring Boot configuration content using the database credentials and create the Config Map.
 
-In the {OPENSHIFT_CONSOLE_URL}[OpenShift web console^, role='params-link'], from the *Developer view*,
+In the {console_url}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
 `*click on 'Config Maps' then click on the 'Create Config Map' button*`.
 
 image::innerloop/openshift-create-configmap.png[Che - OpenShift Create Config Map, 900]
@@ -2162,7 +2056,7 @@ This secret has three encrypted properties defined as *database-name*, *database
 the PostgreSQL database name, username and password values. These values are injected in the PostgreSQL container as 
 environment variables and used to initialize the database.
 
-In the {OPENSHIFT_CONSOLE_URL}[OpenShift web console^, role='params-link'], from the *Developer view*,
+In the {console_url}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
 `*click on 'DC catalog-postgresql' -> 'DC catalog-postgresql' -> 'Environment'*`. Notice the values 
 from the secret are defined as env vars on the deployment:
 
@@ -2175,7 +2069,7 @@ Having made all those changes with adding databases and the application configur
 test that the Coolstore application still works. Just like you did a couple of chapters ago you need to use the toplogy 
 display in the web console.
 
-In the {OPENSHIFT_CONSOLE_URL}[OpenShift web console^, role='params-link'], from the *Developer view*,
+In the {console_url}/topology/ns/globex-innerloop-{user_name}?view=graph[OpenShift web console^, role='params-link'], from the *Developer view*,
 `*click on the 'Open URL' icon of the Web Service*`
 
 image::innerloop/openshift-web-topology.png[OpenShift - Web Topology, 700]

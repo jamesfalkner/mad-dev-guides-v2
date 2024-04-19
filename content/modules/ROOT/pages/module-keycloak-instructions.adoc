@@ -23,7 +23,7 @@
 
 == 1. Deploy Globex Coolstore app using Helm
 
-Let's first deploy the fully function (but unsecured) application. We'll use a Helm chart to deploy it to your namespace (`globex-keycloak-{user_name}`). Open the {openshift_cluster_console}/topology/ns/globex-keycloak-{user_name}?view=graph[OpenShift web console^]. You will see the Keycloak operator already installed:
+Let's first deploy the fully function (but unsecured) application. We'll use a Helm chart to deploy it to your namespace (`globex-keycloak-{user_name}`). Open the {console_url}/topology/ns/globex-keycloak-{user_name}?view=graph[OpenShift web console^]. You will see the Keycloak operator already installed:
 
 image::keycloak/start.png[]
 
@@ -130,7 +130,7 @@ You can install Keycloak in many ways, including just downloading and extracting
 
 === 2.1 Deploy Keycloak Database
 
-Keycloak needs a database to store its data. We'll use Postgres. Back on the {openshift_cluster_console}/topology/ns/globex-keycloak-{user_name}?view=graph[OpenShift web console^], click the Add icon once again, type `postgres ephemeral` into the search box, locate the `Postgres (Ephemeral)` template, click on it, and click *Instantiate Template*:
+Keycloak needs a database to store its data. We'll use Postgres. Back on the {console_url}/topology/ns/globex-keycloak-{user_name}?view=graph[OpenShift web console^], click the Add icon once again, type `postgres ephemeral` into the search box, locate the `Postgres (Ephemeral)` template, click on it, and click *Instantiate Template*:
 
 image::keycloak/postgres-create.png[]
 
@@ -231,7 +231,7 @@ image::keycloak/keycloak-adminsecret.png[]
 
 `admin` is pretty easy to remember, but you'll probably want to copy the password to your clipboard (using the copy-to-clipboard icon at the far right, or CTRL-C (CMD-C on a Mac)) to use in a moment.
 
-Back on the {openshift_cluster_console}/topology/ns/globex-keycloak-{user_name}?view=graph[OpenShift web console^] topology page, click the small "open" icon at the upper right of the Keycloak deployment:
+Back on the {console_url}/topology/ns/globex-keycloak-{user_name}?view=graph[OpenShift web console^] topology page, click the small "open" icon at the upper right of the Keycloak deployment:
 
 image::keycloak/keycloak-openicon.png[]
 
@@ -242,7 +242,7 @@ image::keycloak/admin-intro.png[]
 Click *Administration Console* to log in with the following:
 
 * *Username or email*: `admin`
-* *Password*: The password you retrieved from the {openshift_cluster_console}/k8s/ns/globex-keycloak-{user_name}/secrets/keycloak-initial-admin[secret^] earlier.
+* *Password*: The password you retrieved from the {console_url}/k8s/ns/globex-keycloak-{user_name}/secrets/keycloak-initial-admin[secret^] earlier.
 
 image::keycloak/admin-pw.png[]
 
@@ -278,7 +278,7 @@ image::keycloak/realm-job.png[]
 
 === 3.2 Explore Realm
 
-Go back to the https://keycloak-globex-keycloak-{user_name}.{openshift_subdomain}/[Keycloak administration console] and login as `admin` user (using the password from the {openshift_cluster_console}/k8s/ns/globex-keycloak-{user_name}/secrets/keycloak-initial-admin[Secret^] as before). You should now see a new realm in the Realm dropdown. Select the `globex` realm by clicking on it.
+Go back to the https://keycloak-globex-keycloak-{user_name}.{openshift_subdomain}/[Keycloak administration console] and login as `admin` user (using the password from the {console_url}/k8s/ns/globex-keycloak-{user_name}/secrets/keycloak-initial-admin[Secret^] as before). You should now see a new realm in the Realm dropdown. Select the `globex` realm by clicking on it.
 
 Within the new realm, click on `Users` to see the pre-created users `admin`, `alice`, and `jdoe`:
 
