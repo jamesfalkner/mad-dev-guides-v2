@@ -106,7 +106,7 @@ Now you are ready to move forward to the next lab!
 
 == 2. Create Inventory Service with Quarkus
 
-In this lab you will learn about building microservices using Quarkus.
+In this lab you will learn about building a new *Java* microservice using Quarkus.
 
 image::innerloop/coolstore-arch-inventory-quarkus.png[CoolStore Architecture,400]
 
@@ -133,47 +133,7 @@ The *inventory-quarkus* project has the following structure which shows the comp
 
 image::innerloop/inventory-quarkus-project.png[Inventory Project,600]
 
-When you explore the `pom.xml`, You will find the import of the Quarkus BOM, allowing you to omit the version on the different Quarkus dependencies. In addition, you can see the *quarkus-maven-plugin* responsible for the packaging 
-of the application and also providing the *dev mode* feature.
-
-[.console-output]
-[source,xml]
-----
-<dependencyManagement>
-<dependencies>
-    <dependency>
-    <groupId>${quarkus.platform.group-id}</groupId>
-    <artifactId>quarkus-bom</artifactId>
-    <version>${quarkus.platform.version}</version>
-    <type>pom</type>
-    <scope>import</scope>
-    </dependency>
-</dependencies>
-</dependencyManagement>
-
-<build>
-    <plugins>
-        <plugin>
-            <groupId>${quarkus.platform.group-id}</groupId>
-            <artifactId>quarkus-maven-plugin</artifactId>
-            <version>${quarkus.platform.version}</version>
-            <extensions>true</extensions>
-            <executions>
-            <execution>
-                <goals>
-                <goal>build</goal>
-                <goal>generate-code</goal>
-                <goal>generate-code-tests</goal>
-                </goals>
-            </execution>
-            </executions>
-        </plugin>
-        ....
-    </plugins>
-</build>
-----
-
-You can also see the following extensions in the `pom.xml`.
+When you explore the `pom.xml`, You will find the import of the Quarkus BOM, allowing you to omit the version on the different Quarkus dependencies. In addition, you can see the following extensions in the `pom.xml`.
 
 [.console-output]
 [source,xml]
@@ -275,7 +235,6 @@ If by accident you close that browser tab then you should be able to reopen it f
 
 Now let's write some code and create an Entity to interact with the Database and a RESTful endpoint to create the Inventory service
 
-[#create_entity]
 === 2.4. Create an Entity
 
 Open the `src/main/java/com/redhat/cloudnative/Inventory.java` file and copy the following code.
@@ -340,6 +299,7 @@ quarkus.container-image.name=inventory-coolstore
 quarkus.container-image.registry=image-registry.openshift-image-registry.svc:5000
 quarkus.openshift.route.tls.termination=edge
 quarkus.openshift.route.tls.insecure-edge-termination-policy=Redirect
+test-{user_name} <100>
 ----
 
 <1> An *uber-jar* contains all the dependencies required packaged in the *jar* to enable running the 
