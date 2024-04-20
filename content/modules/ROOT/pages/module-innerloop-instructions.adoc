@@ -513,18 +513,18 @@ public class Product implements Serializable {
   private static final long serialVersionUID = 1L;
 
   @Id // <3> 
-  private String id;
+  private String itemId;
   private String name;
   private String description;
   private double price;
 
   public Product() {}
   
-  public String getId() {
-    return id;
+  public String getItemId() {
+    return itemId;
   }
-  public void setId(String id) {
-    this.id = id;
+  public void setItemId(String itemId) {
+    this.itemId = itemId;
   }
   public String getName() {
     return name;
@@ -547,7 +547,7 @@ public class Product implements Serializable {
 
   @Override
   public String toString() {
-    return "Product [id=" + id + ", name=" + name + ", price=" + price + "]";
+    return "Product [itemId=" + itemId + ", name=" + name + ", price=" + price + "]";
   }
 }
 ----
@@ -936,15 +936,25 @@ Look in the json to see how the *Gateway service* has combined the *product* inf
 [.console-output]
 [source,json]
 ----
-[ {
-  "itemId" : "329299",
-  "name" : "Red Fedora",
-  "desc" : "Official Red Hat Fedora",
-  "price" : 34.99,
-  "availability" : {
-    "quantity" : 35
-  }
-},
+[
+  {
+    "itemId": "100000",
+    "name": "Red Fedora",
+    "description": "Official Red Hat Fedora",
+    "price": 34.99,
+    "availability": {
+      "quantity": 1
+    }
+  },
+  {
+    "itemId": "329299",
+    "name": "Quarkus T-shirt",
+    "description": "This updated unisex essential fits like a well-loved favorite, featuring a crew neck, short sleeves and designed with superior combed and ring- spun cotton.",
+    "price": 10,
+    "availability": {
+      "quantity": 2
+    }
+  },
 ....
 ]
 ----
@@ -998,7 +1008,7 @@ You can test the connectivity by `*selecting the Pod Terminal*` and by `*executi
 image::innerloop/openshift-gateway-pod-terminal.png[Gateway Service,800]
 
 [.console-input]
-[source,bash,subs="+attributes,macros+"]
+[source,bash]
 ----
 curl -w "\n" http://inventory-coolstore:8080/api/inventory/329299
 ----
@@ -1095,7 +1105,7 @@ image::innerloop/openshift-web-topology.png[]
 
 Your browser will be redirected to *your Web Service running on OpenShift. You should be able to see the CoolStore application with all products and their inventory status.
 
-image::innerloop/coolstore-web.png[coolstore-web,800]
+image::innerloop/coolstore-web.png[]
 
 Congratulations! You have successfully deployed the Web UI on OpenShift.
 
