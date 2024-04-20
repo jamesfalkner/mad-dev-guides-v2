@@ -86,7 +86,7 @@ image::innerloop/starting-workspace.png[ds, 800]
 
 After a few seconds, you’ll be placed in the workspace.
 
-image::innerloop/ds-workspace.png[ds, 800]
+image::innerloop/ds-workspace.png
 
 [NOTE]
 ====
@@ -404,7 +404,7 @@ You can now *build* and *deploy* your application code/binary to OpenShift. By w
 * Push this container image to the OpenShift registry
 * Deploying the application to OpenShift
 
-Run the following https://quarkus.io/guides/cli-tooling[Quarkus CLI^] in the terminal.
+Run the following `oc` command and https://quarkus.io/guides/cli-tooling[Quarkus CLI^] in the terminal.
 
 [.console-input]
 [source,bash,subs="+attributes,macros+"]
@@ -467,7 +467,7 @@ image::innerloop/coolstore-arch-catalog-spring-boot.png[CoolStore Architecture, 
 
 === 3.1. What is Spring Boot?
 
-image::innerloop/spring-boot-logo.png[Spring Boot, 600]
+image::innerloop/spring-boot-logo.png[Spring Boot, 500]
 
 Spring Boot is an opinionated framework that makes it easy to create stand-alone Spring based applications with embedded web containers. Spring Boot also allows producing a war file that can be deployed on stand-alone web containers.
 
@@ -1095,7 +1095,7 @@ image::innerloop/openshift-web-topology.png[]
 
 Your browser will be redirected to *your Web Service running on OpenShift. You should be able to see the CoolStore application with all products and their inventory status.
 
-image::innerloop/coolstore-web.png[]
+image::innerloop/coolstore-web.png[coolstore-web,800]
 
 Congratulations! You have successfully deployed the Web UI on OpenShift.
 
