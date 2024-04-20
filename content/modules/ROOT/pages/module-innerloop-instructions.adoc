@@ -390,6 +390,7 @@ quarkus.container-image.name=inventory-coolstore
 quarkus.container-image.registry=image-registry.openshift-image-registry.svc:5000
 quarkus.openshift.route.tls.termination=edge<3>
 quarkus.openshift.route.tls.insecure-edge-termination-policy=Redirect
+%prod.quarkus.http.cors=true
 ----
 <1> Exposes an external route to access the application
 <2> Deploy the application to OpenShift
@@ -598,7 +599,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
+@CrossOrigin
 @RestController
 @RequestMapping(value = "/api/catalog") // <1> 
 public class CatalogController {
