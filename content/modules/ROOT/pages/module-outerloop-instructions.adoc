@@ -695,7 +695,6 @@ Well done! You are ready for the next lab.
 
 == Summary
 
-
 Please close all but the Workshop Deployer browser tab to avoid proliferation of browser tabs which can make working on other modules difficult. 
 
 Go back to the `Workshop Deployer` browser tab to choose your next module!
