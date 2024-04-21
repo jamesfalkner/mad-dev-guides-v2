@@ -104,7 +104,7 @@ https://github.com/rh-mad-workshop/coolstore-monolith-legacy.git
 
 image::eap/ds-landing.png[ds, 800]
 
-A new window or tab in your web browser will open automatically to showcase the progess about *Starting workspace quarkus-workshop*. It takes about *60* seconds to finish the process.
+A new window or tab in your web browser will open automatically to showcase the progess about *Starting workspace coolstore-monolith-legacy*. It takes a few minutes to finish the process.
 
 image::eap/starting-workspace.png[ds, 800]
 
