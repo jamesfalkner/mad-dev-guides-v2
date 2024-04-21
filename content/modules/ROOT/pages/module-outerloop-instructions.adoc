@@ -104,7 +104,597 @@ You'll use all of these during the course of this workshop, so keep this browser
 
 Now you are ready to move forward to the next lab!
 
-== 2. 
+== 2. Continuous Integration with OpenShift Pipelines
+
+In this lab you will learn about deployment pipelines and you will create a pipeline to  automate the build of the Inventory service.
+
+So far you have been building each service manually to OpenShift. Although 
+it's convenient for local development, it's an error-prone way of building software if extended to test and production environments.
+
+Continuous Integration (CI) is a phase in the software development cycle where code from different team members or different features are integrated together. This usually involves merging code (integration), building the application (container) and carrying out basic tests all within an ephemeral environment.
+
+OpenShift simplifies building CI/CD Pipelines by integrating TektonCD into
+the platform and enables defining truly complex workflows directly from within OpenShift.
+
+=== 2.1. Create a Git Repository for Inventory Code
+
+The first step is to create a Git repository to store your source code. 
+You can use any Git server (e.g. GitHub, BitBucket, etc). For this lab we will use a Gitea git server.
+
+Click on the `Developer Repository` button below.
+
+image::outerloop/developer-repository-button.png[Developer Repository - Button, 300]
+
+Then, click on `Sign In` and login via OpenShift as user{user_name}/{user_password}*`
+
+image::outerloop/gitea-signin.png[Sign Up Gitea,700]
+
+Create a new repository called *'inventory-quarkus'*.
+click on the '+' icon -> '+ New Repository'*` as below and enter the following values:
+
+image::outerloop/gitea-create-repository.png[Create New Repository,900]
+
+* Repository Name : `inventory-quarkus`
+
+click on `Create Repository`.
+
+The Git repository is created now. 
+
+=== 2.2. Push Inventory Code to the Git Repository
+
+Now that you have a Git repository for the Inventory service, you should push your local source code into this Git repository.
+
+Execute the following commands in the terminal.
+
+[.console-input]
+[source,sh,subs="attributes"]
+----
+cd /projects/workshop/labs/inventory-quarkus
+git init
+git remote add origin http://gitea-server.gitea.svc:3000/user{user_name}/inventory-quarkus.git
+git add *
+git commit -m "Initial"
+git push http://user{user_name}:openshift@gitea-server.gitea.svc:3000/user{user_name}/inventory-quarkus.git
+----
+
+The output should be as follows:
+
+[.console-output]
+[source,sh]
+----
+Initialized empty Git repository in /projects/workshop/labs/inventory-quarkus/.git/
+[master (root-commit) f7b9db7] Initial
+ 12 files changed, 831 insertions(+)
+ [...]
+Enumerating objects: 29, done.
+Counting objects: 100% (29/29), done.
+Delta compression using up to 16 threads.
+Compressing objects: 100% (20/20), done.
+Writing objects: 100% (29/29), 10.76 KiB | 3.59 MiB/s, done.
+Total 29 (delta 1), reused 0 (delta 0)
+remote: . Processing 1 references
+remote: Processed 1 references in total
+To http://gitea-server.gitea.svc:3000/user{user_name}/inventory-quarkus.git
+ * [new branch]      master -> master
+----
+
+Once done, in your {GIT_URL}/user{user_name}/inventory-quarkus[Git Repository^, role='params-link'], *refresh the page of your inventory-quarkus repository*`. You should see the project files in the repository.
+
+image::outerloop/cd-gitea-inventory-repo.png[Inventory Repository,900]
+
+=== 2.3. What is OpenShift Pipelines?
+
+image::outerloop/tekton-logo.png[Tekton, 300]
+
+OpenShift Pipelines is a cloud-native, continuous integration and continuous delivery (CI/CD) solution for building pipelines based on https://tekton.dev/[Tekton^] project.
+
+* Standard CI/CD pipeline definition based on Tekton
+* Build images with Kubernetes tools such as S2I, Buildah, Buildpacks, Kaniko, etc
+* Deploy applications to multiple platforms such as Kubernetes, serverless and VMs
+* Easy to extend and integrate with existing tools
+* Scale pipelines on-demand
+* Portable across any Kubernetes platform
+* Designed for microservices and decentralized teams
+* Integrated with the OpenShift Developer Console
+
+https://tekton.dev/[Tekton^] provides Kubernetes-style resources for creating serverless CI/CD-style pipelines on Kubernetes.
+
+The custom resources needed to define a pipeline are:
+
+* *Task* - a reusable, loosely coupled number of steps that perform a specific task (e.g., building a container image)
+* *Pipeline* - the definition of the pipeline and the *Task* that it should perform
+* *PipelineResource* - inputs (e.g., git repository) and outputs (e.g., image registry) to and out of a *Pipeline* or *Task*
+* *TaskRun* - the result of running an instance of *Task*
+* *PipelineRun* - the result of running an instance of *Pipeline*, which includes a number of *TaskRun*
+
+image::outerloop/tekton-architecture.png[Tekton Architecture, 600]
+
+=== 2.4. Switch to the Staging Environment
+
+Access the `globex-outerloop-{user_name}` project in the OpenShift web console.
+
+image::outerloop/openshift-staging-project.png[]
+
+A *Pipeline* defines a number of *Task* that should be executed and how they interact with each other via *Workspace*. Let's define and configure these different components.
+
+Click on `Pipelines > Create Pipeline`.
+
+image::outerloop/openshift-create-pipeline.png[]
+
+In the Pipeline Builder page, specify `inventory-pipeline` as Name.
+
+image::outerloop/openshift-add-pipeline-name.png[OpenShift - Pipeline Name, 400]
+
+`*Scroll down to the 'Workspaces' section and define a Workspace called 'shared-workspace'*`
+
+image::outerloop/openshift-add-pipeline-workspace.png[OpenShift - Pipeline Workspace, 600]
+
+Scroll up to the `Tasks` section then click `Add` task.
+
+image::outerloop/openshift-add-pipeline-task.png[OpenShift - Add task, 600]
+
+Start typing `git-` next to the (+) and select `git-clone`. There are several options to choose from, look out for the *Red Hat* one. Then, clixk on `Add`.
+
+image::outerloop/openshift-add-git-clone-task.png[]
+
+click on the newly created `git-clone` task and enter the following configuration.
+
+* Display Name: `git-clone`
+* url: `http://gitea-server.gitea.svc:3000/{user_name}/inventory-quarkus.git`
+* Workspaces output: `shared-workspace`
+
+Once done, let's add another task. click on the blue plus icon at the right hand side of the *git-clone* task.
+
+image::outerloop/openshift-add-task.png[OpenShift - Add task, 500]
+
+Then click on `Add task` and as before `next to the (+) type s2i-java` When you see the *Red Hat* one *select and add the s2i-java task*.
+
+Click on the newly created `s2i-java` task and enter the following configuration.
+
+* Display Name: `s2i-java`
+* TLSVERIFY: `false`
+* MAVEN_MIRROR_URL: `http://nexus.opentlc-shared.svc:8081/repository/maven-all-public`
+* Image: `image-registry.openshift-image-registry.svc:5000/globex-outerloop-{user_name}/inventory-coolstore`
+* Workspaces source: `shared-workspace`
+
+Once done, click on `Create`. Your simple Pipeline is now created.
+
+image::outerloop/openshift-ci-pipeline.png[OpenShift - CI Pipeline, 700]
+
+=== 2.5. Run the Pipeline
+
+Now that your pipeline is created and configured, let's run it.
+
+In the {OPENSHIFT_CONSOLE_URL}[OpenShift Web Console^,role='params-link'], from the *Developer view*, click on `Pipelines > PL inventory-pipeline > Actions > Start`.
+
+image::outerloop/openshift-start-inventory-pipeline.png[]
+
+Enter the following parameters then click on `Start`.
+
+* shared-workspace: `VolumeClaimTemplate`
+
+image::outerloop/openshift-inventory-pipeline-parameters.png[OpenShift Inventory Pipeline Parameters,700]
+
+Congratulations!! You have created and run your first *CI Pipeline on OpenShift*!!
+
+image::outerloop/openshift-inventory-pipeline-run.png[]
+
+Well done! You are ready for the next lab.
+
+== 3. GitOps Workflow with Argo CD
+
+In this lab you will learn about deploying and managing Kubernetes resources using a GitOps tool.
+
+*GitOps* is a set of practices that leverages Git workflows to manage infrastructure and application configurations. By using Git repositories as the source of truth, it allows the DevOps team to store the entire state of the cluster configuration in Git so that the trail of changes are visible and auditable. 
+
+GitOps simplifies the propagation of infrastructure and application 
+configuration changes across multiple clusters by defining your infrastructure and applications definitions as *code*.
+
+* Ensure that the clusters have similar states for configuration, monitoring, or storage.
+* Recover or recreate clusters from a known state.
+* Create clusters with a known state.
+* Apply or revert configuration changes to multiple clusters.
+* Associate templated configuration with different environments.
+
+=== 3.1. Export OpenShift Resources
+
+First, you need to export the project resources from OpenShift.
+
+In your {CHE_URL}[Workspace^,role='params-link'], click on 'Terminal' -> 'Run Task...' ->  'devfile: GitOps - Export Coolstore'*`
+
+image::outerloop/che-runtask.png[Che - RunTask, 600]
+
+A terminal should be opened with the following output:
+
+[.console-output]
+[source,bash]
+----
+--- Export Kubernetes resources for GitOps from my-project{user_name} to globex-outerloop-{user_name} ---
+Exporting resources for inventory-coolstore...
+Exporting resources for catalog-coolstore...
+Exporting resources for gateway-coolstore...
+Exporting resources for web-coolstore...
+--- Kubernetes resources has been exported! ---
+----
+
+This operation exports the project resources (deploymentconfig, route, secret, service) and cleans them up. As a result, you should have all resources in YAML files under the */projects/workshop/labs/gitops* folder.
+
+image::outerloop/che-gitops-export-result.png[Che - GitOps Export Result, 300]
+
+=== 3.2. Create a Git Repository for Your Configuration
+
+The next step is to store all Kubernetes/OpenShift resources in 
+a source code repository.
+
+In your {GIT_URL}[Git Repository^,role='params-link'], `create a new Repository` as follows:
+
+* Repository Name: `inventory-gitops`
+
+Now that you have a Git repository for the configuration, you should push the exported Inventory configuration into it.
+
+Click on 'Terminal' -> 'Run Task...' ->  'devfile: GitOps - Commit Inventory'*`
+
+image::outerloop/che-runtask.png[Che - RunTask, 600]
+
+A terminal should be opened with the following output:
+
+[.console-output]
+[source,bash]
+----
+Initialized empty Git repository in /projects/workshop/labs/gitops/inventory-coolstore/.git/
+[master (root-commit) 918f5d6] Initial Inventory GitOps
+ 6 files changed, 251 insertions(+)
+ create mode 100644 configmap.yaml
+ create mode 100644 deployment.yaml
+ create mode 100644 deploymentconfig.yaml
+ create mode 100644 route.yaml
+ create mode 100644 secret.yaml
+ create mode 100644 service.yaml
+Enumerating objects: 8, done.
+Counting objects: 100% (8/8), done.
+Delta compression using up to 16 threads
+Compressing objects: 100% (7/7), done.
+Writing objects: 100% (8/8), 2.42 KiB | 2.42 MiB/s, done.
+Total 8 (delta 1), reused 0 (delta 0), pack-reused 0
+remote: . Processing 1 references
+remote: Processed 1 references in total
+To http://gitea-server.gitea.svc:3000/user1/inventory-gitops.git
+ * [new branch]      master -> master
+----
+
+Once done, in {GIT_URL}/user{user_name}/inventory-gitops[Git Repository^, role='params-link'], refresh the page of your `inventory-gitops repository`. You should see the files in the repository.
+
+image::outerloop/gitea-inventory-gitops-repo.png[GitOps Repository,900]
+
+=== 3.3. Access OpenShift GitOps
+
+image::outerloop/argocd-logo.png[Argo CD Logo, 200]
+
+https://argoproj.github.io/argo-cd/[Argo CD^] is a declarative, GitOps continuous delivery tool for Kubernetes.
+
+It follows the GitOps pattern of using Git repositories as the source of truth for defining 
+the desired application state. 
+
+It automates the deployment of the desired application states in the specified target environments. Application 
+deployments can track updates to branches, tags, or pinned to a specific version of manifests at a Git commit.
+
+Log in to the OpenShift GiOps using the following credentail:
+
+* *Username*: 
+
+[.console-input]
+[source,yaml,subs="attributes"]
+----
+{user_name}
+----
+
+* *Password*: 
+
+[.console-input]
+[source,yaml,subs="attributes"]
+----
+{user_password}
+----
+
+image::outerloop/argocd-home.png[Argo CD - Home Page, 500]
+
+=== 3.4. Add your Newly Created GitOps Repository 
+
+In {GITOPS_URL}[Argo CD^,role='params-link'], `*Select the 'Configuration menu' then click on 'Repositories'*`
+
+image::outerloop/argocd-configure-repositories.png[Argo CD - Configure Repositories, 500]
+
+Click on `CONNECT REPO USING HTTPS` and key in the following values:
+
+* Type: `git`
+* Repository URL: `http://gitea-server.gitea.svc:3000/user{user_name}/inventory-gitops.git`
+
+Click on `CONNECT`.
+
+Your GitOps repository is now added to Argo CD.
+
+image::outerloop/argocd-inventory-repository.png[Argo CD - Repository, 800]
+
+=== 3.5. Create a GitOps Application
+
+In {GITOPS_URL}[Argo CD^,role='params-link'], select the `Application menu` then click on `+ New App` and enter the following details:
+
+image::outerloop/argocd-configure-application.png[Argo CD - Configure Application, 500]
+
+* Application Name: `inventory-{user_name}`
+* Project: `globex-outerloop-{user_name}`
+* SYNC POLICY: `Manual`
+
+* Repository URL: `http://gitea-server.gitea.svc:3000/user{user_name}/inventory-gitops.git`
+* Revision: `HEAD`
+
+* Path: `. _(dot)_`
+
+* Cluster: `https://kubernetes.default.svc`
+* Namespace: `globex-outerloop-{user_name}`
+
+Click on `CREATE`.
+
+Your Coolstore Application has been created in Argo CD.
+
+image::outerloop/argocd-outofsync-inventory-application.png[Argo CD - OutOfSync Application, 700]
+
+The application status is initially in yellow *OutOfSync* state since the application has yet to be deployed into `globex-outerloop-{user_name}` OpenShift project, and no Kubernetes resources have been created.
+
+image::outerloop/argocd-outofsync-inventory-details.png[Argo CD - OutOfSync Application, 900]
+
+=== 3.6. Deploy a Resource on OpenShift
+
+In {GITOPS_URL}[Argo CD^,role='params-link'], click on the 3 dots menu at the left of the 'CM Inventory' resource then select `Sync`.
+
+image::outerloop/argocd-cm-inventory-sync.png[Argo CD - CM Inventory Sync, 700]
+
+Then click on the `Synchonize`. Now the ConfigMap of Inventory has been deployed and synchronized with your environment.
+
+In the {OPENSHIFT_CONSOLE_URL}[OpenShift Web Console^,role='params-link'], from the *Developer view*, select your `globex-outerloop-{user_name}` and click on `Config Maps`. You should find the resource you just deployed via Argo CD.
+
+image::outerloop/openshift-cm-inventory-deployed.png[OpenShift - CM Inventory Deployed, 500]
+
+=== 3.7. Recover from a Configuration Drift
+
+A _Configuration Drift_ is a term used whenever someone makes ad hoc changes in a (production) environment which are not recorded or tracked.
+
+Click on `Config Maps > CM inventory > YAML`.
+
+Add the following line in your configuration then click on `Save`.
+
+[.console-input]
+[source,yaml,subs="attributes"]
+----
+simple.adhoc.change=This is a configuration drift
+----
+
+image::outerloop/openshift-cm-inventory-drift.png[OpenShift - CM Inventory Configuration Drift, 900]
+
+In {GITOPS_URL}[Argo CD^,role='params-link'], the *CM Inventory* resource is no longer synchronized. click on it then select `Diff` tab and check `Compact diff`.
+
+image::outerloop/argocd-cm-inventory-diff.png[Argo CD - CM Inventory Diff, 700]
+
+Argo CD detects automatically your modification which is not compliant with the desired state described in Git - the source of truth. Indeed, from now, when you want to change the configuration, you will have to update the Git Repository first to record and track your changes to avoid _configuration drifts_.
+
+You can leave the configuration drift as it is. You will fix it in the next lab.
+
+=== 3.8. Push the Coolstore Configuration to the Git Repository
+
+To prepare the next lab, you need to push the remaining coolstore application configuration to the Git repository.
+
+In your {CHE_URL}[Workspace^,role='params-link'], click on 'Terminal' -> 'Run Task...' ->  'devfile: GitOps - Commit & Configure Coolstore'*`
+
+image::outerloop/che-runtask.png[Che - RunTask, 600]
+
+Once done, in your {GIT_URL}/user{user_name}[Git Repository^,role='params-link'], you should see the 3 new '*-gitops' repositories.
+
+image::outerloop/gitea-gitops-repo.png[GitOps Repository,900]
+
+In {GITOPS_URL}[Argo CD^,role='params-link'], you should see the 4 Applications in the  *OutOfSync* state since no service has not yet been deployed into globex-outerloop-{user_name} OpenShift project.
+
+image::outerloop/argocd-outofsync-coolstore.png[Argo CD - OutOfSync Application, 700]
+
+You are going to fix it in the next lab.
+
+Well done! You are ready for the next lab.
+
+== 4. Continuous Delivery with OpenShift Pipelines
+
+In this lab you will learn about deployment pipelines and you will create a pipeline to automate build and deployment of the Inventory service.
+
+So far you have been deploying each service manually to OpenShift. Although 
+it's convenient for local development, it's an error-prone way of delivering software if extended to test and production environments.
+
+Continuous Delivery (CD) refers to a set of practices with the intention of automating various aspects of delivery software. One of these practices is called *Delivery Pipeline* which is an automated process to define the steps a change in code or configuration has to go through in order to reach upper environments and eventually to production. 
+
+OpenShift simplifies building CI/CD Pipelines by integrating TektonCD into
+the platform and enables defining truly complex workflows directly from within OpenShift.
+
+=== 4.1. Create a custom Task
+
+You have learnt and understood how to create a simple *Pipeline*.
+Now, let's *create a task to deploy the OpenShift Configuration from Argo CD and add it the existing pipeline*.
+
+[TIP]
+====
+A *Task* consists of a collection of *Steps* that are executed sequentially with a pod. 
+
+Each *Step* is executed in a separate container within the same pod. 
+They can also have inputs and outputs in order to interact with other tasks in the pipeline.
+====
+
+In the {OPENSHIFT_CONSOLE_URL}[OpenShift Web Console^,role='params-link'], from the *Developer view*,
+click on `Search > Task > T Task > Create Task`.
+
+Then update the content as follows.
+
+[.console-input]
+[source,yaml,subs="attributes"]
+----
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: argocd-task-sync-and-wait
+  namespace: globex-outerloop-{user_name}
+  labels:
+    app.kubernetes.io/version: "0.1"
+  annotations:
+    tekton.dev/pipelines.minVersion: "0.12.1"
+    tekton.dev/tags: deploy
+    tekton.dev/displayName: "argocd"
+spec:
+  description: >-
+    This task syncs (deploys) an Argo CD application and waits for it to be healthy.
+    To do so, it requires the address of the Argo CD server and some form of
+    authentication either a username/password or an authentication token.
+  params:
+    - name: application-name
+      description: name of the application to sync
+  stepTemplate:
+    envFrom:
+      - configMapRef:
+          name: argocd-env-configmap  # used for server address
+      - secretRef:
+          name: argocd-env-secret  # used for authentication (username/password or auth token)
+  steps:
+    - name: login-sync-and-wait
+      image: argoproj/argocd:v1.7.6
+      script: |
+        if [ -z $ARGOCD_AUTH_TOKEN ]; then
+          yes | argocd login $ARGOCD_SERVER --username=$ARGOCD_USERNAME --password=$ARGOCD_PASSWORD --plaintext;
+        fi
+        argocd app sync $(params.application-name){user_name}
+        argocd app wait $(params.application-name){user_name} --health
+----
+
+Then click on `CREATE`. Your Argo CD Task is now created.
+
+image::outerloop/openshift-argocd-task.png[OpenShift - ArgoCD Task, 500]
+
+Now let's define the Argo CD server endpoint as well as the credentials so that the Task you just created has access to the server.
+
+Click on `Config Maps` then click on `Create Config Map`.
+
+image::outerloop/openshift-create-configmap.png[Che - OpenShift Create Config Map, 900]
+
+Then `replace` the content with the following input.
+
+[.console-input]
+[source,yaml,subs="attributes"]
+----
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-env-configmap
+  namespace: globex-outerloop-{user_name}
+data:
+  ARGOCD_SERVER: argocd-server.argocd.svc
+----
+
+click on the `Create`.` 
+
+Then click on `Secrets > Create > Key/Value Secret`.
+
+image::outerloop/openshift-create-keyvalue-secret-menu.png[Che - OpenShift Create Secret, 900]
+
+Enter the following configuration.
+
+* Secret Name: `argocd-env-secret`
+* ARGOCD_USERNAME: `{user_name}`
+* ARGOCD_PASSWORD:` {user_password}`
+
+image::outerloop/openshift-create-keyvalue-secret.png[Che - OpenShift Create Secret, 500]
+
+click on `Create`.
+
+=== 4.2. Expand your Pipeline
+
+Now let's expand your Inventory Pipeline to cover the Continuous Deployment.
+
+Click on `Pipelines > PL inventory-pipeline > Actions > Edit Pipeline`.
+
+Then, complete your pipeline with the following two *Red Hat tasks* and their configurations.
+
+image::outerloop/openshift-full-inventory-pipeline.png[OpenShift Pipeline,900]
+
+* Name: `argocd-task-sync-and-wait`
+* application-name: ₩
+
+*OpenShift Client Task Configuration*
+
+* Name: `openshift-client` 
+* SCRIPT: `oc rollout status deployment/inventory-coolstore`
+
+=== 4.3. Run the Full Pipeline
+
+Click on `Pipelines > PL inventory-pipeline > Actions > Start last run`.
+
+[TIP]
+====
+*Start last run* will run your pipeline with the previous parameters i.e with the previous PVC created for the shared workspace
+====
+
+Congratulations!! You have deployed your first application using OpenShift Pipeline!!
+
+image::outerloop/openshift-run-full-inventory-pipeline.png[]
+
+Once finished, from the *Topology view*, select the `globex-outerloop-{user_name}`.
+
+image::outerloop/openshift-tekton-inventory-deployed.png[OpenShift - Inventory Deployed by Tekton, 800]
+
+Now, you can see that the *Inventory Service has been deployed by OpenShift Pipeline* and it is up and running.
+
+In the {GITOPS_URL}[Argo CD^,role='params-link'], Select the Application menu then click on the `inventory{user_name}` application.
+
+image::outerloop/argocd-sync-inventory-application.png[]
+
+Argo CD has synchronized all the Inventory OpenShift manifests stored into your {GIT_URL}/user{user_name}/inventory-gitops[Inventory Repository^,role='params-link'] with your `globex-outerloop-{user_name}` project on OpenShift.
+
+image::outerloop/argocd-synced-inventory-details.png[]
+
+=== 4.4. Deploy the whole application with Tekton
+
+Previously, for the *Inventory Service*, you have learned how to create, configure and run an OpenShift pipeline.
+
+Deploy the rest of the application.
+
+For doing so, click on `Terminal > Run Task... >  devfile: Pipeline - Deploy Coolstore`.
+
+image::outerloop/che-runtask.png[Che - RunTask, 600]
+
+Once executed, in the {OPENSHIFT_CONSOLE_URL}[OpenShift Web Console^,role='params-link'], from the *Developer view*,
+
+click on `Pipelines > PL - coolstore-java-pipeline > Pipeline Runs`.
+
+image::outerloop/openshift-coolstore-java-pipeline-run.png[OpenShift Pipeline Runs, 700]
+
+You should see 1 pipeline running for the other Java service (Catalog).
+
+click on `Pipelines > PL - coolstore-dotnet-pipeline > Pipeline Runs`.
+
+image::outerloop/openshift-coolstore-dotnet-pipeline-run.png[OpenShift Pipeline Runs, 700]
+
+You should see 1 pipeline running for the the .NET service (Gateway).
+
+click on `Pipelines > PL - coolstore-nodejs-pipeline > Pipeline Runs`.
+
+image::outerloop/openshift-coolstore-nodejs-pipeline-run.png[OpenShift Pipeline Runs, 700]
+
+You should see 1 pipeline running for the NodeJs service (Web).
+
+Go to the Topology view to validate if the CoolStore application is deployed, up and running in the *globex-outerloop-{user_name}* project.
+
+image::outerloop/openshift-tekton-coolstore-deployed.png[]
+
+Finally, in {GITOPS_URL}[Argo CD^,role='params-link'], all Applications are now `Synced`.
+
+image::outerloop/argocd-synced-coolstore.png[Argo CD - Sync Application, 900]
+
+Well done! You are ready for the next lab.
+
+== Summary
+
 
 Please close all but the Workshop Deployer browser tab to avoid proliferation of browser tabs which can make working on other modules difficult. 
 
