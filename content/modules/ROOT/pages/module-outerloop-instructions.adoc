@@ -180,7 +180,7 @@ To http://gitea-server.gitea.svc:3000/user{user_name}/inventory-quarkus.git
 
 Once done, in your {GIT_URL}/user{user_name}/inventory-quarkus[Git Repository^, role='params-link'], *refresh the page of your inventory-quarkus repository*`. You should see the project files in the repository.
 
-image::outerloop/cd-gitea-inventory-repo.png[Inventory Repository,900]
+image::outerloop/cd-gitea-inventory-repo.png[]
 
 === 2.3. What is OpenShift Pipelines?
 
