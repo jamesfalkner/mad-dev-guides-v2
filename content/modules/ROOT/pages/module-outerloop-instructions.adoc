@@ -119,17 +119,17 @@ the platform and enables defining truly complex workflows directly from within O
 === 2.1. Create a Git Repository for Inventory Code
 
 The first step is to create a Git repository to store your source code. 
-You can use any Git server (e.g. GitHub, BitBucket, etc). For this lab we will use a Gitea git server.
+You can use any Git server (e.g. GitHub, BitBucket, etc). For this lab we will use a `Gitea` git server that is running on the OpenShift cluster.
 
-Click on the `Developer Repository` button below.
+Access the {gitea_url}[Gitea server^] and click on `Sign In` using the same credential as you used for accessing the Dev Spaces.
 
-image::outerloop/developer-repository-button.png[Developer Repository - Button, 300]
-
-Then, click on `Sign In` and login via OpenShift as user{user_name}/{user_password}*`
+* Username: `{user_name}`
+* Password: `{user_password}`
 
 image::outerloop/gitea-signin.png[Sign Up Gitea,700]
 
-Create a new repository called *'inventory-quarkus'*.
+Create a new repository called `inventory-quarkus`.
+
 click on the '+' icon -> '+ New Repository'*` as below and enter the following values:
 
 image::outerloop/gitea-create-repository.png[Create New Repository,900]
@@ -277,7 +277,7 @@ image::outerloop/openshift-inventory-pipeline-parameters.png[OpenShift Inventory
 
 Congratulations!! You have created and run your first *CI Pipeline on OpenShift*!!
 
-image::outerloop/openshift-inventory-pipeline-run.png[]
+image::outerloop/openshift-inventory-pipeline-run.png[openshift-inventory-pipeline-run, 800]
 
 Well done! You are ready for the next lab.
 
