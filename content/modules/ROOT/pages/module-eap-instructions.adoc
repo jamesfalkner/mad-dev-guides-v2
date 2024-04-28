@@ -345,9 +345,9 @@ image::eap/mta_project_issues_story.png[mta_project_issues_story, 900]
 
 [NOTE]
 ====
-In case you don't see the previous analysis report when you click on *Open Report*, refresh the browser where you run the VS Code. Open the report again.
+In case you see the previous analysis report when you click on *Open Report*, refresh the browser where you run the VS Code. Open the report again.
 
-image::eap/reopen-report.png[MTA Add App, 400]
+image::eap/reopen-report.png[MTA Add App, 500]
 ====
 
 == 3. Upgrade to JBoss EAP 8
@@ -374,9 +374,9 @@ image::eap/eap8_result_landing_page.png[MTA Langing Page, 900]
 
 [NOTE]
 ====
-In case you don't see the previous analysis report when you click on *Open Report*, refresh the browser where you run the VS Code. Open the report again.
+In case you see the previous analysis report when you click on *Open Report*, refresh the browser where you run the VS Code. Open the report again.
 
-image::eap/reopen-report.png[MTA Add App, 400]
+image::eap/reopen-report.png[MTA Add App, 500]
 ====
 
 Click on the `monolith` link to access details for the EAP 8 upgrade issues in:
