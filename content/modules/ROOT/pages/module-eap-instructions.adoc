@@ -343,6 +343,13 @@ You have successfully migrated this app to `JBoss EAP 7`, congratulations!
 
 image::eap/mta_project_issues_story.png[mta_project_issues_story, 900]
 
+[NOTE]
+====
+In case you don't see the previous analysis report when you click on *Open Report*, refresh the browser where you run the VS Code. Open the report again.
+
+image::eap/reopen-report.png[MTA Add App, 400]
+====
+
 == 3. Upgrade to JBoss EAP 8
 
 *Upgrading to Jakarta EE 10* is a key aspect of moving to *JBoss EAP 8*. This involves a namespace shift from `javax` to `jakarta`, reflecting the transfer of Java EE to the Eclipse Foundation and the creation of Jakarta EE.
@@ -365,7 +372,14 @@ Review the report for the EAP 8 upgrade.
 
 image::eap/eap8_result_landing_page.png[MTA Langing Page, 900]
 
-**Click on the `monolith` link** to access details for the EAP 8 upgrade issues in:
+[NOTE]
+====
+In case you don't see the previous analysis report when you click on *Open Report*, refresh the browser where you run the VS Code. Open the report again.
+
+image::eap/reopen-report.png[MTA Add App, 400]
+====
+
+Click on the `monolith` link to access details for the EAP 8 upgrade issues in:
 
 image::eap/eap8_project_overview.png[MTA Project Overview, 900]
 
@@ -389,7 +403,7 @@ Let's continue to fix the remaining issues.
 
 === 3.3. Fix the "Replace the Java EE XSD with the Jakarta equivalent" issues
 
-Search `Replace the Java EE namespace, schemaLocation and version with the Jakarta equivalent` _Issues_. 
+Search `Replace the Java EE namespace, schemaLocation and version with the Jakarta equivalent` in the *Issues* tab. 
 
 image::eap/report_beans_xsd_issues.png[XSD Issues, 900]
 
