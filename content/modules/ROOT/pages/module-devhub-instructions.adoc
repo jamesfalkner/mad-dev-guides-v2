@@ -793,7 +793,7 @@ image::devhub/devspaces_loading.png[devspaces_loading, 700]
 ====
 In case you fail to start the workspace, you can click on *close running workspace and restart*, then it works fine.
 
-image::devhub/devspaces_error.png[devspaces_error, 500]
+image::devhub/devspaces_error.png[devspaces_error, 700]
 ====
 
 === 3.4.6 Confirm the access by clicking *"Yes, I trust the authors"*.
