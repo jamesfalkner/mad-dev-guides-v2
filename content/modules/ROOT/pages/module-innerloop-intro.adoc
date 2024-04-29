@@ -40,11 +40,6 @@ The outcome is an online store with a catalog of product items and an inventory 
 
 image::innerloop/coolstore-web.png[CoolStore Shop,840]
 
-In addition to the application code, you will learn how to deploy the various services to OpenShift and how to use it to route the trafic to these services and monitor them.
-
-You will also have the opportunity to look at probes and externalized configuration.
-
 Let's start the workshop with the discovery of OpenShift and OpenShift Dev Spaces.
-
 
 Proceed to the xref:./module-innerloop-instructions.adoc[instructions] for this module.
