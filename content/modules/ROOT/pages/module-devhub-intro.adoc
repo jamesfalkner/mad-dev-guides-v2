@@ -22,8 +22,6 @@
 ++++
 
 The story so far: Globex has been growing quickly thanks to the success of its modernized business applications. However, the time to market for new applications has not improved as much as they’d like. They suspect this is due to hiring many new developers to expand their business offerings, but with inconsistent policies, lack of automation, and lack of developer guidance across different lines of business when they start and manage new projects.
-Prerequisite: Pre-installed developer hub with projects representing coolstore microservices
-
 
 In this exercise you will build, deploy, and manage applications using https://developers.redhat.com/rhdh/overview[Red Hat Developer Hub^] that allows you to perform the Software Development activities with an accelerated approach by reducing developer friction and improving time to market.
 

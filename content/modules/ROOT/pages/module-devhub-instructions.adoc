@@ -87,8 +87,6 @@ image::devhub/learning_paths_explore.png[]
 
 ** Go back to the https://developer-hub-backstage-globex-devhub.{openshift_subdomain}[Red Hat Developer Hub UI^]
 
-* *Clusters*: will show your managed clusters. At this time, we are not using https://www.redhat.com/en/technologies/management/advanced-cluster-management[Red Hat Advanced Cluster Management for Kubernetes^] for cluster management. You will see a message: *Could not fetch clusters from Hub*.
-
 * *Tech Radar*: Company radar to understand their modernization technology landscape. This information will be customized by each company. For more information, visit our product page https://access.redhat.com/documentation/en-us/red_hat_developer_hub/1.1/html/administration_guide_for_red_hat_developer_hub/rhdh-installing-dynamic-plugins[about plugins configuration^]
 
 image::devhub/tech_radar.png[] 
@@ -791,11 +789,18 @@ You will see a loading screen while the workspace is being provisioned, where Re
 
 image::devhub/devspaces_loading.png[devspaces_loading, 700]
 
+[NOTE]
+====
+In case you fail to start the workspace, you can click on *close running workspace and restart*, then it works fine.
+
+image::devhub/devspaces_error.png[devspaces_error, 500]
+====
+
 === 3.4.6 Confirm the access by clicking *"Yes, I trust the authors"*.
 
 image::devhub/devspaces_trustauthors.png[devspaces_trustauthors, 800]
 
-** Click on *Mark Done* 
+Then, you should see this.
 
 image::devhub/devspaces_view.png[devspaces_view, 800]
 
@@ -841,7 +846,7 @@ Your source code changes triggered a new pipeline to update the version of the f
 
 image::devhub/frontend_newpipeline.png[frontend_newpipeline, 900]
 
-* Refresh the Cool Store web page.
+* Wait for pipeline to finish and THEN reload the Cool Store web page.
 
 You will see the *new title* in the Cool Store web page.
 
