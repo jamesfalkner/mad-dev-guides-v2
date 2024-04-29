@@ -171,13 +171,12 @@ Now, switch to the new project that was created for you:
 oc project globex-keycloak-{user_name}
 ----
 
-Let's also make the postgresql database icon show its proper logo and visually link it to its database:
+Let's also make the postgresql database icon show its proper logo:
 
 [.console-input]
 [source,bash,subs="+attributes,macros+"]
 ----
-oc -n globex-keycloak-{user_name} label dc keycloak-postgresql "app.openshift.io/runtime=postgresql" --overwrite && \
-oc -n globex-keycloak-{user_name} annotate statefulset keycloak "app.openshift.io/connects-to=keycloak-postgresql" --overwrite
+oc -n globex-keycloak-{user_name} label dc keycloak-postgresql "app.openshift.io/runtime=postgresql" --overwrite
 ----
 
 Keycloak needs a certificate pair to use for TLS communication. We will use OpenSSL to generate the key pair, and put the public key in the application so that we can refer to it at runtime. Run this command to create it and then create an OpenShift _Secret_ that holds the resulting key pair:
@@ -185,8 +184,9 @@ Keycloak needs a certificate pair to use for TLS communication. We will use Open
 [.console-input]
 [source,bash,subs="+attributes,macros+"]
 ----
-openssl req -subj '/CN={openshift_subdomain}/O=Test Keycloak/C=US' -newkey rsa:2048 -nodes -keyout key.pem -x509 -days 365 -out $PROJECT_SOURCE/inventory/src/main/resources/certificate.pem && \
-oc -n globex-keycloak-{user_name} create secret tls keycloak-cert-secret --cert $PROJECT_SOURCE/inventory/src/main/resources/certificate.pem --key key.pem
+mkdir -p $PROJECT_SOURCE/inventory/src/main/resources/certs/ && \
+openssl req -subj '/CN={openshift_subdomain}/O=Test Keycloak/C=US' -newkey rsa:2048 -nodes -keyout key.pem -x509 -days 365 -out $PROJECT_SOURCE/inventory/src/main/resources/certs/certificate.pem && \
+oc -n globex-keycloak-{user_name} create secret tls keycloak-cert-secret --cert $PROJECT_SOURCE/inventory/src/main/resources/certs/certificate.pem --key key.pem
 ----
 This secret will be used in the next step.
 
@@ -227,6 +227,14 @@ This references the certificate+key pair created earlier, as well as our Postgre
 image::keycloak/keycloak-create2.png[]
 
 Wait for it to complete (and get a dark blue circle). This should only take a few seconds if everything is working! If it does not after a minute or so, double-check that you entered the right values, and the database secret and certificate secret both exist under the names given.
+
+Let's also visually link Keycloak to its database:
+
+[.console-input]
+[source,bash,subs="+attributes,macros+"]
+----
+oc -n globex-keycloak-{user_name} annotate statefulset keycloak "app.openshift.io/connects-to=keycloak-postgresql" --overwrite
+----
 
 === 2.4 Log into Keycloak
 
@@ -343,10 +351,14 @@ Next, we'll add the necessary configurations to our application to enable it to 
 [.console-input]
 [source,properties,role="copypaste",subs="+attributes"]
 ----
-mp.jwt.verify.publickey.location=https://keycloak-globex-keycloak-{user_name}.{openshift_subdomain}/realms/globex/protocol/openid-connect/certs // <1>
-mp.jwt.verify.issuer=https://keycloak-globex-keycloak-{user_name}.{openshift_subdomain}/realms/globex // <2>
-smallrye.jwt.client.tls.certificate.path=certificate.pem // <3>
-smallrye.jwt.client.tls.trust-all=true // <4>
+# // <1>
+mp.jwt.verify.publickey.location=https://keycloak-globex-keycloak-{user_name}.{openshift_subdomain}/realms/globex/protocol/openid-connect/certs
+# // <2>
+mp.jwt.verify.issuer=https://keycloak-globex-keycloak-{user_name}.{openshift_subdomain}/realms/globex
+# // <3>
+smallrye.jwt.client.tls.certificate.path=classpath:certs/certificate.pem
+# // <4>
+smallrye.jwt.client.tls.trust-all=true
 
 ----
 <1> Sets public key location for JWT authentication. Keycloak exports this for you at the URL.
@@ -717,7 +729,7 @@ Let's re-build and re-deploy the application once again. Run this command, which
 [source,sh,role="copypaste",subs="attributes"]
 ----
 oc project globex-keycloak-{user_name} && \
-mvn clean package -DskipTests
+mvn -f $PROJECT_SOURCE/inventory clean package -DskipTests
 ----
 
 You should see `BUILD SUCCESS`. The new application will begin deploying. Wait for it to complete (dark blue circle for the `inventory` service on the OpenShift web console).
