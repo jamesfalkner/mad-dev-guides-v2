@@ -739,21 +739,23 @@ image::devhub/ui_web.png[]
 
 As a developer, you need to work on many feature requests or issues. In this use case, you will fix a problem with the title in the front-end application. Red Hat Developer Hub is a single pane of glass that allows you to access all the tools and information for your app from one single place. 
 
-=== 3.3.1. Go back to your frontend component on the Red Hat Developer Hub: https://developer-hub-backstage-globex-devhub.{openshift_subdomain}/catalog/default/component/frontend-app-{user_name}[Red Hat Developer Hub UI^].
+Go back to your frontend component on the Red Hat Developer Hub: https://developer-hub-backstage-globex-devhub.{openshift_subdomain}/catalog/default/component/frontend-app-{user_name}[Red Hat Developer Hub UI^].
 
-=== 3.3.2. Look at the GitLab issues by clicking on *ISSUES*. You will be able to see any GitLab issues associated with the application. 
+=== 3.3.1. Look at the GitLab issues.
 
-There is an issue to be fixed:
+Click on *ISSUES* tab. You will be able to see any GitLab issues associated with the application. 
+
+There is an issue to be fixed.
 
 image::devhub/frontend_issues.png[]
 
-* Click on the *issue link* to read the information.
+* Click on the *Udate Title* to view the details in the GitLab repository.
 
 image::devhub/frontend_issue_desc.png[]
 
 * Go back to your frontend component on the Red Hat Developer Hub: https://developer-hub-backstage-globex-devhub.{openshift_subdomain}/catalog/default/component/frontend-app-{user_name}[Red Hat Developer Hub UI^].
 
-=== 3.3.3. From the *OVERVIEW* tab click on *OpenShift Dev Spaces (VS Code)* to make the necessary source code changes.
+=== 3.3.2. From the *OVERVIEW* tab click on *OpenShift Dev Spaces (VS Code)* to make the necessary source code changes.
 
 image::devhub/frontend_devspaces.png[frontend_devspaces, 700]
 
@@ -799,7 +801,7 @@ image::devhub/devspaces_view.png[devspaces_view, 800]
 
 === 3.4.7 Expand the `frontend-app-{user_name}` to find for the file: `header.html` as shown in the picture below.
 
-image::devhub/file_change.png[file_change, 600]
+image::devhub/file_change.png[file_change, 500]
 
 === 3.4.8 Update the *Title* in *line 12*, adding your preferred city. 
 
@@ -823,9 +825,11 @@ image::devhub/icon_source_control.png[width=60%, float=left]
 
 image::devhub/dev_commit.png[dev_commit, 700]
 
-* Confirm the changes
+* Confirm the changes.
 
 image::devhub/dev_confirmed.png[dev_confirmed, 900]
+
+image::devhub/git_fetch.png[git_fetch, 900]
 
 * Explore Pipelines from Red Hat Developer Hub.
 
