@@ -1116,6 +1116,13 @@ Congratulations! You have successfully deployed the Web UI on OpenShift.
 
 In this module, you have learned how to develop ployglot microservices with Java (Quarkus and Spring Boot), Nodejs, and .Net. Then, you have practiced how to build, test, and deploy those applications to OpenShift.
 
+More importantly, `Quarkus` offers a couple of features that can significantly speed up your inner loop development cycle:
+
+* `Dev Mode`: This is a key aspect of the *Quarkus Developer Joy* philosophy. In Dev Mode, Quarkus automatically detects and applies code changes to your running application. This eliminates the need for the traditional _write-build-deploy-run_ loop. You can simply write your code, interact with the application, and see the changes reflected instantly. This reduces iteration time tremendously, allowing you to experiment and test ideas much faster.
+* `Container-based Development`:  Quarkus applications are inherently container-friendly. This means you can leverage containerization to isolate dependencies and run mock instances of external services during development. This simplifies your development environment and avoids potential conflicts with system-wide dependencies.
+
+By combining these features, Quarkus streamlines the inner loop process, allowing developers to focus on coding and iterating quickly without getting bogged down by build and deployment cycles.
+
 Please close all but the Workshop Deployer browser tab to avoid proliferation of browser tabs which can make working on other modules difficult. 
 
 Go back to the `Workshop Deployer` browser tab to choose your next module!
