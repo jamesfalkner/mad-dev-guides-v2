@@ -86,7 +86,7 @@ image::innerloop/starting-workspace.png[ds, 800]
 
 After a few seconds, you’ll be placed in the workspace.
 
-image::innerloop/ds-workspace.png
+image::innerloop/ds-workspace.png[]
 
 [NOTE]
 ====
