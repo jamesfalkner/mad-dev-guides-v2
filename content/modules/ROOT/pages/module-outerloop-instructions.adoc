@@ -86,7 +86,7 @@ image::outerloop/starting-workspace.png[ds, 800]
 
 After a few seconds, you’ll be placed in the workspace.
 
-image::outerloop/ds-workspace.png
+image::outerloop/ds-workspace.png[]
 
 [NOTE]
 ====
@@ -134,6 +134,8 @@ click on the `+` icon and select `+ New Repository`. Then type the following val
 
 image::outerloop/gitea-create-repository.png[Create New Repository,800]
 
+* *Repository Name*: 
+
 [.console-input]
 [source,yaml,subs="attributes"]
 ----
@@ -168,7 +170,7 @@ git push http://{user_name}:{user_password}@gitea.gitea.svc.cluster.local:3000/{
 The output should look like this.
 
 [.console-output]
-[source,sh]
+[source,sh,subs="attributes"]
 ----
 ....
 Initialized empty Git repository in /projects/coolstore-gitops/inventory-gitops/.git/
