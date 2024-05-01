@@ -121,24 +121,28 @@ the platform and enables defining truly complex workflows directly from within O
 The first step is to create a Git repository to store your source code. 
 You can use any Git server (e.g. GitHub, BitBucket, etc). For this lab we will use a `Gitea` git server that is running on the OpenShift cluster.
 
-Access the {gitea_console_url }[Gitea server^] and click on `Sign In` using the same credential as you used for accessing the Dev Spaces.
+Access the {gitea_console_url}[Gitea server^] and click on `Sign In` using the same credential as you used for accessing the Dev Spaces.
 
 * Username: `{user_name}`
 * Password: `{user_password}`
 
-image::outerloop/gitea-signin.png[Sign Up Gitea,700]
+image::outerloop/gitea-signin.png[Sign Up Gitea,800]
 
 Create a new repository called `inventory-quarkus`.
 
-click on the '+' icon -> '+ New Repository'*` as below and enter the following values:
+click on the `+` icon and select `+ New Repository`. Then type the following value in the `Repository name` field.
 
-image::outerloop/gitea-create-repository.png[Create New Repository,900]
+image::outerloop/gitea-create-repository.png[Create New Repository,800]
 
-* Repository Name : `inventory-quarkus`
+[.console-input]
+[source,yaml,subs="attributes"]
+----
+inventory-quarkus
+----
 
-click on `Create Repository`.
+Leave the other fields as they are. Click on `Create Repository`. It should take a few seconds to complete creatiung the new repository.
 
-The Git repository is created now. 
+image::outerloop/type-repository-name.png[Create New Repository,800]
 
 === 2.2. Push Inventory Code to the Git Repository
 
@@ -151,10 +155,10 @@ Execute the following commands in the terminal.
 ----
 cd /projects/workshop/labs/inventory-quarkus
 git init
-git remote add origin http://gitea-server.gitea.svc:3000/user{user_name}/inventory-quarkus.git
+git remote add origin {gitea_console_url}/{user_name}/inventory-quarkus.git
 git add *
 git commit -m "Initial"
-git push http://user{user_name}:openshift@gitea-server.gitea.svc:3000/user{user_name}/inventory-quarkus.git
+git push http://{user_name}:openshift@gitea-server.gitea.svc:3000/{user_name}/inventory-quarkus.git
 ----
 
 The output should be as follows:
@@ -174,11 +178,11 @@ Writing objects: 100% (29/29), 10.76 KiB | 3.59 MiB/s, done.
 Total 29 (delta 1), reused 0 (delta 0)
 remote: . Processing 1 references
 remote: Processed 1 references in total
-To http://gitea-server.gitea.svc:3000/user{user_name}/inventory-quarkus.git
+To {gitea_console_url}/{user_name}/inventory-quarkus.git
  * [new branch]      master -> master
 ----
 
-Once done, in your {GIT_URL}/user{user_name}/inventory-quarkus[Git Repository^, role='params-link'], *refresh the page of your inventory-quarkus repository*`. You should see the project files in the repository.
+Once done, in your {GIT_URL}/{user_name}/inventory-quarkus[Git Repository^, role='params-link'], *refresh the page of your inventory-quarkus repository*`. You should see the project files in the repository.
 
 image::outerloop/cd-gitea-inventory-repo.png[]
 
@@ -240,7 +244,7 @@ image::outerloop/openshift-add-git-clone-task.png[]
 click on the newly created `git-clone` task and enter the following configuration.
 
 * Display Name: `git-clone`
-* url: `http://gitea-server.gitea.svc:3000/{user_name}/inventory-quarkus.git`
+* url: `{gitea_console_url}/{user_name}/inventory-quarkus.git`
 * Workspaces output: `shared-workspace`
 
 Once done, let's add another task. click on the blue plus icon at the right hand side of the *git-clone* task.
@@ -358,11 +362,11 @@ Writing objects: 100% (8/8), 2.42 KiB | 2.42 MiB/s, done.
 Total 8 (delta 1), reused 0 (delta 0), pack-reused 0
 remote: . Processing 1 references
 remote: Processed 1 references in total
-To http://gitea-server.gitea.svc:3000/user1/inventory-gitops.git
+To {gitea_console_url}/user1/inventory-gitops.git
  * [new branch]      master -> master
 ----
 
-Once done, in {GIT_URL}/user{user_name}/inventory-gitops[Git Repository^, role='params-link'], refresh the page of your `inventory-gitops repository`. You should see the files in the repository.
+Once done, in {GIT_URL}/{user_name}/inventory-gitops[Git Repository^, role='params-link'], refresh the page of your `inventory-gitops repository`. You should see the files in the repository.
 
 image::outerloop/gitea-inventory-gitops-repo.png[GitOps Repository,900]
 
@@ -407,7 +411,7 @@ image::outerloop/argocd-configure-repositories.png[Argo CD - Configure Repositor
 Click on `CONNECT REPO USING HTTPS` and key in the following values:
 
 * Type: `git`
-* Repository URL: `http://gitea-server.gitea.svc:3000/user{user_name}/inventory-gitops.git`
+* Repository URL: `{gitea_console_url}/{user_name}/inventory-gitops.git`
 
 Click on `CONNECT`.
 
@@ -425,7 +429,7 @@ image::outerloop/argocd-configure-application.png[Argo CD - Configure Applicatio
 * Project: `globex-outerloop-{user_name}`
 * SYNC POLICY: `Manual`
 
-* Repository URL: `http://gitea-server.gitea.svc:3000/user{user_name}/inventory-gitops.git`
+* Repository URL: `{gitea_console_url}/{user_name}/inventory-gitops.git`
 * Revision: `HEAD`
 
 * Path: `. _(dot)_`
@@ -487,7 +491,7 @@ In your {CHE_URL}[Workspace^,role='params-link'], click on 'Terminal' -> 'Run Ta
 
 image::outerloop/che-runtask.png[Che - RunTask, 600]
 
-Once done, in your {GIT_URL}/user{user_name}[Git Repository^,role='params-link'], you should see the 3 new '*-gitops' repositories.
+Once done, in your {GIT_URL}/{user_name}[Git Repository^,role='params-link'], you should see the 3 new '*-gitops' repositories.
 
 image::outerloop/gitea-gitops-repo.png[GitOps Repository,900]
 
@@ -649,7 +653,7 @@ In the {GITOPS_URL}[Argo CD^,role='params-link'], Select the Application menu th
 
 image::outerloop/argocd-sync-inventory-application.png[]
 
-Argo CD has synchronized all the Inventory OpenShift manifests stored into your {GIT_URL}/user{user_name}/inventory-gitops[Inventory Repository^,role='params-link'] with your `globex-outerloop-{user_name}` project on OpenShift.
+Argo CD has synchronized all the Inventory OpenShift manifests stored into your {GIT_URL}/{user_name}/inventory-gitops[Inventory Repository^,role='params-link'] with your `globex-outerloop-{user_name}` project on OpenShift.
 
 image::outerloop/argocd-synced-inventory-details.png[]
 
