@@ -148,41 +148,56 @@ image::outerloop/type-repository-name.png[Create New Repository,800]
 
 Now that you have a Git repository for the Inventory service, you should push your local source code into this Git repository.
 
-Execute the following commands in the terminal.
+Open a Terminal window.
+
+image::outerloop/new-terminal.png[new-terminal, 500]
+
+In the terminal, run the following command to push the inventory code into the Gitea repository.
 
 [.console-input]
 [source,sh,subs="attributes"]
 ----
-cd /projects/workshop/labs/inventory-quarkus
+cd inventory-gitops
 git init
-git remote add origin {gitea_console_url}/{user_name}/inventory-quarkus.git
+git remote add origin gitea.gitea.svc.cluster.local:3000/{user_name}/inventory-quarkus.git
 git add *
 git commit -m "Initial"
-git push http://{user_name}:openshift@gitea-server.gitea.svc:3000/{user_name}/inventory-quarkus.git
+git push http://{user_name}:{user_password}@gitea.gitea.svc.cluster.local:3000/{user_name}/inventory-quarkus.git
 ----
 
-The output should be as follows:
+The output should look like this.
 
 [.console-output]
 [source,sh]
 ----
-Initialized empty Git repository in /projects/workshop/labs/inventory-quarkus/.git/
-[master (root-commit) f7b9db7] Initial
- 12 files changed, 831 insertions(+)
- [...]
-Enumerating objects: 29, done.
-Counting objects: 100% (29/29), done.
-Delta compression using up to 16 threads.
-Compressing objects: 100% (20/20), done.
-Writing objects: 100% (29/29), 10.76 KiB | 3.59 MiB/s, done.
-Total 29 (delta 1), reused 0 (delta 0)
+....
+Initialized empty Git repository in /projects/coolstore-gitops/inventory-gitops/.git/
+inventory-gitops (master) $ git remote add origin http://gitea.gitea.svc.cluster.local:3000/{user_name}/inventory-quarkus.git
+inventory-gitops (master) $ git add *
+inventory-gitops (master) $ git commit -m "Initial"
+[master (root-commit) 7c7b9e8] Initial
+ 7 files changed, 313 insertions(+)
+ create mode 100644 inventory-coolstore-buildconfig.yaml
+ create mode 100644 inventory-coolstore-configmap.yaml
+ create mode 100644 inventory-coolstore-deploymentconfig.yaml
+ create mode 100644 inventory-coolstore-imagestream.yaml
+ create mode 100644 inventory-coolstore-route.yaml
+ create mode 100644 inventory-coolstore-secret.yaml
+ create mode 100644 inventory-coolstore-service.yaml
+inventory-gitops (master) $ git push http://{user_name}:openshift@gitea.gitea.svc.cluster.local:3000/{user_name}/inventory-quarkus.git
+Enumerating objects: 9, done.
+Counting objects: 100% (9/9), done.
+Delta compression using up to 32 threads
+Compressing objects: 100% (9/9), done.
+Writing objects: 100% (9/9), 2.98 KiB | 2.98 MiB/s, done.
+Total 9 (delta 3), reused 0 (delta 0), pack-reused 0
 remote: . Processing 1 references
 remote: Processed 1 references in total
-To {gitea_console_url}/{user_name}/inventory-quarkus.git
+To http://gitea.gitea.svc.cluster.local:3000/{user_name}/inventory-quarkus.git
  * [new branch]      master -> master
 ----
 
-Once done, in your {GIT_URL}/{user_name}/inventory-quarkus[Git Repository^, role='params-link'], *refresh the page of your inventory-quarkus repository*`. You should see the project files in the repository.
+Go back to the Gitea repository web page and click on `Refresh, *refresh the page of your inventory-quarkus repository*`. You should see the project files in the repository.
 
 image::outerloop/cd-gitea-inventory-repo.png[]
 
@@ -313,17 +328,30 @@ A terminal should be opened with the following output:
 [.console-output]
 [source,bash]
 ----
---- Export Kubernetes resources for GitOps from my-project{user_name} to globex-outerloop-{user_name} ---
-Exporting resources for inventory-coolstore...
-Exporting resources for catalog-coolstore...
-Exporting resources for gateway-coolstore...
-Exporting resources for web-coolstore...
---- Kubernetes resources has been exported! ---
+Initialized empty Git repository in /projects/workshop/labs/gitops/inventory-coolstore/.git/
+[master (root-commit) 918f5d6] Initial Inventory GitOps
+ 6 files changed, 251 insertions(+)
+ create mode 100644 configmap.yaml
+ create mode 100644 deployment.yaml
+ create mode 100644 deploymentconfig.yaml
+ create mode 100644 route.yaml
+ create mode 100644 secret.yaml
+ create mode 100644 service.yaml
+Enumerating objects: 8, done.
+Counting objects: 100% (8/8), done.
+Delta compression using up to 16 threads
+Compressing objects: 100% (7/7), done.
+Writing objects: 100% (8/8), 2.42 KiB | 2.42 MiB/s, done.
+Total 8 (delta 1), reused 0 (delta 0), pack-reused 0
+remote: . Processing 1 references
+remote: Processed 1 references in total
+To {gitea_console_url}/user1/inventory-gitops.git
+ * [new branch]      master -> master
 ----
 
 This operation exports the project resources (deploymentconfig, route, secret, service) and cleans them up. As a result, you should have all resources in YAML files under the */projects/workshop/labs/gitops* folder.
 
-image::outerloop/che-gitops-export-result.png[Che - GitOps Export Result, 300]
+image::outerloop/che-gitops-export-result.png[Che - GitOps Export Result, 800]
 
 === 3.2. Create a Git Repository for Your Configuration
 
