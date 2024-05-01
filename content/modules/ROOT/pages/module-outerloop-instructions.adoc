@@ -75,7 +75,7 @@ image::outerloop/ds-delete.png[ds, 800]
 [.console-input]
 [source,bash]
 ----
-https://github.com/rh-mad-workshop/coolstore-microservice.git
+https://github.com/rh-mad-workshop/coolstore-gitops.git
 ----
 
 image::outerloop/ds-landing.png[ds, 800]
@@ -121,7 +121,7 @@ the platform and enables defining truly complex workflows directly from within O
 The first step is to create a Git repository to store your source code. 
 You can use any Git server (e.g. GitHub, BitBucket, etc). For this lab we will use a `Gitea` git server that is running on the OpenShift cluster.
 
-Access the {gitea_url}[Gitea server^] and click on `Sign In` using the same credential as you used for accessing the Dev Spaces.
+Access the {gitea_console_url }[Gitea server^] and click on `Sign In` using the same credential as you used for accessing the Dev Spaces.
 
 * Username: `{user_name}`
 * Password: `{user_password}`
