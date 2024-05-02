@@ -159,15 +159,14 @@ In the terminal, run the following command to push the inventory code into the G
 [.console-input]
 [source,sh,subs="attributes"]
 ----
-cd apps/inventory-gitops
+cd apps/inventory-quarkus
 git init
 git config --global user.email "{user_name}@example.com"
 git config --global user.name "{user_name}"
-git remote add origin http://gitea.gitea
-git remote add origin gitea.gitea.svc.cluster.local:3000/{user_name}/inventory-quarkus.git
+git remote add origin http://gitea.gitea.svc.cluster.local:3000/{user_name}/inventory-quarkus.git
 git add *
 git commit -m "Initial"
-git push http://{user_name}:{user_password}@gitea.gitea.svc.cluster.local:3000/{user_name}/inventory-quarkus.git
+git push http://user1:openshift@gitea.gitea.svc.cluster.local:3000/{user_name}/inventory-quarkus.git
 
 ----
 
