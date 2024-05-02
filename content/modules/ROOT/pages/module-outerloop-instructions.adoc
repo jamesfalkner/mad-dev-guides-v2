@@ -159,12 +159,16 @@ In the terminal, run the following command to push the inventory code into the G
 [.console-input]
 [source,sh,subs="attributes"]
 ----
-cd inventory-gitops
+cd apps/inventory-gitops
 git init
+git config --global user.email "{user_name}@example.com"
+git config --global user.name "{user_name}"
+git remote add origin http://gitea.gitea
 git remote add origin gitea.gitea.svc.cluster.local:3000/{user_name}/inventory-quarkus.git
 git add *
 git commit -m "Initial"
 git push http://{user_name}:{user_password}@gitea.gitea.svc.cluster.local:3000/{user_name}/inventory-quarkus.git
+
 ----
 
 The output should look like this.
@@ -173,26 +177,12 @@ The output should look like this.
 [source,sh,subs="attributes"]
 ----
 ....
-Initialized empty Git repository in /projects/coolstore-gitops/inventory-gitops/.git/
-inventory-gitops (master) $ git remote add origin http://gitea.gitea.svc.cluster.local:3000/{user_name}/inventory-quarkus.git
-inventory-gitops (master) $ git add *
-inventory-gitops (master) $ git commit -m "Initial"
-[master (root-commit) 7c7b9e8] Initial
- 7 files changed, 313 insertions(+)
- create mode 100644 inventory-coolstore-buildconfig.yaml
- create mode 100644 inventory-coolstore-configmap.yaml
- create mode 100644 inventory-coolstore-deploymentconfig.yaml
- create mode 100644 inventory-coolstore-imagestream.yaml
- create mode 100644 inventory-coolstore-route.yaml
- create mode 100644 inventory-coolstore-secret.yaml
- create mode 100644 inventory-coolstore-service.yaml
-inventory-gitops (master) $ git push http://{user_name}:openshift@gitea.gitea.svc.cluster.local:3000/{user_name}/inventory-quarkus.git
-Enumerating objects: 9, done.
-Counting objects: 100% (9/9), done.
+Enumerating objects: 27, done.
+Counting objects: 100% (27/27), done.
 Delta compression using up to 32 threads
-Compressing objects: 100% (9/9), done.
-Writing objects: 100% (9/9), 2.98 KiB | 2.98 MiB/s, done.
-Total 9 (delta 3), reused 0 (delta 0), pack-reused 0
+Compressing objects: 100% (19/19), done.
+Writing objects: 100% (27/27), 37.08 KiB | 9.27 MiB/s, done.
+Total 27 (delta 0), reused 0 (delta 0), pack-reused 0
 remote: . Processing 1 references
 remote: Processed 1 references in total
 To http://gitea.gitea.svc.cluster.local:3000/{user_name}/inventory-quarkus.git
@@ -232,21 +222,33 @@ image::outerloop/tekton-architecture.png[Tekton Architecture, 600]
 
 === 2.4. Switch to the Staging Environment
 
-Access the `globex-outerloop-{user_name}` project in the OpenShift web console.
-
-image::outerloop/openshift-staging-project.png[]
+Access the {openshift_cluster_console}/dev-pipelines/ns/globex-outerloop-{user_name}[Pipelines in Developer view^] from the OpenShift web console.
 
 A *Pipeline* defines a number of *Task* that should be executed and how they interact with each other via *Workspace*. Let's define and configure these different components.
 
-Click on `Pipelines > Create Pipeline`.
+Click on `Create > Pipeline`.
 
 image::outerloop/openshift-create-pipeline.png[]
 
-In the Pipeline Builder page, specify `inventory-pipeline` as Name.
+In the Pipeline Builder page, type in the following value.
 
-image::outerloop/openshift-add-pipeline-name.png[OpenShift - Pipeline Name, 400]
+* *Name*:
 
-`*Scroll down to the 'Workspaces' section and define a Workspace called 'shared-workspace'*`
+[.console-input]
+[source,yaml,subs="+attributes,macros+"]
+----
+inventory-pipeline
+----
+
+image::outerloop/openshift-add-pipeline-name.png[OpenShift - Pipeline Name, 600]
+
+Scroll down to the `Workspaces` section and add the follwing new workspace.
+
+[.console-input]
+[source,yaml,subs="+attributes,macros+"]
+----
+shared-workspace
+----
 
 image::outerloop/openshift-add-pipeline-workspace.png[OpenShift - Pipeline Workspace, 600]
 
@@ -254,53 +256,59 @@ Scroll up to the `Tasks` section then click `Add` task.
 
 image::outerloop/openshift-add-pipeline-task.png[OpenShift - Add task, 600]
 
-Start typing `git-` next to the (+) and select `git-clone`. There are several options to choose from, look out for the *Red Hat* one. Then, clixk on `Add`.
+Start typing `git-` next to the (+) and select `git-clone`. There are several options to choose from, look out for the *Red Hat* one. Then, click on `Add`.
 
-image::outerloop/openshift-add-git-clone-task.png[]
+image::outerloop/openshift-add-git-clone-task.png[openshift-add-git-clone-task, 800]
 
 click on the newly created `git-clone` task and enter the following configuration.
 
 * Display Name: `git-clone`
-* url: `{gitea_console_url}/{user_name}/inventory-quarkus.git`
+* url: `http://gitea.gitea.svc.cluster.local:3000/{user_name}/inventory-quarkus.git`
 * Workspaces output: `shared-workspace`
+
+image::outerloop/openshift-update-task.png[]
 
 Once done, let's add another task. click on the blue plus icon at the right hand side of the *git-clone* task.
 
-image::outerloop/openshift-add-task.png[OpenShift - Add task, 500]
+image::outerloop/openshift-add-task.png[OpenShift - Add task, 600]
 
 Then click on `Add task` and as before `next to the (+) type s2i-java` When you see the *Red Hat* one *select and add the s2i-java task*.
+
+image::outerloop/s2i-java-task.png[s2i-java-task, 800]
 
 Click on the newly created `s2i-java` task and enter the following configuration.
 
 * Display Name: `s2i-java`
+* VERSION: `openjdk-21-ubi8`
 * TLSVERIFY: `false`
-* MAVEN_MIRROR_URL: `http://nexus.opentlc-shared.svc:8081/repository/maven-all-public`
 * Image: `image-registry.openshift-image-registry.svc:5000/globex-outerloop-{user_name}/inventory-coolstore`
 * Workspaces source: `shared-workspace`
 
+image::outerloop/update-s2i-java.png[]
+
 Once done, click on `Create`. Your simple Pipeline is now created.
 
-image::outerloop/openshift-ci-pipeline.png[OpenShift - CI Pipeline, 700]
+image::outerloop/openshift-ci-pipeline.png[]
 
 === 2.5. Run the Pipeline
 
 Now that your pipeline is created and configured, let's run it.
 
-In the {OPENSHIFT_CONSOLE_URL}[OpenShift Web Console^,role='params-link'], from the *Developer view*, click on `Pipelines > PL inventory-pipeline > Actions > Start`.
+Click on `Actions > Start`.
 
 image::outerloop/openshift-start-inventory-pipeline.png[]
 
-Enter the following parameters then click on `Start`.
+Enter the following parameters.
 
 * shared-workspace: `VolumeClaimTemplate`
 
 image::outerloop/openshift-inventory-pipeline-parameters.png[OpenShift Inventory Pipeline Parameters,700]
 
-Congratulations!! You have created and run your first *CI Pipeline on OpenShift*!!
+It takes a few minutes to complete the pipeline.
 
 image::outerloop/openshift-inventory-pipeline-run.png[openshift-inventory-pipeline-run, 800]
 
-Well done! You are ready for the next lab.
+Congratulations!! You have created and run your first *CI Pipeline on OpenShift*! You are ready for the next lab.
 
 == 3. GitOps Workflow with Argo CD
 
