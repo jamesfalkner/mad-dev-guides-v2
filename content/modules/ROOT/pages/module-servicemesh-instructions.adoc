@@ -85,7 +85,7 @@ image::servicemesh/ds-delete.png[ds, 800]
 [.console-input]
 [source,bash]
 ----
-https://github.com/rh-mad-workshop/coolstore-monolith-legacy.git
+https://github.com/rh-mad-workshop/coolstore-microservice.git
 ----
 
 image::servicemesh/ds-landing.png[ds, 800]
