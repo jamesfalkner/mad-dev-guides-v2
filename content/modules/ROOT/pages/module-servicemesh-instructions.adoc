@@ -21,7 +21,98 @@
 </style>
 ++++
 
-Story: Globex’s application footprint has been growing on OpenShift. They have several microservices that communicate across their network to perform business-related tasks. It has been challenging to understand the different interdependencies between services, and their security team recently discovered that the service responsible for managing credit card data was hacked from outside the network. The team in charge of the app has been instructed to improve visibility across the services, understand how services interact, and be able to dynamically alter the topology without requiring developers to make code changes.
+== 1. What is Istio?
+
+image::servicemesh/istio-logo.png[Logo, 600, align="center"]
+
+http://istio.io[Istio^] forms the basis for the OpenShift Service Mesh and is an open, platform-independent service mesh designed to manage communications between microservices and applications in a transparent way. It provides behavioral insights and operational control over the service mesh as a whole. It provides a number of key capabilities uniformly across a network of services:
+
+* *Traffic Management* - Control the flow of traffic and API calls between services, make calls more reliable, and make the network more robust in the face of adverse conditions.
+* *Observability* - Gain understanding of the dependencies between services and the nature and flow of traffic between them, providing the ability to quickly identify issues.
+* *Policy Enforcement* - Apply organizational policy to the interaction between services, ensure access policies are enforced and resources are fairly distributed among consumers. Policy changes are made by configuring the mesh, not by changing application code.
+* *Service Identity and Security* - Provide services in the mesh with a verifiable identity and provide the ability to protect service traffic as it flows over networks of varying degrees of trustability.
+
+These capabilities greatly decrease the coupling between application code, the underlying platform, and policy. This decreased coupling not only makes services easier to implement, but also makes it simpler for operators to move application deployments between environments or to new policy schemes. Applications become inherently more portable as a result.
+
+Sounds fun, right? Let’s get started!
+
+=== 1.2. Access Your Development Environment
+
+You will be using Visual Studio Code (VS Code) based on https://developers.redhat.com/products/openshift-dev-spaces/overview[Red Hat OpenShift Dev Spaces^]. **Changes to files are auto-saved every few seconds**, so you don't need to explicitly save changes.
+
+To get started, {devspaces_dashboard}[access the Red Hat OpenShift Dev Spaces instance^] and select *Log in with OpenShift* button:
+
+image::servicemesh/login_with_openshift.png[login,800]
+
+Type in the following credentail:
+
+* *Username*: 
+
+[.console-input]
+[source,yaml,subs="attributes"]
+----
+{user_name}
+----
+
+* *Password*: 
+
+[.console-input]
+[source,yaml,subs="attributes"]
+----
+{user_password}
+----
+
+image::servicemesh/che-login.png[login,800]
+
+[NOTE]
+====
+In case you see the *Authorize Access* page as below, select *Allow selected permissions* button.
+
+image::servicemesh/auth-access.png[auth-access, 800]
+====
+
+Once you log in, you’ll be placed on the *Create Workspace* dashboard. Copy the following `Git Repo URL` and select `Create & Open`.
+
+[NOTE]
+====
+In case you see existing workspace, delete the workspace first.
+
+image::servicemesh/ds-delete.png[ds, 800]
+====
+
+* *Git Repo URL*:
+
+[.console-input]
+[source,bash]
+----
+https://github.com/rh-mad-workshop/coolstore-monolith-legacy.git
+----
+
+image::servicemesh/ds-landing.png[ds, 800]
+
+A new window or tab in your web browser will open automatically to showcase the progess about *Starting workspace coolstore-monolith-legacy*. It takes a few minutes to finish the process.
+
+image::servicemesh/starting-workspace.png[ds, 800]
+
+After a few seconds, you’ll be placed in the workspace.
+
+image::servicemesh/ds-workspace.png[ds, 800]
+
+[NOTE]
+====
+In case you see existing workspace, check on `Trust the authors of all files in the parent folder 'projects'`. Then, select `Yes, I trust the authors`.
+
+image::servicemesh/ds-trust-popup.png[ds, 800]
+
+You can ignore the warning popup below.
+
+image::servicemesh/kubectl-warning-popup.png[ds, 500]
+
+====
+
+You'll use all of these during the course of this workshop, so keep this browser tab open throughout. **If things get weird, you can simply reload the browser tab to refresh the view.**
+
+
 
 Please close all but the Workshop Deployer browser tab to avoid proliferation of browser tabs which can make working on other modules difficult. 
 
