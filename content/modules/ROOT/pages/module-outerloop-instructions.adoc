@@ -167,7 +167,6 @@ git remote add origin http://gitea.gitea.svc.cluster.local:3000/{user_name}/inve
 git add *
 git commit -m "Initial"
 git push http://user1:openshift@gitea.gitea.svc.cluster.local:3000/{user_name}/inventory-quarkus.git
-
 ----
 
 The output should look like this.
