@@ -23,7 +23,7 @@
 
 The story so far: Globex’s application footprint has been growing on OpenShift. They have several microservices that communicate across their network to perform business-related tasks. It has been challenging to understand the different interdependencies between services, and their security team recently discovered that the service responsible for managing credit card data was hacked from outside the network. The team in charge of the app has been instructed to improve visibility across the services, understand how services interact, and be able to dynamically alter the topology without requiring developers to make code changes.
 
-In this exercise you will use the OpenShift _Service Mesh_ based on the _Istio_ open source project. It enables your distributed applications to prevent cascading failures in a distributed environment, how to detect misbehaving services, and how to avoid having to implement resiliency and monitoring in your business logic. As we transition our applications towards a distributed architecture with microservices deployed across a distributed network, many new challenges await us.
+In this exercise you will use the OpenShift _Service Mesh_ that enables your distributed applications to prevent cascading failures in a distributed environment, how to detect misbehaving services, and how to avoid having to implement resiliency and monitoring in your business logic. As we transition our applications towards a distributed architecture with microservices deployed across a distributed network, many new challenges await us.
 
 Technologies like containers and container orchestration platforms like OpenShift solve the deployment of our distributed applications quite well, but some challenges remain with distributed apps:
 

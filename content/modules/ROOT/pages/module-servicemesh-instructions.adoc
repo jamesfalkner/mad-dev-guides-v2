@@ -21,7 +21,20 @@
 </style>
 ++++
 
-== 1. What is Istio?
+== 1. Service Mesh and Identity
+
+Today, developers are responsible for taking into account these challenges, and do things like:
+
+* Circuit breaking and Bulkheading (e.g. with Netfix Hystrix)
+* Timeouts/retries
+* Service discovery (e.g. with Eureka)
+* Client-side load balancing (e.g. with Netfix Ribbon)
+
+Another challenge is each runtime and language addresses these with different libraries and frameworks, and in some cases there may be no implementation of a particular library for your chosen language or runtime.
+
+In this lab exercise we'll explore how to use the OpenShift _Service Mesh_. Service Mesh is based on the _Istio_ open source project. It enables a much more robust, reliable, and resilient application in the face of the new world of dynamic distributed applications.
+
+== 1.1. What is Istio?
 
 image::servicemesh/istio-logo.png[Logo, 600, align="center"]
 
@@ -36,7 +49,7 @@ These capabilities greatly decrease the coupling between application code, the u
 
 Sounds fun, right? Let’s get started!
 
-=== 1.2. Access Your Development Environment
+=== 1.2. Getting Ready for the labs
 
 You will be using Visual Studio Code (VS Code) based on https://developers.redhat.com/products/openshift-dev-spaces/overview[Red Hat OpenShift Dev Spaces^]. **Changes to files are auto-saved every few seconds**, so you don't need to explicitly save changes.
 
@@ -112,7 +125,533 @@ image::servicemesh/kubectl-warning-popup.png[ds, 500]
 
 You'll use all of these during the course of this workshop, so keep this browser tab open throughout. **If things get weird, you can simply reload the browser tab to refresh the view.**
 
+== 2. Deploy Distributed Services
 
+In this step, you will deploy the *Globex Coolstore* application using Helm. The Globex Coolstore is a sample e-commerce application that showcases various features of OpenShift Container Platform, including microservices, service discovery, and externalized configuration. You will use Helm to streamline the deployment process and create a running instance of the Globex Coolstore application on OpenShift.
+
+=== 2.1. Create a ServiceMeshMemberRoll
+
+Before we start depoying our application we need to make sure we have the right access to our different application namespaces. The _ServiceMeshControlPlane_ that includes _Elasticsearch_, _Jaeger_, _Kiali_ and _Service Mesh Operators_, have all been installed at the cluster provisioning time. However for applications to communicate to each other accross different namespaces, we need to ensure that the _ServiceMeshMemberRoll_ is also created.
+
+Let's create the _ServiceMeshMemberRoll_.
+
+- Login to the openshift console link:{openshift_cluster_console}[OpenShift web console^] using the user credentials (*{user_name}*, *{user_password}*) provided in the previous section.
+
+- Press the plus sign on the right top corner as shown in the picture.
+
+image::servicemesh/plus-icon.png[Run yaml in console, 700]
+
+- Select your namespace `{user_name}-istio-system` on the top left; as shown in the picture and paste the below _ServiceMeshMemberRoll_ YAML code into the editor.
+
+[.console-input]
+[source,yaml,subs="attributes"]
+----
+apiVersion: maistra.io/v1
+kind: ServiceMeshMemberRoll
+metadata:
+  name: default
+  namespace: {user_name}-istio-system <1>
+spec:
+  members:
+    - globex-servicemesh-{user_name} <2>
+----
+<1> is the istio-system namespace which will hold the _ServiceMeshMemberRoll_ and a bunch of other service mesh related objects.
+<2> is the list of projects that will be part of this _ServiceMesh_; in our case that's the application spread in one namespaces/projects.
+
+Click **Create**. This should create the required _ServiceMeshMemberRoll_.
+
+Congratulations! Now we have successfully created a _ServiceMeshMemberRoll_ which will cause a new service mesh to be deployed into the `{user_name}-istio-system` project. let's move on to deploy our application to our service mesh.
+
+=== 2.3. Create a new Helm release for the Globex Coolstore application
+
+Click on `Add to Project` icon in the Topology view. Then, type `coolstore` in the search bar and select the `Coolstore Microservice Helm Chart` tile from the list of available resources.
+
+image::servicemesh/search_coolstore_helm.png[]
+
+You will be redirected to the `Create Coolstore Microservice Helm Chart` YAML view that includes application details (e.g., _image, imagePullPolicy, runtime, and name_) for each customers, orders, gateway, frontend, and inventory service.
+
+You can switch to the `Form view` to view the Helm chart configuration in visualization format.
+
+image::servicemesh/coolstore_helm_formview.png[]
+
+Click on `Create` to deploy the Globex Coolstore application using the Helm chart configuration.
+
+You will be redirected to the Topology view where you can see the Globex Coolstore application deployment in progress. The deployment will take a few seconds to complete.
+
+image::servicemesh/coolstore_helm_deploying.png[]
+
+=== 2.4. Verify the deployment of the Globex Coolstore application
+
+Once the deployment is complete, click on the `Open URL` icon of the *frontend* application in the Topology view to view the details of the deployment. 
+
+You can also access the Globex Coolstore application by clicking on the `Routes URL` on the right bottom in the *Resources* tab.
+
+image::servicemesh/coolstore_helm_deployed.png[]
+
+The frontend of the Globex Coolstore application will be displayed in the separate browser or tab window.
+
+image::servicemesh/coolstore_helm_frontend.png[]
+
+You can navigate through the Globex Coolstore application to view the various features and functionalities, including the product catalog, orders, and customers.
+
+*Great Job!* You have successfully deployed the Globex Coolstore application using Helm on OpenShift. This allows you to deploy complex enterprise applications quickly and consistently, streamlining the deployment process and improving productivity.
+
+== 3. Advanced Service Mesh Development
+
+In this lab, we will learn the advanced use cases of service mesh. The lab showcases features:
+
+* Fault Injection
+* Traffic Shifting
+* Circuit Breaking
+* Rate Limiting
+
+These features are important for any distributed applications built on top of Kubernetes/Openshift. We use a different set of microservices that you've already deployed in the prior labs (e.g., *Catalog* and *Inventory*).
+
+=== 3.1. Enabling automatic sidecar injection
+
+Red Hat OpenShift Service Mesh relies on a proxy sidecar within the application’s pod to provide Service Mesh capabilities to the application. You can enable automatic sidecar injection or manage it manually. Red Hat recommends automatic injection using the annotation with no need to label projects. This ensures that your application contains the appropriate configuration for the Service Mesh upon deployment. This method requires fewer privileges and does not conflict with other OpenShift capabilities such as builder pods.
+
+[NOTE]
+====
+The upstream version of Istio injects the sidecar by default if you have labeled the project. Red Hat OpenShift Service Mesh requires you to opt in to having the sidecar automatically injected to a deployment, so you are not required to label the project. This avoids injecting a sidecar if it is not wanted (for example, in build or deploy pods).
+
+The webhook checks the configuration of pods deploying into all projects to see if they are opting in to injection with the appropriate annotation.
+====
+
+First, confirm all services are running. Open a Terminal window in the VS Code.
+
+image::servicemesh/new-terminal.png[new-terminal, 500]
+
+In the terminal, confirm you have running catalog service using the following command:
+
+[.console-input]
+[source,bash,subs="+attributes,macros+"]
+----
+oc get pods -n globex-servicemesh-{user_name} --field-selector status.phase=Running
+----
+
+You should see the following pods running:
+
+[.console-output]
+[source,sh]
+----
+NAME                                    READY   STATUS    RESTARTS   AGE
+customers-5845d7dd55-h8g6g              1/1     Running   0          5m56s
+frontend-5cbc4748df-7j4qg               1/1     Running   0          5m56s
+gateway-54f5775787-xnf2v                1/1     Running   0          5m56s
+inventory-6dfd57d775-hjxsc              1/1     Running   0          5m56s
+orders-7b66f648df-rvpfb                 1/1     Running   0          5m56s
+postgresql-inventory-7c84bbf8fd-r47gq   1/1     Running   0          5m56s
+----
+
+OpenShift Service Mesh requires that applications *opt-in* to being part of a service mesh by default. To *opt-in* an app, you need to add an annotation which is a flag to istio to attach a sidecar and bring the app into the mesh.
+
+Rather than manually adding the annotations necessary to inject istio sidecars, run the following commands to add the annotations which will trigger a sidecar to be injected into our _inventory_ microservice, as well as its associated database.
+
+First, do the inventory database and wait for them to be re-deployed:
+[.console-input]
+[source,bash,subs="+attributes,macros+"]
+----
+oc patch deployment/postgresql-inventory -n globex-servicemesh-{user_name} --type='json' -p '[{"op":"add","path":"/spec/template/metadata/annotations", "value": {"sidecar.istio.io/inject": "'"true"'"}}]' && \
+oc rollout status -w deployment/postgresql-inventory -n globex-servicemesh-{user_name}
+----
+
+This should take about 1 minute to finish.
+
+[NOTE]
+====
+The above complex-looking command uses the `oc patch` command to programmatically edit the Kubernetes objects. You could just as easily have edited the file in an editor, but YAML can sometimes be tricky so we made it easy for you!
+====
+
+Next, let's add sidecars to the `inventory` service and wait for them to be re-deployed:
+
+[.console-input]
+[source,bash,subs="+attributes,macros+"]
+----
+oc patch deployment/inventory -n globex-servicemesh-{user_name} --type='json' -p '[{"op":"add","path":"/spec/template/metadata/annotations", "value": {"sidecar.istio.io/inject": "'"true"'"}}]' && \
+oc rollout status -w deployment/inventory -n globex-servicemesh-{user_name}
+----
+
+This should also take about 1 minute to finish. When it's done, verify that the `postgresql-inventory` is running with 2 pods (`2/2` in the `READY` column) with this command:
+
+[.console-input]
+[source,bash,subs="+attributes,macros+"]
+----
+oc get pods -n globex-servicemesh-{user_name} --field-selector="status.phase=Running"
+----
+
+It should show:
+
+[source,console,role="copypaste"]
+----
+NAME                         READY   STATUS    RESTARTS      AGE
+inventory-2-nx8qp            2/2     Running   2 (33s ago)   40s
+postgresql-inventory-2-jfw99   2/2     Running   0             62s
+----
+
+[WARNING]
+====
+It may take a minute or two before the `inventory` service is recognized and brought into the mesh.
+====
+
+Next, let's create a virtual service to send incoming traffic to the catalog. Open the empty `catalog-default.yaml` file in _catalog/rules_ directory to copy the following _VirtualService_ into the empty file using VS Code:
+
+[source,yaml, role="copypaste"]
+----
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: catalog-default
+spec:
+  hosts:
+  - "istio-ingressgateway-{user_name}-istio-system.{openshift_subdomain}"
+  gateways:
+  - {user_name}}-bookinfo/bookinfo-gateway
+  http:
+    - match:
+        - uri:
+            exact: /services/products
+        - uri:
+            exact: /services/product
+        - uri:
+            exact: /
+      route:
+        - destination:
+            host: catalog-springboot
+            port:
+              number: 8080
+----
+
+Execute the following command in VS Code Terminal:
+
+[.console-input]
+[source,bash,subs="+attributes,macros+"]
+----
+oc create -f $PROJECT_SOURCE/catalog/rules/catalog-default.yaml -n {user_name}-catalog
+----
+
+Access the http://istio-ingressgateway-{user_name}-istio-system.{openshift_subdomain}[Catalog Service Page^] and ensure it should look something like:
+
+image::servicemesh/catalog-ui-gateway.png[catalog, 700]
+
+[NOTE]
+====
+It takes a few seconds to reconcile _istio ingress_ with the _gateway_ and _virtual service_. Leave this page open as the _Catalog UI browser_ creates traffic (every 2 seconds) between services, which is useful for testing.
+====
+
+Ensure if we injected _side car_ to each pods. Access the https://kiali-{user_name}-istio-system.{openshift_subdomain}/console/graph/namespaces/?edges=noEdgeLabels&graphType=versionedApp&namespaces={user_name}-catalog%2C{user_name}-inventory&unusedNodes=false&injectServiceNodes=true&duration=60&pi=15000&layout=dagre[Kiali Graph page^] and verify that *{user_name}-inventory*, *{user_name}-catalog* are selected _Namespaces_ then enable *Traffic Animation* in the _Display_ drop-down to see animated traffic flow from _Catalog service_ to _Inventory service_:
+
+image::servicemesh/kiali_graph_sidecar.png[istio, 700]
+
+You can see the incoming traffic to the catalog service along with traffic going to both the catalog and inventory databases along each branch. This mirrors what we would expect - when you access the catalog frontend, a call is made to the catalog backend, which in turn access the inventory and combines it with catalog data and returns the result for display.
+
+[NOTE]
+====
+You may occasionally see _unknown_ or _PassthroughCluster_ elements in the graph. These are due to the istio configuration changes we are doing in realtime and would disappear if you wait long enough, but you can ignore them for this lab.
+====
+
+=== 3.2. Fault Injection
+
+This step will walk you through how to use *Fault Injection* to test the end-to-end failure recovery capability of the application as a whole. An incorrect configuration of the failure recovery policies could result in unavailability of critical services. Examples of incorrect configurations include incompatible or restrictive timeouts across service calls.
+
+_Istio_ provides a set of failure recovery features that can be taken advantage of by the services in an application. Features include:
+
+* **Timeouts** to minimize wait times for slow services
+* **Bounded retries** with timeout budgets and variable jitter between retries
+* **Limits** on number of concurrent connections and requests to upstream services
+* **Active (periodic) health checks** on each member of the load balancing pool
+* **Fine-grained circuit breakers** (passive health checks) – applied per instance in the load balancing pool
+
+These features can be dynamically configured at runtime through Istio’s traffic management rules.
+
+A combination of active and passive health checks minimizes the chances of accessing an unhealthy service. When combined with platform-level health checks (such as readiness/liveness probes in OpenShift), applications can ensure that unhealthy pods/containers/VMs can be quickly weeded out of the service mesh, minimizing the request failures and impact on latency.
+
+Together, these features enable the service mesh to tolerate failing nodes and prevent localized failures from cascading instability to other nodes.
+
+Istio enables protocol-specific _fault injection_ into the network (instead of killing pods) by delaying or corrupting packets at TCP layer.
+
+Two types of faults can be injected:
+
+* _Delays_ are timing failures. They mimic increased network latency or an overloaded upstream service.
+* _Aborts_ are crash failures. They mimic failures in upstream services. Aborts usually manifest in the form of HTTP error codes or TCP connection failures.
+
+To test our application microservices for resiliency, we will inject a failure in *50%* of the requests to the _inventory_ service, causing the service to appear to fail (and return `HTTP 5xx` errors) half of the time.
+
+Open the empty `inventory-default.yaml` file in the _inventory/rules_ directory and copy the following into the file:
+
+[source,yaml,role="copypaste"]
+----
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: inventory-default
+spec:
+  hosts:
+  - "istio-ingressgateway-{user_name}-istio-system.{openshift_subdomain}"
+  gateways:
+  - {user_name}}-bookinfo/bookinfo-gateway
+  http:
+    - match:
+        - uri:
+            exact: /services/inventory
+        - uri:
+            exact: /
+      route:
+        - destination:
+            host: inventory
+            port:
+              number: 80
+----
+
+Delete the gateway to direct route catalog that was setup earlier with:
+
+[.console-input]
+[source,bash,subs="+attributes,macros+"]
+----
+oc delete -f $PROJECT_SOURCE/catalog/rules/catalog-default.yaml -n {user_name}-catalog
+----
+
+Create the new VirtualService to direct traffic to the inventory service by running the following command via VS Code Terminal:
+
+[.console-input]
+[source,bash,subs="+attributes,macros+"]
+----
+oc create -f $PROJECT_SOURCE/inventory/rules/inventory-default.yaml -n {user_name}-inventory
+----
+
+Now, you can test if the inventory service works correctly via accessing the http://istio-ingressgateway-{user_name}-istio-system.{openshift_subdomain}[CoolStore Inventory page^]. If you still see _Coolstore Catalog_ then reload the page to see _Coolstore Inventory_ with kbd:[CTRL+F5] (or kbd:[Command+Shift+R] on Mac OS).
+
+image::servicemesh/inventory-ui-gateway.png[fault-injection, 700]
+
+Let’s inject a failure (_500 status_) in *50%* of requests to _inventory_ microservices. Edit _inventory-default.yaml_ as below.
+
+Open the empty `inventory-vs-fault.yaml` file in _inventory/rules_ directory and copy the following codes.
+
+[source,yaml,role="copypaste"]
+----
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: inventory-fault
+spec:
+  hosts:
+  - "istio-ingressgateway-{user_name}-istio-system.{openshift_subdomain}"
+  gateways:
+  - {user_name}}-bookinfo/bookinfo-gateway
+  http:
+    - fault:
+         abort:
+           httpStatus: 500
+           percentage:
+             value: 50
+      route:
+        - destination:
+            host: inventory
+            port:
+              number: 80
+----
+
+Before creating a new *inventory-fault VirtualService*, we need to delete the existing inventory-default virtualService. Run the following command via VS Code Terminal:
+
+[.console-input]
+[source,bash,subs="+attributes,macros+"]
+----
+oc delete virtualservice/inventory-default -n {user_name}-inventory
+----
+
+Then create a new VirtualService with this command:
+
+[.console-input]
+[source,bash,subs="+attributes,macros+"]
+----
+oc create -f $PROJECT_SOURCE/inventory/rules/inventory-vs-fault.yaml -n {user_name}-inventory
+----
+
+Let’s find out if the fault injection works corectly via accessing the http://istio-ingressgateway-{user_name}-istio-system.{openshift_subdomain}[CoolStore Inventory page^] once again. You will see that the *Status* of CoolStore Inventory continues to change between *DEAD* and *OK*:
+
+image::servicemesh/inventory-dead-ok.png[fault-injection, 700]
+
+Back on the https://kiali-{user_name}-istio-system.{openshift_subdomain}/console/graph/namespaces/?edges=noEdgeLabels&graphType=versionedApp&namespaces={user_name}-catalog%2C{user_name}-inventory&unusedNodes=false&injectServiceNodes=true&duration=60&pi=15000&layout=dagre[Kiali Graph page^] and you will see `red` traffic from _istio-ingressgateway_ as well as around 50% of requests are displayed as _5xx_ on the right side, _HTTP Traffic_. It may not be _exactly_ 50% since some traffic is coming from the catalog and ingress gateway at the same time, but it will approach 50% over time.
+
+[WARNING]
+====
+Kiali "looks back" and records/displays the last minute of traffic, so if you're quick you may see some of the prior traffic flows from earlier in the lab. Within 1 minute the graph should clear up and only show what you are looking for!
+====
+
+image::servicemesh/inventlry-vs-error-kiali.png[fault-injection,900]
+
+Let’s now add a 5 second delay for the `inventory` service.
+
+Open the empty `inventory-vs-fault-delay.yaml` file in _inventory/rules_ directory and copy the following code into it:
+
+[source,yaml,role="copypaste"]
+----
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: inventory-fault-delay
+spec:
+  hosts:
+  - "istio-ingressgateway-{user_name}-istio-system.{openshift_subdomain}"
+  gateways:
+  - {user_name}}-bookinfo/bookinfo-gateway
+  http:
+    - fault:
+         delay:
+           fixedDelay: 5s
+           percentage:
+             value: 100
+      route:
+        - destination:
+            host: inventory
+            port:
+              number: 80
+----
+
+Delete the existing inventory-fault VirtualService in VS Code Terminal:
+
+[.console-input]
+[source,bash,subs="+attributes,macros+"]
+----
+oc delete virtualservice/inventory-fault -n {user_name}-inventory
+----
+
+Then create a new virtualservice:
+
+[.console-input]
+[source,bash,subs="+attributes,macros+"]
+----
+oc create -f $PROJECT_SOURCE/inventory/rules/inventory-vs-fault-delay.yaml -n {user_name}-inventory
+----
+
+Go to the *Kiali Graph* you opened earlier and you will see that the `green` traffic from _istio-ingressgateway_ is delayed for requests coming from inventory service. Note that you need to check *Traffic Animation* in the _Display_ select box.
+
+[NOTE]
+====
+You may still see "red" traffic from our previous fault injections, but those will disappear after the 1 minute time window (the default lookback period) of the graph elapses.
+====
+
+image::servicemesh/inventlry-vs-delay-kiali.png[fault-injection,900]
+
+Click on the "edge" (the line between `istio-ingressgateway` and `inventory`) and then scroll to the bottom of the right-side graph showing the _HTTP Request Response Time_. Hover over the black _average_ data point to confirm that the average response time is about 5000ms (5 seconds) as expected:
+
+image::5sdelay.png[delay, 800]
+
+If the Inventory’s front page was set to correctly handle delays, we expect it to load within approximately 5 seconds. To see the web page response times, open the Developer Tools menu in IE, Chrome or Firefox (typically, key combination kbd:[CTRL+SHIFT+I] or kbd:[CMD+ALT+I] on a Mac), select the `Network` tab, and reload the inventory web page.
+
+You will see and feel that the webpage loads in about 5 seconds:
+
+image::servicemesh/inventory-webui-delay.png[Delay, 900]
+
+Before we will move to the next step, clean up the fault injection and set the default virtual service once again using these commands in a Terminal:
+
+[.console-input]
+[source,bash,subs="+attributes,macros+"]
+----
+oc delete virtualservice/inventory-fault-delay -n {user_name}-inventory && \
+oc create -f $PROJECT_SOURCE/inventory/rules/inventory-default.yaml -n {user_name}-inventory
+----
+
+Also, close the tabs in your browser for the Inventory and Catalog services to avoid unnecessary load, and stop the endless `for` loop you started in the beginning of this lab in VS Code by closing the Terminal window that was running it.
+
+=== 3.3. Enable Circuit Breaker
+
+In this step, you will configure a circuit Breaker to protect the calls to `Inventory` service. If the `Inventory` service gets overloaded due to call volume, Istio will limit future calls to the service instances to allow them to recover.
+
+Circuit breaking is a critical component of distributed systems. It’s nearly always better to fail quickly and apply back pressure upstream as soon as possible. Istio enforces circuit breaking limits at the network level as opposed to having to configure and code each application independently.
+
+Istio supports various types of conditions that would trigger a circuit break:
+
+* *Cluster maximum connections*: The maximum number of connections that Istio will establish to all hosts in a cluster.
+
+* *Cluster maximum pending requests*: The maximum number of requests that will be queued while waiting for a ready connection pool connection.
+
+* *Cluster maximum requests*: The maximum number of requests that can be outstanding to all hosts in a cluster at any given time. In practice this is applicable to HTTP/2 clusters since HTTP/1.1 clusters are governed by the maximum connections circuit breaker.
+
+* *Cluster maximum active retries*: The maximum number of retries that
+can be outstanding to all hosts in a cluster at any given time. In general Istio recommends aggressively circuit breaking retries so that retries for sporadic failures are allowed but the overall retry volume cannot explode and cause large scale cascading failure.
+
+[NOTE]
+====
+that *HTTP2* uses a single connection and never queues (always multiplexes), so max connections and max pending requests are not applicable.
+====
+
+Each circuit breaking limit is configurable and tracked on a per upstream cluster and per priority basis. This allows different components of the distributed system to be tuned independently and have different limits. See the https://www.envoyproxy.io/docs/envoy/latest/intro/arch_overview/upstream/circuit_breaking[Envoy’s circuit breaker^] for more details.
+
+Let’s add a circuit breaker to the calls to the *Inventory service*. Instead of using a _VirtualService_ object, circuit breakers in Istio are defined as _DestinationRule_ objects. DestinationRule defines policies that apply to traffic intended for a service after routing has occurred. These rules specify configuration for load balancing, connection pool size from the sidecar, and outlier detection settings to detect and evict unhealthy hosts from the load balancing pool.
+
+Open the empty *inventory-cb.yaml* file in _inventory/rules_ directory and add this code to the file to enable circuit breaking when calling the Inventory service:
+
+[source,yaml,role="copypaste"]
+----
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: inventory-cb
+spec:
+  host: inventory
+  trafficPolicy:
+    connectionPool:
+      tcp:
+        maxConnections: 1
+      http:
+        http1MaxPendingRequests: 1
+        maxRequestsPerConnection: 1
+----
+
+Run the following command via VS Code Terminal to then create the rule:
+
+[.console-input]
+[source,bash,subs="+attributes,macros+"]
+----
+oc create -f $PROJECT_SOURCE/inventory/rules/inventory-cb.yaml -n {user_name}-inventory
+----
+
+We set the Inventory service’s maximum connections to 1 and maximum pending requests to 1. Thus, if we send more than 2 requests within a short period of time to the inventory service, 1 will go through, 1 will be pending, and any additional requests will be denied until the pending request is processed. Furthermore, it will detect any hosts that return a server error (HTTP 5xx) and eject the pod out of the load balancing pool for 15 minutes. You can visit here to check the https://istio.io/docs/tasks/traffic-management/circuit-breaking[Istio spec^] for more details on what each configuration
+parameter does.
+
+=== 3.4. Overload the service
+
+We'll use a utility called _siege_ to send multiple concurrent requests to our application, and witness the circuit breaker kicking in and opening the circuit.
+
+Execute this to simulate a number of users attempting to access the gateway URL simultaneously in VS Code Terminal.
+
+[.console-input]
+[source,bash,subs="+attributes,macros+"]
+----
+siege --verbose --time=1M --concurrent=10 'http://istio-ingressgateway-{user_name}-istio-system.{openshift_subdomain}'
+----
+
+This will run for 1 minute, and you'll likely encounter errors like `[error] Failed to make an SSL connection: 5` which indicates that the circuit breaker is tripping and stopping the flood of requests from going to the service.
+
+To see this, open the https://grafana-{user_name}-istio-system.{openshift_subdomain}/d/LJ_uJAvmk/istio-service-dashboard?orgId=1&refresh=10s&var-service=inventory.{user_name}-inventory.svc.cluster.local&var-srcns=All&var-srcwl=All&var-dstns=All&var-dstwl=All[Istio Service Dashboard^] in Grafana and ensure to see _Client Success Rate(non-5xx responses)_ of inventory service is no longer at 100%:
+
+[NOTE]
+====
+It may take 10-20 seconds before the evidence of the circuit breaker is visible within the Grafana dashboard, due to the not-quite-realtime nature of Prometheus metrics and Grafana refresh periods and general network latency. You can also re-run the `siege` command to force more failures.
+====
+
+image::servicemesh/inventory-circuit-breaker-grafana.png[circuit-breaker, 700]
+
+That’s the circuit breaker in action, limiting the number of requests to the service. In practice your limits would be much higher.
+
+You can also see the Circuit Breaker triggering `HTTP 503` errors in the animation:
+
+image::servicemesh/inventory-circuit-breaker-kiali.png[circuit-breaker, 700]
+
+In practice, these `503` errors would trigger upstream fallbacks while the overloaded service is given a chance to recover.
+
+Congratulations! You’ve ...
+
+When combining Red Hat SSO with istio, you can ensure traffic within the service mesh and traffic coming and leaving the mesh can be properly authenticated.
+
+== Summary
+
+In this scenario you used Istio to implement many of the features needed in modern, distributed applications.
+
+Istio provides an easy way to create a network of deployed services with load balancing, service-to-service authentication, monitoring, and more without requiring any changes in service code. You add Istio support to services by deploying a special sidecar proxy throughout your environment that intercepts all network communication between microservices, configured and managed using Istio’s control plane functionality.
+
+Technologies like containers and container orchestration platforms like OpenShift solve the deployment of our distributed applications quite well, but are still catching up to addressing the service communication necessary to fully take advantage of distributed microservice applications. With Istio you can solve many of these issues outside of your business logic, freeing you as a developer from concerns that belong in the infrastructure.
 
 Please close all but the Workshop Deployer browser tab to avoid proliferation of browser tabs which can make working on other modules difficult. 
 
