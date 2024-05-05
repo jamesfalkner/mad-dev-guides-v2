@@ -535,7 +535,7 @@ image::servicemesh/inventlry-vs-delay-kiali.png[fault-injection,900]
 
 Click on the "edge" (the line between `istio-ingressgateway` and `inventory`) and then scroll to the bottom of the right-side graph showing the _HTTP Request Response Time_. Hover over the black _average_ data point to confirm that the average response time is about 5000ms (5 seconds) as expected:
 
-image::5sdelay.png[delay, 800]
+image::servicemesh/5sdelay.png[delay, 800]
 
 If the Inventory’s front page was set to correctly handle delays, we expect it to load within approximately 5 seconds. To see the web page response times, open the Developer Tools menu in IE, Chrome or Firefox (typically, key combination kbd:[CTRL+SHIFT+I] or kbd:[CMD+ALT+I] on a Mac), select the `Network` tab, and reload the inventory web page.
 
