@@ -279,6 +279,7 @@ Click on the newly created `s2i-java` task and enter the following configuration
 * Display Name: `s2i-java`
 * VERSION: `openjdk-21-ubi8`
 * TLSVERIFY: `false`
+* MAVEN_ARGS_APPEND: `-Dquarkus.kubernetes.deploy=false -Dquarkus.container-image.build=false -Dquarkus.container-image.group=globex-outerloop-{user_name}`
 * Image: `image-registry.openshift-image-registry.svc:5000/globex-outerloop-{user_name}/inventory-coolstore`
 * Workspaces source: `shared-workspace`
 
